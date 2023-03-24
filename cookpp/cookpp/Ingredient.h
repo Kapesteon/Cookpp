@@ -1,8 +1,11 @@
 #pragma once
 #include <stdlib.h>
 #include <string>
-//#include "InfoNutri.cpp"
+#include <memory>
 #include "InfoNutri.h"
+#include "Windows.h"
+#include "debugapi.h"
+
 class Ingredient
 
 {
@@ -10,7 +13,7 @@ private:
 	std::string name;
 	std::string type;
 	std::string season;
-	InfoNutri* infoNutri;
+	std::shared_ptr<InfoNutri> infoNutri;
 
 public:
 
@@ -19,6 +22,7 @@ public:
 	Ingredient();		
 	Ingredient(std::string name, std::string type, std::string season, InfoNutri *infoNutri);
 	Ingredient(const Ingredient &c);
+	~Ingredient();
 
 	const std::string getName(void) const;
 	void setName(std::string name);

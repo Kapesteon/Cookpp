@@ -25,6 +25,24 @@ Ingredient::Ingredient(const Ingredient& c)
 	this->infoNutri = c.infoNutri;
 }
 
+Ingredient::~Ingredient()
+{
+	if (this->infoNutri == NULL) {
+		OutputDebugStringA("InfoNutri in Ingredient aleady destroyed\n");
+	} else {
+		try {
+			//delete this->infoNutri;
+			this->infoNutri.reset();
+		}
+		catch (std::exception e) {
+			OutputDebugStringA("Error while destroying Ingredient :");
+			OutputDebugStringA(e.what());
+		}
+		OutputDebugStringA("Ingredient Destroyed \n");
+	}
+
+}
+
 const std::string Ingredient::getName(void) const
 {
 	return std::string(this->name);

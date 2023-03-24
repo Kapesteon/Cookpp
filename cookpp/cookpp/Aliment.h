@@ -10,6 +10,7 @@ class Aliment : public Ingredient
 		Aliment(std::string name, std::string type, std::string season, InfoNutri* infoNutri, double mass);
 		Aliment(const Ingredient& ingr, double mass);
 		Aliment(const Aliment & c);
+		~Aliment();
 
 		void setMass(double mass);
 		double getMass();

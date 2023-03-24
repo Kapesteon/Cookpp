@@ -39,6 +39,9 @@
     <ClInclude Include="Aliment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="StockedAliment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cookpp.cpp">
@@ -50,10 +53,13 @@
     <ClCompile Include="InfoNutri.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="debug.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="Aliment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="StockedAliment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="debug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,8 +1,9 @@
 #include "Aliment.h"
 
 Aliment::Aliment()
+	: Ingredient()
 {
-	Ingredient();
+
 	this->mass = 0;
 }
 
@@ -27,6 +28,11 @@ Aliment::Aliment(const Aliment& c)
 	this->setSeason(c.getSeason());
 	this->setInfoNutri(c.getInfoNutri());
 	this->mass = c.mass;
+}
+
+Aliment::~Aliment()
+{
+	OutputDebugStringA("Aliment Destroyed \n");
 }
 
 void Aliment::setMass(double mass)

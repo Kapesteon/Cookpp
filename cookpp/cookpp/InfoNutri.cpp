@@ -59,6 +59,11 @@ InfoNutri::InfoNutri(const InfoNutri& c)
     this->values = c.values;
 }
 
+InfoNutri::~InfoNutri()
+{
+    OutputDebugStringA("InfoNutri Destroyed \n");
+}
+
 void InfoNutri::printInfoNutri()
 {
 
