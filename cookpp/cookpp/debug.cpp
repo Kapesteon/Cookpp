@@ -2,6 +2,7 @@
 #include "InfoNutri.h"
 #include "Windows.h"
 #include "debugapi.h"
+#include "Aliment.h"
 
 void debug()
 {
@@ -21,5 +22,11 @@ void debug()
 	Ingredient testIngredient;
 	Ingredient testIngredient2 = Ingredient("Carot", "Vegetable", "N/A", &testInfoNutri3);
 	Ingredient testIngredient3 = Ingredient(testIngredient2);
+
+	Aliment testAliment;
+	Aliment testAliment2 = Aliment(testIngredient3, 500);
+	Aliment testAliment3 = Aliment("Apple", "Fruit", "Winter", &testInfoNutri3, 200);
+	Aliment testAliment4 = Aliment(testAliment3);
+
 	return;
 }

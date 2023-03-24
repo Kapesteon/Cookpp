@@ -20,13 +20,13 @@ public:
 	Ingredient(std::string name, std::string type, std::string season, InfoNutri *infoNutri);
 	Ingredient(const Ingredient &c);
 
-	std::string getName(void);
+	const std::string getName(void) const;
 	void setName(std::string name);
-	std::string getType(void);
+	const std::string getType(void) const ;
 	void setType(std::string type);
-	std::string getSeason(void);
+	const std::string getSeason(void) const;
 	void setSeason(std::string season);
-	InfoNutri * getInfoNutri(void);
+	InfoNutri* getInfoNutri(void) const;
 	void setInfoNutri(InfoNutri * infoNutri);
 
 };
