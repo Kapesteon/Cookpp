@@ -25,7 +25,7 @@ Ingredient::Ingredient(const Ingredient& c)
 	this->infoNutri = c.infoNutri;
 }
 
-std::string Ingredient::getName(void)
+const std::string Ingredient::getName(void) const
 {
 	return std::string(this->name);
 }
@@ -36,7 +36,7 @@ void Ingredient::setName(std::string name)
 	return;
 }
 
-std::string Ingredient::getType(void)
+const std::string Ingredient::getType(void) const
 {
 	return std::string(this->type);
 }
@@ -47,7 +47,7 @@ void Ingredient::setType(std::string type)
 	return;
 }
 
-std::string Ingredient::getSeason(void)
+const std::string Ingredient::getSeason(void) const 
 {
 	return std::string(this->season);
 }
@@ -59,7 +59,7 @@ void Ingredient::setSeason(std::string season)
 	return;
 }
 
-InfoNutri * Ingredient::getInfoNutri(void)
+InfoNutri * Ingredient::getInfoNutri(void) const
 {
 
 	return this->infoNutri;

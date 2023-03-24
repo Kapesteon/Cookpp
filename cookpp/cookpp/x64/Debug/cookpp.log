@@ -1,3 +1,1 @@
-﻿  debug.cpp
-C:\ISEN\M2\ProgObj\projFinal\Cookpp\cookpp\cookpp\debug.cpp(9,20): warning C4091: '': ignored on left of 'std::basic_ostringstream<char,std::char_traits<char>,std::allocator<char>>' when no variable is declared
-  cookpp.vcxproj -> C:\ISEN\M2\ProgObj\projFinal\Cookpp\cookpp\x64\Debug\cookpp.exe
+﻿  cookpp.vcxproj -> C:\ISEN\M2\ProgObj\projFinal\Cookpp\cookpp\x64\Debug\cookpp.exe

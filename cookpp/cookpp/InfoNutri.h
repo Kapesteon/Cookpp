@@ -39,6 +39,6 @@ public:
 	InfoNutri(const InfoNutri& c);
 
 	void printInfoNutri();
-	std::map<std::string, double> getInfoNutri();
+	const std::map<std::string, double> getInfoNutri() const;
 };
 

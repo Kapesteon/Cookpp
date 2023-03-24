@@ -71,7 +71,7 @@ void InfoNutri::printInfoNutri()
     }
 }
 
-std::map<std::string, double> InfoNutri::getInfoNutri()
+const std::map<std::string, double> InfoNutri::getInfoNutri() const
 {
     
     return this->values;

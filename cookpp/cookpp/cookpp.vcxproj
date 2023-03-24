@@ -127,6 +127,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Aliment.h" />
     <ClInclude Include="cookpp.h" />
     <ClInclude Include="debug.h" />
     <ClInclude Include="framework.h" />
@@ -136,6 +137,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Aliment.cpp" />
     <ClCompile Include="cookpp.cpp" />
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="InfoNutri.cpp" />
