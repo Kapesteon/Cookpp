@@ -8,14 +8,13 @@
 class InfoNutri
 {
 private:
-
-//May be replace with key-value tab
-
-	static const std::vector<std::string> keys;
+	
+	static std::vector<std::string> keys;
 	std::map<std::string, double> values;
-/*
-	UNUSED
+	
+
 	//UNUSED //InfoNutri(double perAmount,double calories,double fat, double cholesterol, double sodium, double carbohydrate, double protein); //May be unused
+	/*
 	double perAmount;
 	double calories;
 	double fat;
@@ -23,15 +22,23 @@ private:
 	double sodium;
 	double carbohydrate;
 	double protein;
-*/
+	*/
+
 public:
 
+	//define the static vector Keys
+	//static void instanciateKeys();
+	
+
+	//Overloading cout
+	friend std::ostream& operator<<(std:: ostream& os, const InfoNutri& dt);
+
 	InfoNutri();
-	InfoNutri(std::map<std::string, double>& values);
-	InfoNutri(double* tab); // Tab of all parameters
-	InfoNutri(InfoNutri& c);
+	InfoNutri(std::vector<double>& param);
+	InfoNutri(double* tab, size_t len); // Tab of all parameters
+	InfoNutri(const InfoNutri& c);
 
 	void printInfoNutri();
-	std::map<std::string, double> *getInfoNutri();
+	std::map<std::string, double> getInfoNutri();
 };
 

@@ -1,41 +1,62 @@
 #include "InfoNutri.h"
 
+#define NUMBER_ATRIBUTES 7
 
-const std::vector<std::string> InfoNutri::keys({ "perAmount", "calories","fat","cholesterol","sodium","carbohydrate","protein"});
+/*
+std::vector<std::string> InfoNutri::keys = { "perAmount", "calories","fat","cholesterol","sodium","carbohydrate","protein" };
+*/
+
+std::vector<std::string> InfoNutri::keys = { "perAmount", "calories","fat","cholesterol","sodium","carbohydrate","protein" };
+
+
+
+
+
 
 
 InfoNutri::InfoNutri()
 {
 
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < NUMBER_ATRIBUTES; i++) {
         values[keys[i]] = 0;
 
     }
  
 }
 
-InfoNutri::InfoNutri(std::map<std::string, double>& param)
+InfoNutri::InfoNutri(std::vector<double>& param)
 {
-
+    if (values.size() != param.size()) {
+        std::cout << "Size required : " << values.size();
+        std::cout << "Size given : " << param.size();
+        throw std::invalid_argument("Wrong Size of argument");
+    }
+    else {
+        for (int i = 0; i <= values.size(); i++) {
+            values[keys[i]] = param[i];
+        }
+    }
+    
 }
 
-InfoNutri::InfoNutri(double* tab)
+InfoNutri::InfoNutri(double *tab, size_t len)
 {
-    int sizeRequired = 7 * 8; //7 attributes, 8 bytes for a double
+    int sizeRequired = NUMBER_ATRIBUTES; //7 attributes, 8 bytes for a double
 
-    if (int(sizeof(tab)) != sizeRequired) {
+    if (len != sizeRequired) {
         std::cout << "Size required : " << sizeRequired;
-        std::cout << "Size given : " << int(sizeof(tab));
+        std::cout << "Size given : " << int(sizeof(*tab));
         throw std::invalid_argument("Wrong Size of argument");
     }
 
-    for (int i = 0; i < 8; i++) {
-        values[keys[i]] = *tab + i * 8;
+    for (int i = 0; i < NUMBER_ATRIBUTES; i++) {
+        values[keys[i]] = tab[i];
     }
 }
 
-InfoNutri::InfoNutri(InfoNutri& c)
+InfoNutri::InfoNutri(const InfoNutri& c)
 {
+    this->values = c.values;
 }
 
 void InfoNutri::printInfoNutri()
@@ -50,7 +71,28 @@ void InfoNutri::printInfoNutri()
     }
 }
 
-std::map<std::string, double>* InfoNutri::getInfoNutri()
+std::map<std::string, double> InfoNutri::getInfoNutri()
 {
-    return nullptr;
+    
+    return this->values;
 }
+
+
+//Overloading COUT
+/*
+NOT USED BECAUSE NON-CONSOLE PROGRAM
+*/
+std::ostream& operator<<(std::ostream& os, const InfoNutri& infoNutri)
+{
+
+    for (auto const& x : infoNutri.values)
+    {
+        os << x.first  // string (key)
+            << ':'
+            << x.second     // string's value 
+            << std::endl;
+    }
+
+    return os;
+}
+

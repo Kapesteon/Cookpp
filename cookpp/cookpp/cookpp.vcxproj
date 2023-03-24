@@ -128,6 +128,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="cookpp.h" />
+    <ClInclude Include="debug.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="InfoNutri.h" />
     <ClInclude Include="Ingredient.h" />
@@ -136,6 +137,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cookpp.cpp" />
+    <ClCompile Include="debug.cpp" />
     <ClCompile Include="InfoNutri.cpp" />
     <ClCompile Include="Ingredient.cpp" />
   </ItemGroup>
