@@ -5,7 +5,7 @@ Ingredient::Ingredient()
 	this->name = "Undefined";
 	this->type = "N/A";
 	this->season = "N/A";
-	this->infoNutri = new InfoNutri();
+	this->infoNutri = InfoNutri();
 }
 
 Ingredient::Ingredient(std::string name, std::string type, std::string season, InfoNutri *infoNutri)
@@ -13,7 +13,7 @@ Ingredient::Ingredient(std::string name, std::string type, std::string season, I
 	this->name = name;
 	this->type = type;
 	this->season = season;
-	this->infoNutri = infoNutri;
+	this->infoNutri = *infoNutri;
 }
 
 
@@ -27,20 +27,19 @@ Ingredient::Ingredient(const Ingredient& c)
 
 Ingredient::~Ingredient()
 {
-	if (this->infoNutri == NULL) {
+	/*
+	if (this->infoNutri == NULL); {
 		OutputDebugStringA("InfoNutri in Ingredient aleady destroyed\n");
-	} else {
-		try {
-			//delete this->infoNutri;
-			this->infoNutri.reset();
-		}
-		catch (std::exception e) {
-			OutputDebugStringA("Error while destroying Ingredient :");
-			OutputDebugStringA(e.what());
-		}
-		OutputDebugStringA("Ingredient Destroyed \n");
 	}
-
+	try {
+		delete this->infoNutri;
+	}
+	catch (std::exception e) {
+		OutputDebugStringA("Error while destroying Ingredient :");
+		OutputDebugStringA(e.what());
+	}
+	*/
+	OutputDebugStringA("Ingredient Destroyed \n");
 }
 
 const std::string Ingredient::getName(void) const
@@ -77,13 +76,13 @@ void Ingredient::setSeason(std::string season)
 	return;
 }
 
-InfoNutri * Ingredient::getInfoNutri(void) const
+InfoNutri Ingredient::getInfoNutri(void) const
 {
 
 	return this->infoNutri;
 }
 
-void Ingredient::setInfoNutri(InfoNutri * infoNutri)
+void Ingredient::setInfoNutri(InfoNutri  infoNutri)
 {
 	this->infoNutri = infoNutri;
 	return;

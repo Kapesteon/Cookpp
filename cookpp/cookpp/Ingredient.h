@@ -13,7 +13,7 @@ private:
 	std::string name;
 	std::string type;
 	std::string season;
-	std::shared_ptr<InfoNutri> infoNutri;
+	InfoNutri infoNutri;
 
 public:
 
@@ -30,8 +30,8 @@ public:
 	void setType(std::string type);
 	const std::string getSeason(void) const;
 	void setSeason(std::string season);
-	InfoNutri* getInfoNutri(void) const;
-	void setInfoNutri(InfoNutri * infoNutri);
+	InfoNutri getInfoNutri(void) const;
+	void setInfoNutri(InfoNutri infoNutri);
 
 };
 

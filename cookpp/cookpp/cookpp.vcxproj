@@ -134,7 +134,6 @@
     <ClInclude Include="InfoNutri.h" />
     <ClInclude Include="Ingredient.h" />
     <ClInclude Include="Resource.h" />
-    <ClInclude Include="StockedAliment.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -143,7 +142,6 @@
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="InfoNutri.cpp" />
     <ClCompile Include="Ingredient.cpp" />
-    <ClCompile Include="StockedAliment.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="cookpp.rc" />
