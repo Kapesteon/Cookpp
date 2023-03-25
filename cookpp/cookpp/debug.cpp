@@ -1,9 +1,10 @@
 #pragma once
 #include "debug.h"
-#include "InfoNutri.h"
 #include "Windows.h"
 #include "debugapi.h"
+#include "InfoNutri.h"
 #include "Aliment.h"
+#include "StockedAliment.h"
 
 void debug()
 {
@@ -32,8 +33,17 @@ void debug()
 	Aliment testAliment4 = Aliment("Apple", "Fruit", "Winter", &testInfoNutri1, 200);
 	Aliment testAliment5 = Aliment(testAliment4);
 
+	StockedAliment testStockedAliment;
+	StockedAliment testStockedAliment2 = StockedAliment(testAliment2, 50000, 1000);
+	StockedAliment testStockedAliment3 = StockedAliment(testAliment3, "2022-02-12", 30);
+	StockedAliment testStockedAliment4 = StockedAliment(testIngredient2, 100, time_t(95484845214), time_t(1555000));
+	StockedAliment testStockedAliment5 = StockedAliment(testIngredient3, 100,"2023-03-13", 15);
+	StockedAliment testStockedAliment6 = StockedAliment(testStockedAliment2);
+	StockedAliment testStockedAliment7 = StockedAliment();
 
-	/*
+	auto s1 = testStockedAliment3.getObtainedDate();
+	auto s2 = testStockedAliment3.getSpoilDate();
+	/*;
 	testAliment4.~Aliment();
 	OutputDebugStringA("\n\n ");
 	testIngredient2.~Ingredient();
