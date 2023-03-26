@@ -133,7 +133,9 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="InfoNutri.h" />
     <ClInclude Include="Ingredient.h" />
+    <ClInclude Include="Pantry.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="StockedAliment.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
@@ -142,6 +144,8 @@
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="InfoNutri.cpp" />
     <ClCompile Include="Ingredient.cpp" />
+    <ClCompile Include="Pantry.cpp" />
+    <ClCompile Include="StockedAliment.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="cookpp.rc" />

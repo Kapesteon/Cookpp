@@ -110,6 +110,8 @@ const std::string StockedAliment::getSpoilDate() const
 	return  this->time_tToStr(this->spoilDate);
 }
 
+
+
 void StockedAliment::calculateSpoilDate(void)
 {
 	this->spoilDate = this->obtainedDate + this->spoilRate;
@@ -141,4 +143,17 @@ std::string StockedAliment::time_tToStr(time_t time) const
 
 	std::strftime(buffer, 32, this->format.c_str(), &ptm);
 	return std::string(buffer);
+}
+
+
+
+StockedAliment StockedAliment::operator<(const StockedAliment& s) const
+{
+	if (this == &s) return *this;
+	if (int(this->spoilDate) < int(s.spoilDate)){
+		return s;
+	}
+	else {
+		return *this;
+	}
 }

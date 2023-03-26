@@ -35,6 +35,8 @@ public:
 
 	time_t strTotime_t(std::string strDate) const;
 	std::string time_tToStr(time_t time) const ;
+
+	StockedAliment operator< (const StockedAliment& s) const;
 };
 
-#pragma once
+

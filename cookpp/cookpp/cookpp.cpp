@@ -6,8 +6,6 @@
 #include "debug.h"
 
 
-
-
 #define MAX_LOADSTRING 100
 
 // Global Variables:
