@@ -45,3 +45,22 @@ double Aliment::getMass()
 {
 	return this->mass;
 }
+
+bool operator<(const Aliment& l, const Aliment& r)
+{
+	return std::tie(l.getName())
+		< std::tie(r.getName()); // keep the same order
+}
+
+/*
+Aliment Aliment::operator<(const Aliment& a) const
+{
+	if (this == &a) return *this;
+	if (this->getName() < a.getName()){
+		return a;
+	}
+	else {
+		return *this;
+	}
+}
+*/

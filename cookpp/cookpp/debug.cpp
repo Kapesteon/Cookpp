@@ -6,7 +6,7 @@
 #include "Aliment.h"
 #include "StockedAliment.h"
 #include "Pantry.h"
-
+#include "Recipe.h"
 void debug()
 {
 
@@ -57,7 +57,21 @@ void debug()
 	auto b = pantry2.popStockedAlimentByName("Carot");
 	auto c = pantry2.popStockedAlimentByType("Vegetable");
 	auto d = pantry2.popStockedAlimentMostDated(4);
-	/*;
+
+	std::string s[] = { "1a","2b","3c","4d","5e"};
+	std::vector<std::string> strs(s, s + sizeof(s) / sizeof(std::string));
+
+	Recipe testRecipe1 = Recipe();
+	testRecipe1.addAliment(testAliment2);
+	testRecipe1.addAliment(testAliment3);
+	testRecipe1.setSteps(strs);
+	testRecipe1.addStep("6f");
+	testRecipe1.addStep("7g");
+	testRecipe1.removeLastStep();
+	testRecipe1.setNotes("here are some notes");
+
+
+	/*
 	testAliment4.~Aliment();
 	OutputDebugStringA("\n\n ");
 	testIngredient2.~Ingredient();

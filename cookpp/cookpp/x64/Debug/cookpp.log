@@ -1,3 +1,11 @@
-﻿  Pantry.cpp
+﻿  Aliment.cpp
+  debug.cpp
+C:\ISEN\M2\ProgObj\projFinal\Cookpp\cookpp\cookpp\debug.cpp(13,20): warning C4091: '': ignored on left of 'std::basic_ostringstream<char,std::char_traits<char>,std::allocator<char>>' when no variable is declared
+  Pantry.cpp
 C:\ISEN\M2\ProgObj\projFinal\Cookpp\cookpp\cookpp\Pantry.cpp(89,40): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+  Recipe.cpp
+  StockedAliment.cpp
+C:\ISEN\M2\ProgObj\projFinal\Cookpp\cookpp\cookpp\StockedAliment.cpp(95,26): warning C4244: 'return': conversion from 'time_t' to 'const int', possible loss of data
+  Generating Code...
+C:\ISEN\M2\ProgObj\projFinal\Cookpp\cookpp\cookpp\Recipe.cpp(93): warning C4717: 'Recipe::getInfoNutri': recursive on all control paths, function will cause runtime stack overflow
   cookpp.vcxproj -> C:\ISEN\M2\ProgObj\projFinal\Cookpp\cookpp\x64\Debug\cookpp.exe

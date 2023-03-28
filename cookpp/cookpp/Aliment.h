@@ -14,5 +14,8 @@ class Aliment : public Ingredient
 
 		void setMass(double mass);
 		double getMass();
+
+		//Aliment operator< (const Aliment& a) const;
+		friend bool operator<(const Aliment& l, const Aliment& r);
 };
 

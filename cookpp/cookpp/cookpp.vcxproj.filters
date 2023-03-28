@@ -42,6 +42,12 @@
     <ClInclude Include="StockedAliment.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Pantry.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Recipe.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cookpp.cpp">
@@ -60,6 +66,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StockedAliment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pantry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Recipe.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
