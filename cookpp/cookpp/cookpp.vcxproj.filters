@@ -48,6 +48,9 @@
     <ClInclude Include="Recipe.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="NutritionalManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="cookpp.cpp">
@@ -72,6 +75,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Recipe.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NutritionalManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

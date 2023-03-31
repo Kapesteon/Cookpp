@@ -41,7 +41,7 @@ void Aliment::setMass(double mass)
 	return;
 }
 
-double Aliment::getMass()
+const double Aliment::getMass() const
 {
 	return this->mass;
 }

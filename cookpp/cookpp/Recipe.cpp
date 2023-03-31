@@ -17,6 +17,7 @@ Recipe::Recipe(std::set<Aliment> aliments, std::vector<std::string> steps, std::
 	this->notes = notes;
 	this->nutriScore = -1;
 	this->infoNutri = InfoNutri();
+	this->evaluateNutriInfo();
 }
 
 Recipe::Recipe(const Recipe& c)
@@ -35,17 +36,19 @@ Recipe::~Recipe()
 
 std::set<Aliment> Recipe::getAliments() const
 {
-	return std::set< Aliment>();
+	return this->aliments;
 }
 
 void Recipe::setAliments(std::set<Aliment> aliments)
 {
 	this->aliments = aliments;
+
 }
 
 void Recipe::addAliment(Aliment aliment)
 {
 	this->aliments.insert(aliment);
+
 }
 
 
@@ -53,6 +56,7 @@ void Recipe::addAliment(Aliment aliment)
 void Recipe::removeAliment(Aliment aliment)
 {
 	this->aliments.erase(aliment);
+
 }
 
 
@@ -77,6 +81,37 @@ void Recipe::removeLastStep()
 	this->steps.pop_back();
 }
 
+
+std::string Recipe::getNotes() const
+{
+	return this->notes;
+}
+
+void Recipe::setNotes(std::string notes)
+{
+	this->notes = notes;
+}
+
+void Recipe::evaluateNutriInfo()
+{
+	NutritionalManager* n = n->getSingleton();
+	this->infoNutri = n->estimateNutriValue(this->aliments);
+	this->nutriScore = n->estimateNutriScore(this->infoNutri);
+}
+
+void Recipe::markAsComplete()
+{
+	this->isDraft = false;
+	this->evaluateNutriInfo();
+}
+
+void Recipe::markAsDraft()
+{
+	this->isDraft = true;
+}
+
+
+/*
 float Recipe::getNutriScore() const
 {
 	return this->nutriScore;
@@ -96,13 +131,4 @@ void Recipe::setInfoNutri(InfoNutri infoNutri)
 {
 	this->infoNutri = infoNutri;
 }
-
-std::string Recipe::getNotes() const
-{
-	return this->notes;
-}
-
-void Recipe::setNotes(std::string notes)
-{
-	this->notes = notes;
-}
+*/

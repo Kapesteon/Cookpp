@@ -133,6 +133,7 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="InfoNutri.h" />
     <ClInclude Include="Ingredient.h" />
+    <ClInclude Include="NutritionalManager.h" />
     <ClInclude Include="Pantry.h" />
     <ClInclude Include="Recipe.h" />
     <ClInclude Include="Resource.h" />
@@ -145,6 +146,7 @@
     <ClCompile Include="debug.cpp" />
     <ClCompile Include="InfoNutri.cpp" />
     <ClCompile Include="Ingredient.cpp" />
+    <ClCompile Include="NutritionalManager.cpp" />
     <ClCompile Include="Pantry.cpp" />
     <ClCompile Include="Recipe.cpp" />
     <ClCompile Include="StockedAliment.cpp" />

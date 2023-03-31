@@ -21,11 +21,12 @@ public:
 	InfoNutri();
 	InfoNutri(std::vector<double>& param);
 	InfoNutri(double* tab, size_t len); // Tab of all parameters
+	InfoNutri(std::map<std::string, double> values);
 	InfoNutri(const InfoNutri& c);
 	~InfoNutri();
 
 	void printInfoNutri();
-	const std::map<std::string, double> getInfoNutri() const;
+	const std::map<std::string, double> getNutriValues() const;
 
 
 	//Overloading cout

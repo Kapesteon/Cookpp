@@ -7,6 +7,8 @@
 #include "StockedAliment.h"
 #include "Pantry.h"
 #include "Recipe.h"
+#include "NutritionalManager.h"
+
 void debug()
 {
 
@@ -15,24 +17,29 @@ void debug()
 	//InfoNutri* testInfoNutri2 = new InfoNutri();
 	double tab[7] = { 52.1,98.5,100,258,48,987,10 };
 	double tab2[7] = { 1,2,3,4,5,6,7};
+	double tab3[7] = { 100,1200,65,0.3,2.4,300,20 };
+
 	InfoNutri testInfoNutri1;
 	InfoNutri testInfoNutri2 = InfoNutri(tab,7);
 	InfoNutri testInfoNutri3 = InfoNutri(testInfoNutri2);
 	InfoNutri testInfoNutri4 = InfoNutri(tab2, 7);
+	InfoNutri testInfoNutri5 = InfoNutri(tab3, 7);
 
-	auto e = testInfoNutri3.getInfoNutri();
+	auto e = testInfoNutri3.getNutriValues();
 	std::cout << "test";
 
 	Ingredient testIngredient;
 	Ingredient testIngredient2 = Ingredient("Carot", "Vegetable", "N/A", &testInfoNutri2);
 	Ingredient testIngredient3 = Ingredient("Potato", "Vegetable", "N/A", &testInfoNutri3);
 	Ingredient testIngredient4 = Ingredient(testIngredient3);
+	Ingredient testIngredient5 = Ingredient("Perfection", "P", "N/A", &testInfoNutri5);
 
 	Aliment testAliment;
 	Aliment testAliment2 = Aliment(testIngredient2, 500); //Carot
 	Aliment testAliment3 = Aliment(testIngredient3, 500); //Potato
 	Aliment testAliment4 = Aliment("Apple", "Fruit", "Winter", &testInfoNutri1, 200); //Apple
 	Aliment testAliment5 = Aliment(testAliment4);
+	Aliment testAliment6 = Aliment(testIngredient5, 100); //TEST perfection
 
 	StockedAliment testStockedAliment;
 	StockedAliment testStockedAliment2 = StockedAliment(testAliment2, 50000, 1000); //Carot
@@ -61,6 +68,7 @@ void debug()
 	std::string s[] = { "1a","2b","3c","4d","5e"};
 	std::vector<std::string> strs(s, s + sizeof(s) / sizeof(std::string));
 
+	/*
 	Recipe testRecipe1 = Recipe();
 	testRecipe1.addAliment(testAliment2);
 	testRecipe1.addAliment(testAliment3);
@@ -69,8 +77,15 @@ void debug()
 	testRecipe1.addStep("7g");
 	testRecipe1.removeLastStep();
 	testRecipe1.setNotes("here are some notes");
+	testRecipe1.markAsComplete();
+	*/
+	Recipe testRecipe2 = Recipe();
+	testRecipe2.addAliment(testAliment6);
+	testRecipe2.markAsComplete();
 
-
+	NutritionalManager* testNManager = testNManager->getSingleton();
+	auto w = testRecipe2.getAliments();
+	testNManager->estimateNutriValue(w);
 	/*
 	testAliment4.~Aliment();
 	OutputDebugStringA("\n\n ");

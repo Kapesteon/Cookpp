@@ -26,13 +26,13 @@ InfoNutri::InfoNutri()
 
 InfoNutri::InfoNutri(std::vector<double>& param)
 {
-    if (values.size() != param.size()) {
-        std::cout << "Size required : " << values.size();
+    if (param.size() != NUMBER_ATRIBUTES) {
+        //std::cout << "Size required : " << values.size();
         std::cout << "Size given : " << param.size();
         throw std::invalid_argument("Wrong Size of argument");
     }
     else {
-        for (int i = 0; i <= values.size(); i++) {
+        for (int i = 0; i < param.size(); i++) {
             values[keys[i]] = param[i];
         }
     }
@@ -51,6 +51,24 @@ InfoNutri::InfoNutri(double *tab, size_t len)
 
     for (int i = 0; i < NUMBER_ATRIBUTES; i++) {
         values[keys[i]] = tab[i];
+    }
+}
+
+InfoNutri::InfoNutri(std::map<std::string, double> param)
+{
+    if (param.size() != this->keys.size()) {
+        throw std::invalid_argument("Bad parameter size");
+    }
+    else {
+
+    }
+
+    auto itr = this->keys.begin();
+
+
+    for (itr; itr < this->keys.end(); itr++) {
+        this->values[(*itr)] = param[*(itr)];
+
     }
 }
 
@@ -76,7 +94,7 @@ void InfoNutri::printInfoNutri()
     }
 }
 
-const std::map<std::string, double> InfoNutri::getInfoNutri() const
+const std::map<std::string, double> InfoNutri::getNutriValues() const
 {
     
     return this->values;
