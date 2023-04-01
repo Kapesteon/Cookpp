@@ -99,10 +99,18 @@ void Recipe::evaluateNutriInfo()
 	this->nutriScore = n->estimateNutriScore(this->infoNutri);
 }
 
-void Recipe::markAsComplete()
+int Recipe::markAsComplete()
 {
-	this->isDraft = false;
-	this->evaluateNutriInfo();
+	try {
+		this->isDraft = false;
+		this->evaluateNutriInfo();
+		return 0;
+	}
+	catch(std::exception){
+		std::cout << "Couldn't mark recipe as complete";
+		OutputDebugStringA("Couldn't mark recipe as complete");
+		return -1;
+	}
 }
 
 void Recipe::markAsDraft()

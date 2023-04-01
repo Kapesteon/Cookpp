@@ -45,7 +45,7 @@ class Recipe
 
 		void evaluateNutriInfo();
 
-		void markAsComplete();
+		int markAsComplete();
 		void markAsDraft();
 
 		/*

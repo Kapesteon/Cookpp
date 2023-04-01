@@ -63,12 +63,17 @@ InfoNutri NutritionalManager::estimateNutriValue(const std::set<Aliment> aliment
 
 
 		}
-		catch(std::runtime_error){
+		catch (std::runtime_error) {
 			if (perAmount == 0) {
 				std::cout << "Math Error : Division by 0 \n NutritionalManager";
 				OutputDebugStringA("Math Error : Division by 0 \n NutritionalManager");
 			}
 		}
+		catch(std::exception)
+		{
+			throw(exception_code);
+		}
+		
 		itr++;
 	}
 	return InfoNutri(returnValues);
@@ -87,6 +92,8 @@ float NutritionalManager::estimateNutriScore(InfoNutri infoNutri)
 	int i = 0;
 
 
+	//No try catch : https://cplusplus.com/reference/map/map/erase/
+	//maps are Exception safe with .erase()
 	values.erase("perAmount");
 	recValues.erase("perAmount");
 
@@ -94,16 +101,25 @@ float NutritionalManager::estimateNutriScore(InfoNutri infoNutri)
 		return MIN_NUTRISCORE-1;
 	}
 	else {
+		try {
+
 		
-		auto itr = values.begin();
-		auto itr2 = recValues.begin();
-		for (itr; itr != values.end(); itr++) {
-			diffPercent = abs(((*itr).second / (*itr2).second) - 1) * 100;
-			currentNutriScore = std::floor(diffPercent / this->percentThresholdUnhealthy) * stepScoreIncrement;
-			currentNutriScore = std::min(currentNutriScore, scalingFactor);
-			nutriScore -= currentNutriScore;
-			itr2++;
+			auto itr = values.begin();
+			auto itr2 = recValues.begin();
+			for (itr; itr != values.end(); itr++) {
+				diffPercent = abs(((*itr).second / (*itr2).second) - 1) * 100;
+				currentNutriScore = std::floor(diffPercent / this->percentThresholdUnhealthy) * stepScoreIncrement;
+				currentNutriScore = std::min(currentNutriScore, scalingFactor);
+				nutriScore -= currentNutriScore;
+				itr2++;
+			}
 		}
+		catch (std::exception) {
+			std::cout << "Couldn't mark recipe as complete";
+			OutputDebugStringA("Couldn't mark recipe as complete");
+			return -1.0f;
+		}
+		
 	}
 	return nutriScore;
 }
