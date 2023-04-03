@@ -2,6 +2,8 @@
 
 #define NUMBER_ATRIBUTES 7
 
+#define DELIMITER_KEY_VALUE_INFONUTRI ":@:" //For serialization
+
 /*
 std::vector<std::string> InfoNutri::keys = { "perAmount", "calories","fat","cholesterol","sodium","carbohydrate","protein" };
 */
@@ -104,7 +106,7 @@ const std::map<std::string, double> InfoNutri::getNutriValues() const
 //Overloading COUT
 /*
 NOT USED BECAUSE NON-CONSOLE PROGRAM
-*/
+
 std::ostream& operator<<(std::ostream& os, const InfoNutri& infoNutri)
 {
 
@@ -118,4 +120,33 @@ std::ostream& operator<<(std::ostream& os, const InfoNutri& infoNutri)
 
     return os;
 }
+*/
 
+
+std::istream& operator>>(std::istream& is, InfoNutri& in)
+{
+    
+    std::string s = "";
+    is >> s;
+
+    std::string delimiter = DELIMITER_KEY_VALUE_INFONUTRI;
+    std::string key = s.substr(0, s.find(delimiter)); 
+    std::string value = s.substr(s.find(delimiter), s.size());
+
+    in.values[key] = std::stod(value);
+
+    return is;
+
+}
+
+std::ostream& operator<<(std::ostream& os, const InfoNutri& in)
+{
+    for (auto const& x : in.values)
+    {
+        os << x.first 
+           << DELIMITER_KEY_VALUE_INFONUTRI
+           << x.second  // string (key) + string's value 
+           << std::endl;
+    }
+    return os;
+}

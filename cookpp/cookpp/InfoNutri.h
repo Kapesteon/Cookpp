@@ -29,7 +29,11 @@ public:
 	const std::map<std::string, double> getNutriValues() const;
 
 
-	//Overloading cout
-	friend std::ostream& operator<<(std::ostream& os, const InfoNutri& dt);
+	//Overloading streams
+	//friend std::ostream& operator<<(std::ostream& os, const InfoNutri& dt);
+
+
+	friend std::istream& operator>>(std::istream& is, InfoNutri& in);
+	friend std::ostream& operator<<(std::ostream& os, const InfoNutri& in);
 };
 

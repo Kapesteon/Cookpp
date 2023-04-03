@@ -20,5 +20,8 @@ class Pantry
 		std::forward_list<StockedAliment*> popStockedAlimentByName(std::string name);
 		std::forward_list<StockedAliment*> popStockedAlimentByType(std::string type);
 		std::forward_list<StockedAliment*> popStockedAlimentMostDated(int nbr);
+
+		friend std::istream& operator>>(std::istream& is, Pantry& in);
+		friend std::ostream& operator<<(std::ostream& os, const Pantry& in);
 };
 

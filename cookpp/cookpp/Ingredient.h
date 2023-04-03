@@ -33,5 +33,9 @@ public:
 	InfoNutri getInfoNutri(void) const;
 	void setInfoNutri(InfoNutri infoNutri);
 
+	friend std::istream& operator>>(std::istream& is, Ingredient& in);
+	friend std::ostream& operator<<(std::ostream& os, const Ingredient& in);
+
+
 };
 

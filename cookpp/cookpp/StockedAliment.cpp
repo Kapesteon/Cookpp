@@ -157,3 +157,54 @@ StockedAliment StockedAliment::operator<(const StockedAliment& s) const
 		return *this;
 	}
 }
+
+
+
+
+
+std::istream& operator>>(std::istream& is, StockedAliment& in)
+{
+
+	try {
+		is >> static_cast<Aliment&>(in); //static cast to call Parent istream operator>>
+
+		is >> in.spoilDate;
+
+		is >> in.spoilRate;
+
+		is >> in.spoilDate;
+
+		return is;
+	}
+	catch (std::exception) {
+		std::cout << "Couldn't recover StockedAliment from database";
+		OutputDebugStringA("Couldn't recover StockedAliment from database");
+		return is;
+	}
+
+
+	return is;
+
+}
+
+std::ostream& operator<<(std::ostream& os, const StockedAliment& in)
+{
+
+	try {
+		os << static_cast<const Aliment&>(in)
+			<< std::endl
+			<< in.spoilDate
+			<< std::endl
+			<< in.spoilRate
+			<< std::endl
+			<< in.spoilDate
+			<< std::endl;
+		return os;
+	}
+	catch (std::exception) {
+		std::cout << "Couldn't add StockedAliment to database";
+		OutputDebugStringA("Couldn't add StockedAliment to database");
+		return os;
+	}
+	return os;
+}

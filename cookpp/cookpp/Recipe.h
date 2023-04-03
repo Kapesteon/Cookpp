@@ -11,12 +11,13 @@
 class Recipe
 {
 	private:
-		bool isDraft = true;
+
 		std::set <Aliment > aliments;
 		std::vector<std::string> steps;
 		std::string notes = "";
 		float nutriScore;
 		InfoNutri infoNutri;
+		bool isDraft = true;
 		
 		//friend InfoNutri NutritionalManager::setRecipeNutriInfos(Recipe *recipe);
 		friend InfoNutri NutritionalManager::estimateNutriValue(const std::set<Aliment> aliments);
@@ -42,18 +43,17 @@ class Recipe
 
 		std::string getNotes() const;
 		void setNotes(std::string notes);
+		
+		float getNutriScore() const;
+		InfoNutri getInfoNutri() const;
+		bool getIsDraft() const;
 
 		void evaluateNutriInfo();
 
 		int markAsComplete();
 		void markAsDraft();
 
-		/*
-		float getNutriScore() const;
-		void setNutriScore(float nutriScore);
-
-		InfoNutri getInfoNutri() const;
-		void setInfoNutri(InfoNutri infoNutri);
-		*/
+		friend std::istream& operator>>(std::istream& is, Recipe& in);
+		friend std::ostream& operator<<(std::ostream& os, const Recipe& in);
 };
 

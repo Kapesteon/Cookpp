@@ -1,4 +1,5 @@
 #include "Ingredient.h"
+#define DELIMITER_DB ":@:"
 
 Ingredient::Ingredient()
 {
@@ -89,3 +90,82 @@ void Ingredient::setInfoNutri(InfoNutri  infoNutri)
 }
 
 
+
+std::istream& operator>>(std::istream& is, Ingredient& in)
+{
+
+
+	try {
+		is >> in.name;
+		is >> in.type;
+		is >> in.season;
+		is >> in.infoNutri;
+	}
+	catch(std::exception){
+		std::cout << "Couldn't recover Ingredient from database";
+		OutputDebugStringA("Couldn't recover Ingredient from database");
+		return is;
+	}
+
+
+	return is;
+
+}
+
+std::ostream& operator<<(std::ostream& os, const Ingredient& in)
+{
+	os << in.getName()
+	<< std::endl
+	<< in.getType()
+	<< std::endl
+	<< in.getSeason()
+	<< std::endl
+	<< in.getInfoNutri()
+	//<< DELIMITER_DB 
+	<< std::endl;
+	
+	return os;
+}
+
+
+
+
+
+
+
+/*
+* OLD operator>>
+std::string s = "";
+is >> s;
+
+size_t pos = 0;
+std::string token;
+std::string delimiter = DELIMITER_DB;
+std::vector<std::string> values;
+int i = 0;
+try {
+	while ((pos = s.find(delimiter)) != std::string::npos) {
+
+		token = s.substr(0, pos);
+		values.push_back(token);
+		s.erase(0, pos + delimiter.length());
+	}
+}
+catch (std::exception) {
+	std::cout << "Couldn't recover Ingredient from database";
+	OutputDebugStringA("Couldn't recover Ingredient from database");
+	return is;
+}
+if (values.size() != 4) { //If there is no 4 attributes recovered
+	std::cout << "Couldn't recover Ingredient from database";
+	OutputDebugStringA("Couldn't recover Ingredient from database");
+	return is;
+}
+
+in.setName(values[0]);
+in.setType(values[1]);
+in.setSeason(values[2]);
+//in.setInfoNutri(values[3]);
+
+return is;
+*/

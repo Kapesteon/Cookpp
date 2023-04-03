@@ -69,11 +69,12 @@ InfoNutri NutritionalManager::estimateNutriValue(const std::set<Aliment> aliment
 				OutputDebugStringA("Math Error : Division by 0 \n NutritionalManager");
 			}
 		}
+		/*
 		catch(std::exception)
 		{
 			throw(exception_code);
 		}
-		
+		*/
 		itr++;
 	}
 	return InfoNutri(returnValues);

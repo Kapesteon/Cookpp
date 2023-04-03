@@ -27,6 +27,8 @@ public:
 	const std::string getObtainedDate() const;
 	void setObtainedDate(time_t obtainedDate);
 
+
+
 	const int getSpoilRateInDays() const;
 	void setSpoilRateInDays(int spoilRate) ;
 
@@ -37,6 +39,9 @@ public:
 	std::string time_tToStr(time_t time) const ;
 
 	StockedAliment operator< (const StockedAliment& s) const;
+
+	friend std::istream& operator >>(std::istream& is, StockedAliment& in);
+	friend std::ostream& operator <<(std::ostream& os, const StockedAliment& in);
 };
 
 

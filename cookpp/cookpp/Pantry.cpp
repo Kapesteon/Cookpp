@@ -1,4 +1,5 @@
 #include "Pantry.h"
+#define DELIMITER_KEY_VALUE_RECIPE '@' //For serialization //MUST BE ONE CHAR
 
 Pantry::Pantry()
 {
@@ -117,3 +118,52 @@ std::forward_list<StockedAliment*> Pantry::popStockedAlimentMostDated(int nbr)
 	return ;
 }
 */
+
+std::istream& operator>>(std::istream& is, Pantry& in)
+{
+
+
+	try {
+		StockedAliment buffer;
+		while (is.peek() != DELIMITER_KEY_VALUE_RECIPE) {
+			is >> buffer;
+			in.addToStock(&buffer);
+		}
+		is.ignore(2, '\n'); //Ignore the delimiter
+	}
+	catch (std::exception) {
+		std::cout << "Couldn't recover Pantry from database";
+		OutputDebugStringA("Couldn't recover Pantry from database");
+		return is;
+	}
+
+
+	return is;
+
+}
+
+std::ostream& operator<<(std::ostream& os, const Pantry& in)
+{
+
+
+	try {
+		auto itr = in.getStock().begin();
+		StockedAliment buffer;
+		while (itr != in.getStock().end()) {
+			os << *itr;
+			os << std::endl;
+		}
+		os << DELIMITER_KEY_VALUE_RECIPE;
+		os << std::endl;
+	}
+	catch (std::exception) {
+		std::cout << "Couldn't save Pantry to database";
+		OutputDebugStringA("Couldn't save Pantry to database");
+		return os;
+	}
+
+
+	return os;
+
+
+}

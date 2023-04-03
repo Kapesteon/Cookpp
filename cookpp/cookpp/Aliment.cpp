@@ -46,21 +46,51 @@ const double Aliment::getMass() const
 	return this->mass;
 }
 
+
+
 bool operator<(const Aliment& l, const Aliment& r)
 {
 	return std::tie(l.getName())
 		< std::tie(r.getName()); // keep the same order
 }
 
-/*
-Aliment Aliment::operator<(const Aliment& a) const
+std::istream& operator>>(std::istream& is, Aliment& in)
 {
-	if (this == &a) return *this;
-	if (this->getName() < a.getName()){
-		return a;
+
+	try {
+		is >> static_cast<Ingredient&>(in); //static cast to call Parent istream operator>>
+		std::string newMass = "";
+		is >> newMass;
+		in.setMass(std::stod(newMass));
+		return is;
 	}
-	else {
-		return *this;
+	catch (std::exception) {
+		std::cout << "Couldn't recover Aliment from database";
+		OutputDebugStringA("Couldn't recover Aliment from database");
+		return is;
 	}
+
+
+	return is;
+
 }
-*/
+
+std::ostream& operator<<(std::ostream& os, const Aliment& in)
+{
+
+	try {
+		os << static_cast<const Ingredient&>(in)
+			<< std::endl
+			<< in.getMass()
+			<< std::endl;
+		return os;
+	}
+	catch (std::exception) {
+		std::cout << "Couldn't add Aliment to database";
+		OutputDebugStringA("Couldn't add Aliment to database");
+		return os;
+	}
+	return os;
+}
+
+
