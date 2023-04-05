@@ -2,15 +2,21 @@
 #include <iostream>
 #include <fstream>
 #include <ios>
+
 #include "debug.h"
 #include "Windows.h"
 #include "debugapi.h"
+#include <deque>
+
 #include "InfoNutri.h"
 #include "Aliment.h"
 #include "StockedAliment.h"
 #include "Pantry.h"
 #include "Recipe.h"
 #include "NutritionalManager.h"
+#include "PantryDBManager.h"
+#include "RecipeDBManager.h"
+#include "FacadeUserDB.h"
 
 void debug()
 {
@@ -76,9 +82,11 @@ void debug()
 
 	Recipe testRecipe2 = Recipe();
 	testRecipe2.addAliment(testAliment6);
+	testRecipe2.setName("Recette2");
 	testRecipe2.markAsComplete();
 
 	Recipe testRecipe3 = Recipe();
+	testRecipe3.setName("Recette3");
 	testRecipe3.addAliment(testAliment2);
 	testRecipe3.addAliment(testAliment3);
 	testRecipe3.setSteps(strs);
@@ -160,13 +168,32 @@ void debug()
 	file3.read((char*)&testStockedAliment1, sizeof(StockedAliment));
 	file3.close();
 	*/
+	/*
+	void* h = &pantry;
 
 	std::fstream dbPantry;
 	dbPantry.open("stockDB/pantry.cdb", std::ios::in | std::ios::out | std::ios::binary);
 	dbPantry.write((char*)&pantry2, sizeof(Pantry));
 	dbPantry.seekp(0, std::ios::beg);
-	dbPantry.read((char*)&pantry, sizeof(Pantry));
+	dbPantry.read((char*)h, sizeof(Pantry));
 	dbPantry.close();
+	*/
+	FacadeUserDB facade;
+	PantryDBManager DBPantry("stockDB/pantry.cdb");
+
+	facade.savePantry(&pantry2);
+	pantry = facade.getPantry();
+	
+	RecipeDBManager DBRecipe("stockDB/recipe.cdb");
+	DBRecipe.append(&testRecipe2);
+	DBRecipe.append(&testRecipe3);
+	DBRecipe.read(&testRecipe1, 1);
+	DBRecipe.read(&testRecipe1, 2);
+
+	
+	std::list<Recipe *> r;
+	r.push_back(&testRecipe1);
+	r = DBRecipe.getAllRecipe();
 
 	return;
 }

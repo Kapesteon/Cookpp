@@ -130,12 +130,16 @@
     <ClInclude Include="Aliment.h" />
     <ClInclude Include="cookpp.h" />
     <ClInclude Include="debug.h" />
+    <ClInclude Include="FacadeUserDB.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="GenericDBManager.h" />
     <ClInclude Include="InfoNutri.h" />
     <ClInclude Include="Ingredient.h" />
     <ClInclude Include="NutritionalManager.h" />
     <ClInclude Include="Pantry.h" />
+    <ClInclude Include="PantryDBManager.h" />
     <ClInclude Include="Recipe.h" />
+    <ClInclude Include="RecipeDBManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="StockedAliment.h" />
     <ClInclude Include="targetver.h" />
@@ -144,11 +148,15 @@
     <ClCompile Include="Aliment.cpp" />
     <ClCompile Include="cookpp.cpp" />
     <ClCompile Include="debug.cpp" />
+    <ClCompile Include="FacadeUserDB.cpp" />
+    <ClCompile Include="GenericDBManager.cpp" />
     <ClCompile Include="InfoNutri.cpp" />
     <ClCompile Include="Ingredient.cpp" />
     <ClCompile Include="NutritionalManager.cpp" />
     <ClCompile Include="Pantry.cpp" />
+    <ClCompile Include="PantryDBManager.cpp" />
     <ClCompile Include="Recipe.cpp" />
+    <ClCompile Include="RecipeDBManager.cpp" />
     <ClCompile Include="StockedAliment.cpp" />
   </ItemGroup>
   <ItemGroup>

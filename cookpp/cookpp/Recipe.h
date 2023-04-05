@@ -11,7 +11,7 @@
 class Recipe
 {
 	private:
-
+		std::string name;
 		std::set <Aliment > aliments;
 		std::vector<std::string> steps;
 		std::string notes = "";
@@ -25,9 +25,12 @@ class Recipe
 
 	public:
 		Recipe();
-		Recipe(std::set<Aliment>  aliments, std::vector<std::string> steps, std::string notes = "");
+		Recipe(std::string name, std::set<Aliment>  aliments, std::vector<std::string> steps, std::string notes = "");
 		Recipe(const Recipe& c);
 		~Recipe();
+
+		void setName(std::string name);
+		std::string getName() const;
 
 		std::set<Aliment >  getAliments() const;
 		void setAliments(std::set< Aliment >  aliments);
@@ -55,5 +58,7 @@ class Recipe
 
 		friend std::istream& operator>>(std::istream& is, Recipe& in);
 		friend std::ostream& operator<<(std::ostream& os, const Recipe& in);
+
+		Recipe operator<(const Recipe& s) const;
 };
 

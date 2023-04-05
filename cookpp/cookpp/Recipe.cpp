@@ -2,7 +2,7 @@
 #define DELIMITER_KEY_VALUE_RECIPE '@' //For serialization //MUST BE ONE CHAR
 Recipe::Recipe()
 {
-
+	this->name = "unknown";
 	this->aliments = std::set <Aliment>();
 	this->steps = std::vector<std::string>();
 	this->notes = "";
@@ -10,8 +10,9 @@ Recipe::Recipe()
 	this->infoNutri = InfoNutri();
 }
 
-Recipe::Recipe(std::set<Aliment> aliments, std::vector<std::string> steps, std::string notes)
+Recipe::Recipe(std::string name,std::set<Aliment> aliments, std::vector<std::string> steps, std::string notes)
 {
+	this->name = name;
 	this->aliments = aliments;
 	this->steps = steps;
 	this->notes = notes;
@@ -22,6 +23,7 @@ Recipe::Recipe(std::set<Aliment> aliments, std::vector<std::string> steps, std::
 
 Recipe::Recipe(const Recipe& c)
 {
+	this->name = c.name;
 	this->aliments = c.aliments;
 	this->steps = c.steps;
 	this->notes = c.notes;
@@ -29,9 +31,21 @@ Recipe::Recipe(const Recipe& c)
 	this->infoNutri = c.infoNutri;
 }
 
+
+
 Recipe::~Recipe()
 {
 	OutputDebugStringA("Recipe Destroyed \n");
+}
+
+void Recipe::setName(std::string name)
+{
+	this->name = name;
+}
+
+std::string Recipe::getName() const
+{
+	return this->name;
 }
 
 std::set<Aliment> Recipe::getAliments() const
@@ -134,10 +148,11 @@ void Recipe::markAsDraft()
 }
 
 
+
 std::istream& operator>>(std::istream& is, Recipe& in)
 {
 
-
+	is >> in.name;
 	try {
 
 		Aliment bufferA;
@@ -173,7 +188,8 @@ std::istream& operator>>(std::istream& is, Recipe& in)
 std::ostream& operator<<(std::ostream& os, const Recipe& in)
 {
 
-
+	os << in.getName()
+		<< std::endl;
 	try {
 		// Serialize Aliments set
 		std::set<Aliment>::iterator itr;
@@ -213,4 +229,15 @@ std::ostream& operator<<(std::ostream& os, const Recipe& in)
 	return os;
 
 
+}
+
+Recipe Recipe::operator<(const Recipe& s) const
+{
+	if (this == &s) return *this;
+	if ((this->name) < (s.name)) {
+		return s;
+	}
+	else {
+		return *this;
+	}
 }
