@@ -135,6 +135,7 @@
     <ClInclude Include="GenericDBManager.h" />
     <ClInclude Include="InfoNutri.h" />
     <ClInclude Include="Ingredient.h" />
+    <ClInclude Include="IngredientDBManager.h" />
     <ClInclude Include="NutritionalManager.h" />
     <ClInclude Include="Pantry.h" />
     <ClInclude Include="PantryDBManager.h" />
@@ -152,6 +153,7 @@
     <ClCompile Include="GenericDBManager.cpp" />
     <ClCompile Include="InfoNutri.cpp" />
     <ClCompile Include="Ingredient.cpp" />
+    <ClCompile Include="IngredientDBManager.cpp" />
     <ClCompile Include="NutritionalManager.cpp" />
     <ClCompile Include="Pantry.cpp" />
     <ClCompile Include="PantryDBManager.cpp" />

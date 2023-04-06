@@ -178,22 +178,49 @@ void debug()
 	dbPantry.read((char*)h, sizeof(Pantry));
 	dbPantry.close();
 	*/
-	FacadeUserDB facade;
-	PantryDBManager DBPantry("stockDB/pantry.cdb");
 
-	facade.savePantry(&pantry2);
-	pantry = facade.getPantry();
-	
+
+
+	/*
 	RecipeDBManager DBRecipe("stockDB/recipe.cdb");
 	DBRecipe.append(&testRecipe2);
 	DBRecipe.append(&testRecipe3);
 	DBRecipe.read(&testRecipe1, 1);
 	DBRecipe.read(&testRecipe1, 2);
-
-	
 	std::list<Recipe *> r;
 	r.push_back(&testRecipe1);
 	r = DBRecipe.getAllRecipe();
+	*/
+	
+
+/*
+
+	IngredientDBManager DBIngredient("stockDB/ingredient.cdb");
+	DBIngredient.write(&testIngredient2,0);
+	DBIngredient.append(&testIngredient4);
+	DBIngredient.read(&testIngredient1, 0);
+	DBIngredient.read(&testIngredient1, 1);
+	std::list<Ingredient*> r;
+	r = DBIngredient.getAllIngredient();
+*/
+
+	FacadeUserDB facade;
+
+	facade.savePantry(&pantry2);
+	pantry = facade.getPantry();
+
+	facade.addIngredient(&testIngredient1);
+	facade.addIngredient(&testIngredient2);
+	facade.addIngredient(&testIngredient3);
+	facade.saveIngredient(&testIngredient5, 0);
+	Ingredient b1 = facade.getIngredient(0);
+	auto a1 = facade.getAllIngredient();
+
+	facade.addRecipe(&testRecipe1);
+	facade.addRecipe(&testRecipe2);
+	facade.saveRecipe(&testRecipe3,0);
+	Recipe b2 = facade.getRecipe(0);
+	auto a2 = facade.getAllRecipe();
 
 	return;
 }
