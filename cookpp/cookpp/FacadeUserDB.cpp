@@ -40,23 +40,34 @@ FacadeUserDB::~FacadeUserDB()
 
 Pantry FacadeUserDB::getPantry()
 {
-	Pantry pReturn;
-	if (this->DBPantry->read(&pReturn,0)) {
-		return pReturn;
+	try {
+
+		Pantry pReturn;
+		if (this->DBPantry->read(&pReturn,0)) {
+			return pReturn;
+		}
+		else {
+			return Pantry();
+		}
 	}
-	else {
+	catch (std::exception) {
+		std::cout << "Failed to get Pantry";
 		return Pantry();
 	}
-
 }
 
 bool FacadeUserDB::savePantry(Pantry* pantry)
 {
-
-	if (this->DBPantry->write(pantry,0)) {
-		return true;
+	try{
+		if (this->DBPantry->write(pantry,0)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
-	else {
+	catch (std::exception) {
+		std::cout << "Failed to save Pantry";
 		return false;
 	}
 }
@@ -65,36 +76,64 @@ bool FacadeUserDB::savePantry(Pantry* pantry)
 std::list<Recipe*> FacadeUserDB::getAllRecipe()
 {
 	
-	return this->DBRecipe->getAllRecipe();
+	try {
+
+		return this->DBRecipe->getAllRecipe();
+	}
+	catch (std::exception) {
+		std::cout << "Failed to get all Recipe";
+		return std::list<Recipe*>();
+	}
 }
 
 Recipe FacadeUserDB::getRecipe(int pos)
 {
-	Recipe p;
-	if (this->DBRecipe->read(&p,pos)) {
-		return p;
+	try {
+
+		Recipe p;
+		if (this->DBRecipe->read(&p,pos)) {
+			return p;
+		}
+		else {
+			return Recipe();
+		}
 	}
-	else {
+	catch (std::exception) {
+		std::cout << "Failed to get Recipe";
 		return Recipe();
 	}
 }
 
 bool FacadeUserDB::saveRecipe(Recipe* recipe, int pos)
 {
-	if (this->DBRecipe->write(recipe,pos)) {
-		return true;
+	try {
+
+	
+		if (this->DBRecipe->write(recipe,pos)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
-	else {
+	catch (std::exception) {
+		std::cout << "Failed to save Recipe";
 		return false;
 	}
 }
 
 bool FacadeUserDB::addRecipe(Recipe* recipe)
 {
-	if (this->DBRecipe->append(recipe)) {
-		return true;
+	try{
+		if (this->DBRecipe->append(recipe)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
-	else {
+	catch (std::exception) {
+		std::cout << "Failed to add Recipe";
 		return false;
 	}
 }
@@ -110,31 +149,54 @@ std::list<Ingredient*> FacadeUserDB::getAllIngredient()
 
 Ingredient FacadeUserDB::getIngredient(int pos)
 {
-	Ingredient i;
-	if (this->DBIngredient->read(&i, pos)) {
-		return i;
+	try {
+		Ingredient i;
+		if (this->DBIngredient->read(&i, pos)) {
+			return i;
+		}
+		else {
+			return Ingredient();
+		}
 	}
-	else {
+	catch(std::exception){
+		std::cout << "Failed to get Ingredient";
 		return Ingredient();
 	}
+
 }
 
 bool FacadeUserDB::saveIngredient(Ingredient* ingredient, int pos)
 {
-	if (this->DBIngredient->write(ingredient, pos)) {
-		return true;
+	try {
+
+
+		if (this->DBIngredient->write(ingredient, pos)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+
 	}
-	else {
+
+	catch (std::exception) {
+		std::cout << "Failed to save Ingredient";
 		return false;
-	}
+}
 }
 
 bool FacadeUserDB::addIngredient(Ingredient* ingredient)
 {
-	if (this->DBIngredient->append(ingredient)) {
-		return true;
+	try{
+		if (this->DBIngredient->append(ingredient)) {
+			return true;
+		}
+		else {
+			return false;
+		}
 	}
-	else {
+	catch (std::exception) {
+		std::cout << "Failed to add Ingredient";
 		return false;
 	}
 }
