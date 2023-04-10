@@ -95,10 +95,10 @@ void debug()
 	testRecipe3.setName("Recette3");
 	testRecipe3.addAliment(testAliment2);
 	testRecipe3.addAliment(testAliment3);
-	testRecipe3.setSteps(strs);
+	//testRecipe3.setSteps(strs);
 	testRecipe3.addStep("6f");
 	testRecipe3.addStep("7g");
-	testRecipe3.removeLastStep();
+	//testRecipe3.removeLastStep();
 	testRecipe3.setNotes("here are some notes");
 	testRecipe3.markAsComplete();
 
@@ -260,18 +260,18 @@ void debug()
 void initDb()
 {
 	//keys = { "perAmount", "calories","fat","cholesterol","sodium","carbohydrate","protein" };
-	double tab1[7] = { 100,2,3,4,5,6,7 };
-	double tab2[7] = { 100,12,13,14,15,16,17 };
-	double tab3[7] = { 100,22,23,24,25,26,27 };
-	double tab4[7] = { 150,32,33,34,35,36,37 };
-	double tab5[7] = { 100,2,3,4,5,6,7 };
-	double tab6[7] = { 500,12,13,14,15,16,17 };
-	double tab7[7] = { 100,0,0,0,0,0,0 };
-	double tab8[7] = { 100,32,33,34,35,36,37 };
-	double tab9[7] = { 100,2,3,4,5,6,7 };
-	double tab10[7] = { 150,12,13,14,15,16,17 };
-	double tab11[7] = { 100,22,23,24,25,26,27 };
-	double tab12[7] = { 100,32,33,34,35,36,37 };
+	double tab1[7] = { 100,41,0.2,0,0.070,10,0.9 }; //Carot
+	double tab2[7] = { 100,77,0.1,0,0.006,17,2 }; //Potato
+	double tab3[7] = { 100,52,0.2,0,001,14,0.3 }; //Apple
+	double tab4[7] = { 100,360,1,0,0.002,76,10.3 }; //Wheat
+	double tab5[7] = { 100,57,0.1,0,0.001,15,0.4 }; //Pear
+	double tab6[7] = { 100,60,0.1,0,0.004,15,14 }; //Quince
+	double tab7[7] = { 100,0,0,0,0.004,0,0 }; //Water
+	double tab8[7] = { 100,884,100,0,0.002,0,0 }; //Olive Oil
+	double tab9[7] = { 100,717,81,0.215,0.642,0.1,0.9 }; //Butter
+	double tab10[7] = { 100,259,17,0.087,0.050,0,26 }; //Red Meat
+	double tab11[7] = { 100,116,0.4,0,0.002,20,9 }; //Lentil
+	double tab12[7] = { 100,92,0.6,0,0.004,20,3.4 }; //Buckwheat
 
 	InfoNutri testInfoNutri1 = InfoNutri(tab1, 7);
 	InfoNutri testInfoNutri2 = InfoNutri(tab2, 7);
@@ -301,17 +301,17 @@ void initDb()
 	Ingredient testIngredient12 = Ingredient("Buckwheat", "Grain", "N/A", &testInfoNutri12);
 
 
-	Aliment testAliment1 = Aliment(testIngredient1, 100); //Carot
-	Aliment testAliment2 = Aliment(testIngredient2, 200); //Potato
+	Aliment testAliment1 = Aliment(testIngredient1, 50); //Carot
+	Aliment testAliment2 = Aliment(testIngredient2, 50); //Potato
 	Aliment testAliment3 = Aliment(testIngredient3, 300); //Apple
 	Aliment testAliment4 = Aliment(testIngredient4, 400); //Wheat
 	Aliment testAliment5 = Aliment(testIngredient5, 100); //Peer
 	Aliment testAliment6 = Aliment(testIngredient6, 200); //Quince
-	Aliment testAliment7 = Aliment(testIngredient7, 300); //Water
-	Aliment testAliment8 = Aliment(testIngredient8, 400); //Olive Oil
+	Aliment testAliment7 = Aliment(testIngredient7, 200); //Water
+	Aliment testAliment8 = Aliment(testIngredient8, 10); //Olive Oil
 	Aliment testAliment9 = Aliment(testIngredient9, 100); //Butter
 	Aliment testAliment10 = Aliment(testIngredient10, 200); //Red Meat
-	Aliment testAliment11 = Aliment(testIngredient11, 300); //Lentil
+	Aliment testAliment11 = Aliment(testIngredient11, 150); //Lentil
 	Aliment testAliment12 = Aliment(testIngredient10, 400); //Buckwheat
 
 
@@ -349,7 +349,13 @@ void initDb()
 	testRecipe1.addAliment(testAliment11);
 	testRecipe1.addAliment(testAliment7);
 	testRecipe1.setName("Lentil Soup");
-	testRecipe1.setSteps(strs);
+
+	testRecipe1.addStep(testSteps1[0]);
+	testRecipe1.addStep(testSteps1[1]);
+	testRecipe1.addStep(testSteps1[2]);
+	testRecipe1.addStep(testSteps1[3]);
+	testRecipe1.addStep(testSteps1[4]);
+
 	testRecipe1.setNotes("Notes of Recipe1");
 	testRecipe1.markAsComplete();
 
@@ -358,7 +364,9 @@ void initDb()
 	testRecipe2.addAliment(testAliment5);
 	testRecipe2.addAliment(testAliment6);
 	testRecipe2.setName("Fruit Salad");
-	testRecipe2.setSteps(strs2);
+	testRecipe2.addStep(testSteps2[0]);
+	testRecipe2.addStep(testSteps2[1]);
+	testRecipe2.addStep(testSteps2[2]);
 	testRecipe2.setNotes("Notes of Recipe2");
 	testRecipe2.markAsComplete();
 

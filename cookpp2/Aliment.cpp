@@ -64,6 +64,19 @@ bool operator==(const Aliment& l, const Aliment& r)
 	}
 }
 
+bool operator!=(const Aliment& l, int a)
+{
+	if (a != 0) {
+		return true;
+	}
+	else {
+		if ( ( int(l.getMass()) != 0) || (l.getName() != "Undefined") || (l.getType()) != "N/A") {
+			return true;
+		}
+	}
+	return false;
+}
+
 std::istream& operator>>(std::istream& is, Aliment& in)
 {
 

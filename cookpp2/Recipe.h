@@ -6,6 +6,9 @@
 #include <set>
 #include <vector>
 #include <array>
+#define MAX_STEPS 20
+#define MAX_ALIMENTS 15
+
 //class NutritionalManager;
 
 //std::array<double, NUMBER_ATRIBUTES>
@@ -13,11 +16,12 @@ class Recipe
 {
 	private:
 		std::string name;
-		float nutriScore;
-		std::string notes = "";
-		std::vector<std::string> steps;
+		std::string notes;
+		std::array <Aliment, MAX_ALIMENTS> aliments;
+		std::array<char[256], MAX_STEPS> steps;
+
 		InfoNutri infoNutri;
-		std::vector <Aliment > aliments;
+		float nutriScore;
 		bool isDraft = true;
 
 
@@ -28,24 +32,24 @@ class Recipe
 
 	public:
 		Recipe();
-		Recipe(std::string name, std::vector<Aliment>  aliments, std::vector<std::string> steps, std::string notes = "");
+		Recipe(std::string name, std::array <Aliment, MAX_ALIMENTS>  aliments, std::array <char[256], MAX_STEPS> steps, std::string notes = "");
 		Recipe(const Recipe& c);
 		~Recipe();
 
 		void setName(std::string name);
 		std::string getName() const;
 
-		std::vector<Aliment >  getAliments() const;
+		std::vector< Aliment >  getAliments() const;
 		void setAliments(std::vector< Aliment >  aliments);
 		void addAliment(Aliment aliment);
 		//void addAliment(std::string name);
 		void removeAliment(Aliment aliment);
 		//void removeAliment(std::string name);
 
-		std::vector<std::string> getSteps() const;
-		void setSteps(std::vector<std::string> steps);
+		std::vector< std::string > getSteps() const;
+		void setStep(std::string step, int pos);
 		void addStep(std::string step);
-		void removeLastStep();
+
 
 		std::string getNotes() const;
 		void setNotes(std::string notes);

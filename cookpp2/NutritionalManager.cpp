@@ -9,8 +9,8 @@
 #define RECOMMENDED_carbohydrate 300
 #define RECOMMENDED_protein 20
 //https://www.canada.ca/en/health-canada/services/understanding-food-labels/percent-daily-value.html
-#define UNHEALTHY_PERCENT_STEP_THRESHOLD 5  
-#define AMOUNT_STEP_BEFORE_FULLY_UNHEALTHY 3
+#define UNHEALTHY_PERCENT_STEP_THRESHOLD 5 
+#define AMOUNT_STEP_BEFORE_FULLY_UNHEALTHY 30
 #define MIN_NUTRISCORE 0
 #define MAX_NUTRISCORE 100
 
@@ -73,6 +73,7 @@ InfoNutri NutritionalManager::estimateNutriValue(const std::vector<Aliment> alim
 
 		itr++;
 	}
+
 	return InfoNutri(returnValues);
 }
 
@@ -100,8 +101,10 @@ float NutritionalManager::estimateNutriScore(InfoNutri infoNutri)
 		try {
 
 		
-			auto itr = values.begin()++; //++ to avoid going over "perAmount"
-			auto itr2 = recValues.begin()++;
+			auto itr = values.begin(); //++ to avoid going over "perAmount"
+			itr++;
+			auto itr2 = recValues.begin();
+			itr2++;
 			for (itr; itr != values.end(); itr++) {
 				diffPercent = abs(((*itr) / (*itr2)) - 1) * 100;
 				currentNutriScore = std::floor(diffPercent / this->percentThresholdUnhealthy) * stepScoreIncrement;

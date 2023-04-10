@@ -683,13 +683,20 @@ void cookpp::showIngredientDetailclicked()
         it++;
         for (it; it != t.end(); it++) {
             QTableWidgetItem* itemTitle = new QTableWidgetItem();
+
             itemTitle->setText(QString::fromStdString(keysName.at(i)));
             infoNutri->setItem(i, 0, itemTitle);
 
             QTableWidgetItem* itemValue = new QTableWidgetItem();
             QString* qstr = new QString();
+
             qstr->append(QString::number(*it));
-            qstr->append(" mg");
+            if (keysName.at(i) == "calories") {
+                qstr->append(" kcal");
+            }
+            else {
+                qstr->append(" g");
+            }
             itemValue->setText(*qstr);
             infoNutri->setItem(i, 1, itemValue);
             i++;
@@ -718,16 +725,19 @@ void cookpp::showRecipeDetailclicked()
         std::string ss = qs.toStdString();
 
 
-        QVBoxLayout* vbox = new QVBoxLayout;
+        QGridLayout* grid = new QGridLayout;
 
         Recipe* recipeToShow = new Recipe();
 
 
         QLineEdit* name = new QLineEdit("Name");
-        QLineEdit* type = new QLineEdit("NutriScore");
-        QLineEdit* season = new QLineEdit("Season");
+        QLineEdit* nutriScore = new QLineEdit("NutriScore");
+        QLineEdit* notes = new QLineEdit("Notes");
+        QTableWidget* aliments = new QTableWidget();
+        QTableWidget* steps = new QTableWidget();
         QTableWidget* infoNutri = new QTableWidget();
-
+        QString* qstr = new QString();
+        int i = 0;
         auto itr = this->activeRecipeBuffer->begin();
 
         for (itr; itr != this->activeRecipeBuffer->end(); itr++) {
@@ -741,48 +751,96 @@ void cookpp::showRecipeDetailclicked()
         name->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
         name->setFrame(false);
         name->setReadOnly(true);
-        name->setAlignment(Qt::AlignCenter);
-
-        type->setText(QString::fromStdString(recipeToShow->getName()));
-        type->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
-        type->setFrame(false);
-        type->setReadOnly(true);
-        type->setAlignment(Qt::AlignCenter);
+        name->setAlignment(Qt::AlignLeft);
 
 
-        if (recipeToShow->getName() != "N/A") {
-            season->setText(qs);
-            season->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
-            season->setFrame(false);
-            season->setReadOnly(true);
-            season->setAlignment(Qt::AlignCenter);
+
+        *qstr = QString::fromStdString("");
+        qstr->append("Score : ");
+        nutriScore->setText(QString::number(recipeToShow->getNutriScore()));
+        qstr->append(" /100");
+        nutriScore->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+        nutriScore->setFrame(false);
+        nutriScore->setReadOnly(true);
+        nutriScore->setAlignment(Qt::AlignRight);
+
+
+
+
+        /*----Aliments table----*/
+        auto a = recipeToShow->getAliments();
+
+        aliments->setColumnCount(2);
+        aliments->setRowCount(a.size());
+        aliments->verticalHeader()->setVisible(false);
+        aliments->horizontalHeader()->setVisible(false);
+
+        i = 0;
+        auto it1 = a.begin();
+        for (it1; it1 != a.end(); it1++) {
+            QTableWidgetItem* alimName = new QTableWidgetItem();
+            alimName->setText(QString::fromStdString(it1->getName()));
+            aliments->setItem(i, 0, alimName);
+
+            QTableWidgetItem* alimMass = new QTableWidgetItem();
+            *qstr = QString::fromStdString("");
+            qstr->append(QString::number(it1->getMass()));
+            qstr->append(" g");
+            alimMass->setText(*qstr);
+            aliments->setItem(i, 1, alimMass);
+            i++;
         }
-        else {
-            season->setFixedSize(0, 0);
+        aliments->setFrameStyle(QFrame::NoFrame);
+
+        
+        /*----Steps table----*/
+        auto s = recipeToShow->getSteps();
+
+        steps->setColumnCount(1);
+        steps->setRowCount(s.size());
+        steps->verticalHeader()->setVisible(false);
+        steps->horizontalHeader()->setVisible(false);
+
+        i = 0;
+        auto it0 = s.begin();
+        for (it0; it0 != s.end(); it0++) {
+            QTableWidgetItem* step = new QTableWidgetItem();
+            step->setText(QString::fromStdString(*it0));
+            steps->setItem(i, 0, step);
+            i++;
         }
+        steps->setFrameStyle(QFrame::NoFrame);
 
 
+        /*----Notes-----*/
+        *qstr = QString::fromStdString("");
+        qstr->append(QString::fromStdString(recipeToShow->getNotes()));
+        notes->setText(*qstr);
+        notes->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+        notes->setFrame(false);
+        notes->setReadOnly(true);
+        notes->setAlignment(Qt::AlignCenter);
+
+        /*----Info Nutri table----*/
         auto t = recipeToShow->getInfoNutri().getNutriValues();
-
         infoNutri->setColumnCount(2);
         infoNutri->setRowCount(t.size());
         infoNutri->verticalHeader()->setVisible(false);
         infoNutri->horizontalHeader()->setVisible(false);
         auto keysName = recipeToShow->getInfoNutri().getNutriKeys();
 
-
         QTableWidgetItem* itemTitle = new QTableWidgetItem();
         itemTitle->setText("Per Amount");
         infoNutri->setItem(0, 0, itemTitle);
 
         QTableWidgetItem* itemValue = new QTableWidgetItem();
-        QString* qstr = new QString();
+        *qstr = QString::fromStdString("");
         qstr->append(QString::number(t.at(0)));
         qstr->append(" g");
         itemValue->setText(*qstr);
         infoNutri->setItem(0, 1, itemValue);
 
-        int i = 1;
+        i = 1;
         auto it = t.begin();
         it++;
         for (it; it != t.end(); it++) {
@@ -791,7 +849,7 @@ void cookpp::showRecipeDetailclicked()
             infoNutri->setItem(i, 0, itemTitle);
 
             QTableWidgetItem* itemValue = new QTableWidgetItem();
-            QString* qstr = new QString();
+            *qstr = QString::fromStdString("");
             qstr->append(QString::number(*it));
             qstr->append(" mg");
             itemValue->setText(*qstr);
@@ -803,11 +861,13 @@ void cookpp::showRecipeDetailclicked()
 
         QLayout* oldLayout = this->detailBox->layout();
         deleteSpecificLayout(oldLayout);
-        vbox->addWidget(name, Qt::AlignCenter);
-        vbox->addWidget(type, Qt::AlignCenter);
-        vbox->addWidget(season, Qt::AlignCenter);
-        vbox->addWidget(infoNutri, Qt::AlignCenter);
-        this->detailBox->setLayout(vbox);
+        grid->addWidget(name, 0,0,1,1);
+        grid->addWidget(nutriScore, 0, 0, 1, 1);
+        grid->addWidget(aliments, 1, 0, 2, 1);
+        grid->addWidget(steps, 1, 1, 2, 1);
+        grid->addWidget(notes, 3, 0, 1, 2);
+        grid->addWidget(infoNutri, 3, 1, 2, 1);
+        this->detailBox->setLayout(grid);
     }
     catch (std::exception) {
         OutputDebugStringA("Error with button sender");
