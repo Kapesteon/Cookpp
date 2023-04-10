@@ -22,7 +22,7 @@ class NutritionalManager
 
 	public:
 		static NutritionalManager* getSingleton();
-		InfoNutri estimateNutriValue(const std::set<Aliment> aliments);
+		InfoNutri estimateNutriValue(const std::vector<Aliment> aliments);
 		float estimateNutriScore(InfoNutri infoNutri);
 		
 		

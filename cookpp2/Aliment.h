@@ -18,7 +18,7 @@ class Aliment : public Ingredient
 
 		//Aliment operator< (const Aliment& a) const;
 		friend bool operator<(const Aliment& l, const Aliment& r);
-
+		friend bool operator==(const Aliment& l, const Aliment& r);
 		friend std::istream& operator >>(std::istream& is, Aliment& in);
 		friend std::ostream& operator <<(std::ostream& os, const Aliment& in);
 

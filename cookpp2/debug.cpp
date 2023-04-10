@@ -18,6 +18,12 @@
 #include "RecipeDBManager.h"
 #include "FacadeUserDB.h"
 
+
+#include <QtCore/QCoreApplication> 
+#include <qfile> 
+#include <qcryptographichash.h> 
+#include <iostream> 
+
 void debug()
 {
 
@@ -112,7 +118,7 @@ void debug()
 	/*
 	std::fstream file;
 
-	file.open("stockDB/file.txt", std::ios::in | std::ios::out | std::ios::binary);
+	file.open("stockDB/debug.cdb", std::ios::in | std::ios::out | std::ios::binary);
 	file.write((char*)&testInfoNutri5, sizeof(InfoNutri));
 	file.write((char*)&testInfoNutri4, sizeof(InfoNutri));
 	file.seekp(0, std::ios::beg);
@@ -121,22 +127,26 @@ void debug()
 	file.read((char*)&testInfoNutri2, sizeof(InfoNutri));
 	
 	file.close();
+	*/
 
-
-
+	/* 
+	//Does not cause issues, even tho seekp is used instead of seekg ! weird
 	std::fstream dbIngredients;
 
-	dbIngredients.open("stockDB/ingredients.cdb", std::ios::in | std::ios::out | std::ios::binary);
+	dbIngredients.open("stockDB/debug.cdb", std::ios::in | std::ios::out | std::ios::binary);
 	dbIngredients.write((char*)&testIngredient5, sizeof(Ingredient));
+	dbIngredients.write((char*)&testIngredient4, sizeof(Ingredient));
 	dbIngredients.seekp(0, std::ios::beg);
+	dbIngredients.read((char*)&testIngredient1, sizeof(Ingredient));
+	dbIngredients.seekp(1*sizeof(Ingredient), std::ios::beg);
 	dbIngredients.read((char*)&testIngredient1, sizeof(Ingredient));
 
 	dbIngredients.close();
 	*/
 
-	/*
+	//No issue
 	std::fstream file2;
-	file2.open("stockDB/file2.cdb", std::ios::in | std::ios::out | std::ios::binary);
+	file2.open("stockDB/debug.cdb", std::ios::in | std::ios::out | std::ios::binary);
 	file2.write((char*)&testAliment6, sizeof(Aliment));
 	file2.write((char*)&testAliment5, sizeof(Aliment));
 	file2.seekp(0, std::ios::beg);
@@ -144,9 +154,9 @@ void debug()
 	file2.seekg(1 * sizeof(Aliment), std::ios::beg);
 	file2.read((char*)&testAliment1, sizeof(Aliment));
 	file2.close();
-	*/
+	
 
-	/*
+	//No issue
 	std::fstream dbRecipe;
 	dbRecipe.open("stockDB/recipe.cdb", std::ios::in | std::ios::out | std::ios::binary);
 	dbRecipe.write((char*)&testRecipe2, sizeof(Recipe));
@@ -156,7 +166,7 @@ void debug()
 	dbRecipe.seekg(1 * sizeof(Recipe), std::ios::beg);
 	dbRecipe.read((char*)&testRecipe1, sizeof(Recipe));
 	dbRecipe.close();
-	*/
+	
 	/*
 	std::fstream file3;
 	file3.open("stockDB/file3.cdb", std::ios::in | std::ios::out | std::ios::binary);
@@ -181,30 +191,43 @@ void debug()
 
 
 
-	/*
+	
 	RecipeDBManager DBRecipe("stockDB/recipe.cdb");
-	DBRecipe.append(&testRecipe2);
-	DBRecipe.append(&testRecipe3);
+	//DBRecipe.append(&testRecipe2);
+	//DBRecipe.append(&testRecipe3);
 	DBRecipe.read(&testRecipe1, 1);
 	DBRecipe.read(&testRecipe1, 2);
-	std::list<Recipe *> r;
-	r.push_back(&testRecipe1);
-	r = DBRecipe.getAllRecipe();
-	*/
+	std::list<Recipe *> r1;
+	r1.push_back(&testRecipe1);
+	r1 = DBRecipe.getAllRecipe();
+	
 	
 
-/*
+	FacadeUserDB facade;
 
 	IngredientDBManager DBIngredient("stockDB/ingredient.cdb");
-	DBIngredient.write(&testIngredient2,0);
-	DBIngredient.append(&testIngredient4);
+	Ingredient * testIngredient0 = new Ingredient();
+	//DBIngredient.write(&testIngredient2,0);
+	//DBIngredient.write(&testIngredient3, 1); 
+	///DBIngredient.append(&testIngredient4);
+	DBIngredient.read(testIngredient0, 0);
+	DBIngredient.read(testIngredient0, 1);
+	//--------------------------------------
+	facade.saveIngredient(&testIngredient2, 0);
+	facade.saveIngredient(&testIngredient3, 1);
 	DBIngredient.read(&testIngredient1, 0);
 	DBIngredient.read(&testIngredient1, 1);
-	std::list<Ingredient*> r;
-	r = DBIngredient.getAllIngredient();
-*/
+	//std::list<Ingredient*> r;
+	//r = DBIngredient.getAllIngredient();
 
-	FacadeUserDB facade;
+
+
+
+	std::cout << testInfoNutri1;
+	std::cout << testIngredient1;
+
+
+	//FacadeUserDB facade;
 
 	facade.savePantry(&pantry2);
 	facade.getPantry(&pantry2);
@@ -214,6 +237,9 @@ void debug()
 	facade.addIngredient(&testIngredient3);
 	facade.saveIngredient(&testIngredient5, 0);
 	Ingredient b1 = facade.getIngredient(0);
+	Ingredient b2 = facade.getIngredient(0);
+	Ingredient b3 = facade.getIngredient(0);
+	Ingredient b4 = facade.getIngredient(0);
 	auto a1 = facade.getAllIngredient();
 
 	facade.addRecipe(&testRecipe1);
@@ -233,19 +259,19 @@ void debug()
 
 void initDb()
 {
-
-	double tab1[7] = { 1,2,3,4,5,6,7 };
-	double tab2[7] = { 11,12,13,14,15,16,17 };
-	double tab3[7] = { 21,22,23,24,25,26,27 };
-	double tab4[7] = { 31,32,33,34,35,36,37 };
-	double tab5[7] = { 1,2,3,4,5,6,7 };
-	double tab6[7] = { 11,12,13,14,15,16,17 };
-	double tab7[7] = { 21,22,23,24,25,26,27 };
-	double tab8[7] = { 31,32,33,34,35,36,37 };
-	double tab9[7] = { 1,2,3,4,5,6,7 };
-	double tab10[7] = { 11,12,13,14,15,16,17 };
-	double tab11[7] = { 21,22,23,24,25,26,27 };
-	double tab12[7] = { 31,32,33,34,35,36,37 };
+	//keys = { "perAmount", "calories","fat","cholesterol","sodium","carbohydrate","protein" };
+	double tab1[7] = { 100,2,3,4,5,6,7 };
+	double tab2[7] = { 100,12,13,14,15,16,17 };
+	double tab3[7] = { 100,22,23,24,25,26,27 };
+	double tab4[7] = { 150,32,33,34,35,36,37 };
+	double tab5[7] = { 100,2,3,4,5,6,7 };
+	double tab6[7] = { 500,12,13,14,15,16,17 };
+	double tab7[7] = { 100,0,0,0,0,0,0 };
+	double tab8[7] = { 100,32,33,34,35,36,37 };
+	double tab9[7] = { 100,2,3,4,5,6,7 };
+	double tab10[7] = { 150,12,13,14,15,16,17 };
+	double tab11[7] = { 100,22,23,24,25,26,27 };
+	double tab12[7] = { 100,32,33,34,35,36,37 };
 
 	InfoNutri testInfoNutri1 = InfoNutri(tab1, 7);
 	InfoNutri testInfoNutri2 = InfoNutri(tab2, 7);
@@ -265,7 +291,7 @@ void initDb()
 	Ingredient testIngredient2 = Ingredient("Potato", "Vegetable", "N/A", &testInfoNutri2);
 	Ingredient testIngredient3 = Ingredient("Apple", "Fruit", "N/A", &testInfoNutri3);
 	Ingredient testIngredient4 = Ingredient("Wheat", "Grain", "N/A", &testInfoNutri4);
-	Ingredient testIngredient5 = Ingredient("Peer", "Fruit", "N/A", &testInfoNutri5);
+	Ingredient testIngredient5 = Ingredient("Pear", "Fruit", "N/A", &testInfoNutri5);
 	Ingredient testIngredient6 = Ingredient("Quince", "Fruit", "N/A", &testInfoNutri6);
 	Ingredient testIngredient7 = Ingredient("Water", "N/A", "N/A", &testInfoNutri7);
 	Ingredient testIngredient8 = Ingredient("Olive Oil", "Oil", "N/A", &testInfoNutri8);
@@ -279,6 +305,14 @@ void initDb()
 	Aliment testAliment2 = Aliment(testIngredient2, 200); //Potato
 	Aliment testAliment3 = Aliment(testIngredient3, 300); //Apple
 	Aliment testAliment4 = Aliment(testIngredient4, 400); //Wheat
+	Aliment testAliment5 = Aliment(testIngredient5, 100); //Peer
+	Aliment testAliment6 = Aliment(testIngredient6, 200); //Quince
+	Aliment testAliment7 = Aliment(testIngredient7, 300); //Water
+	Aliment testAliment8 = Aliment(testIngredient8, 400); //Olive Oil
+	Aliment testAliment9 = Aliment(testIngredient9, 100); //Butter
+	Aliment testAliment10 = Aliment(testIngredient10, 200); //Red Meat
+	Aliment testAliment11 = Aliment(testIngredient11, 300); //Lentil
+	Aliment testAliment12 = Aliment(testIngredient10, 400); //Buckwheat
 
 
 	StockedAliment testStockedAliment1 = StockedAliment(testIngredient1, 1000, "2021-21-01", 185); //Carot
@@ -293,26 +327,43 @@ void initDb()
 
 	Pantry testpantry1 = Pantry(stockedAlimentList);
 
-	std::string testSteps1[] = { "1a","2b","3c","4d","5e" };
+	std::string testSteps1[] = 
+	{ "1 - Dice carots and potatoes",
+		"2 - Boil them for ~20 minutes",
+		"3 - After 20min, add the lentils and the meat to the soup",
+		"4 - Let it cook for another 20min",
+		"5 - Serve"
+	};
 	std::vector<std::string> strs(testSteps1, testSteps1 + sizeof(testSteps1) / sizeof(std::string));
-	std::string testSteps2[] = { "I","II","III"};
+	std::string testSteps2[] = 
+	{ "1 - Lorem ipsum dolor sit amet",
+	  "2 - consectetur adipiscing elit ",
+	  "3 - sed do eiusmod tempor incididunt"
+	};
 	std::vector<std::string> strs2(testSteps2, testSteps2 + sizeof(testSteps2) / sizeof(std::string));
 
 	Recipe testRecipe1 = Recipe();
 	testRecipe1.addAliment(testAliment1);
 	testRecipe1.addAliment(testAliment2);
-	testRecipe1.setName("Recipe 1");
+	testRecipe1.addAliment(testAliment8);
+	testRecipe1.addAliment(testAliment11);
+	testRecipe1.addAliment(testAliment7);
+	testRecipe1.setName("Lentil Soup");
+	testRecipe1.setSteps(strs);
 	testRecipe1.setNotes("Notes of Recipe1");
 	testRecipe1.markAsComplete();
 
 	Recipe testRecipe2 = Recipe();
 	testRecipe2.addAliment(testAliment3);
-	testRecipe2.addAliment(testAliment4);
-	testRecipe2.setName("Recipe 2");
+	testRecipe2.addAliment(testAliment5);
+	testRecipe2.addAliment(testAliment6);
+	testRecipe2.setName("Fruit Salad");
+	testRecipe2.setSteps(strs2);
 	testRecipe2.setNotes("Notes of Recipe2");
 	testRecipe2.markAsComplete();
 
 	FacadeUserDB facade;
+	IngredientDBManager DBIngredient("stockDB/ingredient.cdb");
 
 	facade.savePantry(&testpantry1);
 
@@ -332,3 +383,148 @@ void initDb()
 	facade.saveRecipe(&testRecipe1, 0);
 	facade.saveRecipe(&testRecipe2, 1);
 }
+
+
+
+
+
+
+void debugA(IngredientDBManager* DBIngredient, Ingredient* testIngredient0)
+{
+
+	//BUG : READING OUTSIDE OF SCOPE OF WHEN IT WAS WRITTEN RETURN INVALID DATA (especially InfoNutri)
+	// Exact : https://cplusplus.com/forum/general/44719/
+
+	double tab1[7] = { 1,2,3,4,5,6,7 };
+	double tab2[7] = { 11,12,13,14,15,16,17 };
+	double tab3[7] = { 21,22,23,24,25,26,27 };
+	InfoNutri testInfoNutri1 = InfoNutri(tab1, 7);
+	InfoNutri testInfoNutri2 = InfoNutri(tab2, 7);
+	InfoNutri testInfoNutri3 = InfoNutri(tab3, 7);
+	Ingredient testIngredient1 = Ingredient("Carot", "Vegetable", "N/A", &testInfoNutri1);
+	Ingredient testIngredient2 = Ingredient("Potato", "Vegetable", "N/A", &testInfoNutri2);
+	Ingredient testIngredient3 = Ingredient("Apple", "Fruit", "N/A", &testInfoNutri3);
+
+	FacadeUserDB facade;
+	//IngredientDBManager DBIngredient("stockDB/ingredient.cdb");
+	//Ingredient* testIngredient0 = new Ingredient();
+	InfoNutri * testInfoNutri0 = new InfoNutri();
+
+
+	DBIngredient->write(&testIngredient1,0);
+	DBIngredient->write(&testIngredient2, 1); 
+
+
+		
+	std::fstream file;
+
+
+
+	file.open("stockDB/debug.cdb", std::ios::in | std::ios::out | std::ios::binary);
+	file.write((char*)&testInfoNutri1, sizeof(InfoNutri));
+
+	file.close();
+
+	file.open("stockDB/debug.cdb", std::ios::in | std::ios::out | std::ios::binary);
+	file.seekg(0, std::ios::beg);
+	file.read((char*)testInfoNutri0, sizeof(InfoNutri));
+
+	file.close();
+	
+	std::cout << *testInfoNutri0;
+
+
+
+	//facade.saveIngredient(&testIngredient1, 0);
+    //facade.saveIngredient(&testIngredient2, 1);
+	//Ingredient a = facade.getIngredient(0);
+	//Ingredient b = facade.getIngredient(1);
+}
+
+
+
+
+
+
+void debugB(IngredientDBManager* DBIngredient, Ingredient* testIngredient0)
+{
+
+	FacadeUserDB facade;
+	//IngredientDBManager * DBIngredient = new IngredientDBManager("stockDB/ingredient.cdb");
+
+
+	InfoNutri* testInfoNutri0 = new InfoNutri();
+
+
+
+
+
+
+	/*
+	std::ifstream in("stockDB/debug.cdb");
+	std::streambuf* cinbuf = std::cin.rdbuf(); //save old buf
+	std::cin.rdbuf(in.rdbuf()); //redirect std::cin to stockDB/debug.cdb
+	*/
+
+	//std::ifstream cin("stockDB/debug.cdb");
+	//std::ofstream cout("stockDB/debug.cdb");
+
+	//std::cout << *testInfoNutri0;
+	//std::cin >> *testInfoNutri0;
+
+
+	std::fstream file;
+	file.open("stockDB/debug.cdb", std::ios::in | std::ios::out | std::ios::binary);
+	file.seekg(0, std::ios::beg);
+	file.read((char*)testInfoNutri0, sizeof(InfoNutri));
+	//file.seekg(1 * sizeof(InfoNutri), std::ios::beg);
+	//file.read((char*)testInfoNutri0, sizeof(InfoNutri));
+
+	file.close();
+
+	/*
+	DBIngredient->read(testIngredient0, 0);
+	std::cout << testIngredient0->getName();
+	std::cout << std::endl;
+	std::cout << testIngredient0->getType();
+	std::cout << std::endl;
+	std::cout << testIngredient0->getSeason();
+	std::cout << std::endl;
+	std::cout << testIngredient0->getInfoNutri();
+	std::cout << std::endl;
+
+	DBIngredient->read(testIngredient0, 1);
+
+	std::cout << testIngredient0->getName();
+	std::cout << std::endl;
+	std::cout << testIngredient0->getType();
+	std::cout << std::endl;
+	std::cout << testIngredient0->getSeason();
+	std::cout << std::endl;
+	std::cout << testIngredient0->getInfoNutri();
+	std::cout << std::endl;
+	*/
+
+
+	Ingredient a = facade.getIngredient(0);
+	Ingredient b = facade.getIngredient(1);
+}
+
+
+
+
+/* get hash  	//https://www.quora.com/How-can-I-get-the-MD5-or-SHA-hash-of-a-file-in-C
+
+
+	QFile myFile("C:/ISEN/M2/ProgObj/projFinal/Cookpp2/cookpp2/cookpp2/stockDB/ingredient.cdb");
+	myFile.open(QIODevice::ReadOnly);
+
+	QByteArray fileData = myFile.readAll(); //207E9B56724944A171CC273E49B77D46
+	myFile.close();
+	QString hash = QString(QCryptographicHash::hash((fileData),
+		QCryptographicHash::Md5).toHex()).toUpper();
+	std::cout << "The Md5 hash of your file is: " << hash.toStdString()
+		<< std::endl;
+
+
+*/

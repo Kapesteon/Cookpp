@@ -156,7 +156,15 @@ bool FacadeUserDB::addRecipe(Recipe* recipe)
 std::list<Ingredient*> FacadeUserDB::getAllIngredient()
 {
 
-	return this->DBIngredient->getAllIngredient();
+	try {
+
+		return this->DBIngredient->getAllIngredient();
+	}
+	catch (std::exception) {
+		std::cout << "Failed to get all Recipe";
+		return std::list<Ingredient *>();
+	}
+
 }
 
 Ingredient FacadeUserDB::getIngredient(int pos)

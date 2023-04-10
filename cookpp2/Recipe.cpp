@@ -1,16 +1,18 @@
 #include "Recipe.h"
 #define DELIMITER_KEY_VALUE_RECIPE '@' //For serialization //MUST BE ONE CHAR
+
 Recipe::Recipe()
 {
 	this->name = "unknown";
-	this->aliments = std::set <Aliment>();
-	this->steps = std::vector<std::string>();
+
 	this->notes = "";
 	this->nutriScore = -1;
 	this->infoNutri = InfoNutri();
+	this->aliments = std::vector <Aliment>();
+	this->steps = std::vector<std::string>();
 }
 
-Recipe::Recipe(std::string name,std::set<Aliment> aliments, std::vector<std::string> steps, std::string notes)
+Recipe::Recipe(std::string name,std::vector<Aliment> aliments, std::vector<std::string> steps, std::string notes)
 {
 	this->name = name;
 	this->aliments = aliments;
@@ -48,12 +50,12 @@ std::string Recipe::getName() const
 	return this->name;
 }
 
-std::set<Aliment> Recipe::getAliments() const
+std::vector<Aliment> Recipe::getAliments() const
 {
 	return this->aliments;
 }
 
-void Recipe::setAliments(std::set<Aliment> aliments)
+void Recipe::setAliments(std::vector<Aliment> aliments)
 {
 	this->aliments = aliments;
 
@@ -61,7 +63,7 @@ void Recipe::setAliments(std::set<Aliment> aliments)
 
 void Recipe::addAliment(Aliment aliment)
 {
-	this->aliments.insert(aliment);
+	this->aliments.push_back(aliment);
 
 }
 
@@ -69,7 +71,14 @@ void Recipe::addAliment(Aliment aliment)
 
 void Recipe::removeAliment(Aliment aliment)
 {
-	this->aliments.erase(aliment);
+	auto itr = this->getAliments().begin();
+
+	for (itr; itr != this->getAliments().end(); itr++) {
+		if ((*itr) == aliment) {
+			this->aliments.erase(itr);
+		}
+	}
+
 
 }
 
@@ -77,7 +86,7 @@ void Recipe::removeAliment(Aliment aliment)
 
 std::vector<std::string> Recipe::getSteps() const
 {
-	return std::vector<std::string>();
+	return this->steps;
 }
 
 void Recipe::setSteps(std::vector<std::string> steps)
@@ -192,7 +201,7 @@ std::ostream& operator<<(std::ostream& os, const Recipe& in)
 		<< std::endl;
 	try {
 		// Serialize Aliments set
-		std::set<Aliment>::iterator itr;
+		std::vector<Aliment>::iterator itr;
 		for (itr = in.getAliments().begin();
 			itr != in.getAliments().end(); itr++)
 		{

@@ -52,8 +52,6 @@ bool IngredientDBManager::read(void* ingredient, int pos = 0)//Pointer to ingred
 		try {
 
 			this->stream.seekg(pos * this->classSize, std::ios::beg);
-			//If we went too far off
-
 			this->stream.read((char*)ingredient, this->classSize);
 			this->close();
 			if (this->stream.eof()) {

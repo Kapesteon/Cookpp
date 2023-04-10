@@ -61,9 +61,6 @@
     <ClCompile Include="IngredientDBManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="NutritionalManager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Pantry.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -77,6 +74,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="StockedAliment.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="NutritionalManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -94,9 +94,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="IngredientDBManager.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="NutritionalManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Pantry.h">
@@ -124,6 +121,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="StockedAliment.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="NutritionalManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

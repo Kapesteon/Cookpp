@@ -54,6 +54,16 @@ bool operator<(const Aliment& l, const Aliment& r)
 		< std::tie(r.getName()); // keep the same order
 }
 
+bool operator==(const Aliment& l, const Aliment& r)
+{
+	if (l.getName() == r.getName() && l.getMass() == r.getMass()) {
+		return true;
+	}
+	else {
+		return false;
+	}
+}
+
 std::istream& operator>>(std::istream& is, Aliment& in)
 {
 
