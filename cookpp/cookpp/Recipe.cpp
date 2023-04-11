@@ -241,3 +241,11 @@ Recipe Recipe::operator<(const Recipe& s) const
 		return *this;
 	}
 }
+
+
+int Recipe::operator==(const Recipe& s) const
+{
+	if (s.name == this->name)
+		return 1;
+	return 0;
+}

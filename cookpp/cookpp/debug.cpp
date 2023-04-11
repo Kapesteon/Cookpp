@@ -17,12 +17,36 @@
 #include "PantryDBManager.h"
 #include "RecipeDBManager.h"
 #include "FacadeUserDB.h"
+#include "Menu.h"
 
+#include <string>
+
+/*
 void debug()
 {
 
 	std::ostringstream;
-	OutputDebugStringA("test \n ");
+	Menu menu;
+	std::time_t currentTime = std::time(nullptr);
+	menu.setStartDate(currentTime);
+	menu.setNumConsumers(5);
+	std::string chaine = std::to_string(menu.getStartDate());
+	LPCSTR ma_chaine_lpcstr = chaine.c_str();
+
+	OutputDebugStringA(ma_chaine_lpcstr);
+
+	//std::cout << menu.getStartDate();
+
+	//std::cout << "test fini";
+}
+*/
+
+
+void debug()
+{
+
+	//std::ostringstream;
+	//OutputDebugStringA("test \n ");
 	//InfoNutri* testInfoNutri2 = new InfoNutri();
 	double tab[7] = { 52.1,98.5,100,258,48,987,10 };
 	double tab2[7] = { 1,2,3,4,5,6,7};
@@ -36,6 +60,13 @@ void debug()
 
 	auto e = testInfoNutri3.getNutriValues();
 	std::cout << "test";
+
+	Menu menu;
+	std::time_t currentTime = std::time(nullptr);
+	menu.setStartDate(currentTime);
+	std::cout << menu.getStartDate();
+
+	std::cout << "test fini";
 
 	Ingredient testIngredient1;
 	Ingredient testIngredient2 = Ingredient("Carot", "Vegetable", "N/A", &testInfoNutri2);
@@ -99,11 +130,26 @@ void debug()
 	NutritionalManager* testNManager = testNManager->getSingleton();
 	auto w = testRecipe2.getAliments();
 	testNManager->estimateNutriValue(w);
+	
+	menu.addRecipe(testRecipe2);
+	menu.addRecipe(testRecipe3);
+	menu.removeRecipe(testRecipe3);
+
+	RecipeDBManager DBRecipe("stockDB/recipe.cdb");
+	DBRecipe.append(&testRecipe2);
+	DBRecipe.append(&testRecipe3);
+	DBRecipe.read(&testRecipe1, 1);
+	DBRecipe.read(&testRecipe1, 2);
+	std::list<Recipe*> r;
+	//r.push_back(&testRecipe1);
+	r = DBRecipe.getAllRecipe();
+
+	std::cout << "yoo";
 	/*
 	testAliment4.~Aliment();
-	OutputDebugStringA("\n\n ");
+	OutputDebugStringA("\ns\n ");
 	testIngredient2.~Ingredient();
-	OutputDebugStringA("\n\n ");
+	OutputDebugStringA("\n\n ");	
 	testInfoNutri4.~InfoNutri();
 	OutputDebugStringA("\n\n ");
 	*/
@@ -204,7 +250,7 @@ void debug()
 	r = DBIngredient.getAllIngredient();
 */
 
-	FacadeUserDB facade;
+	/*FacadeUserDB facade;
 
 	facade.savePantry(&pantry2);
 	pantry = facade.getPantry();
@@ -222,5 +268,5 @@ void debug()
 	Recipe b2 = facade.getRecipe(0);
 	auto a2 = facade.getAllRecipe();
 
-	return;
+	return;*/
 }

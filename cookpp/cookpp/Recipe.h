@@ -4,6 +4,7 @@
 #include "NutritionalManager.h"
 #include <set>
 #include <vector>
+#include <list>
 
 //class NutritionalManager;
 
@@ -60,5 +61,6 @@ class Recipe
 		friend std::ostream& operator<<(std::ostream& os, const Recipe& in);
 
 		Recipe operator<(const Recipe& s) const;
+		int operator==(const Recipe& s) const;
 };
 
