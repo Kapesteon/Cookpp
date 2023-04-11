@@ -28,9 +28,10 @@ public:
 
     void displayAllIngredients();
     void displayAllRecipes();
+    void displayPantry();
     void getPageIngredient(int page, std::list<Ingredient*>* listIngredient,std::vector< QToolButton*>* ingredientsButton);
     void getPageRecipe(int page, std::list<Recipe*>* listRecipe, std::vector< QToolButton*>* recipesButton);
-
+    void getPagePantry(int page, std::list<StockedAliment*>* listStockedAliment, std::vector< QToolButton*>* pantryButton);
 
 
     void deleteCurrentView();
@@ -39,7 +40,8 @@ public:
 private:
     int currentPage = 0;
     std::unique_ptr<std::vector<Ingredient*>> activeIngredientBuffer; //Used to store Ingredients
-    std::unique_ptr<std::vector<Recipe*>> activeRecipeBuffer; //Used to store Ingredients
+    std::unique_ptr<std::vector<Recipe*>> activeRecipeBuffer; //Used to store Recipes
+    std::unique_ptr<std::vector<StockedAliment*>> activeStockedAlimentBuffer; //Used to store StockedAliment
     FacadeUserDB* facade;
 
 
@@ -93,11 +95,13 @@ private slots:
     void mnMainMenu();
     void mnViewIngredients();
     void mnViewRecipes();
+    void mnViewPantry();
     /*------------------------------------*/
 
     /*------------Menu Slots-----------*/
     void showIngredientDetailclicked();
     void showRecipeDetailclicked();
+    void showStockedAlimentDetailclicked();
     /*------------------------------------*/
 
 };

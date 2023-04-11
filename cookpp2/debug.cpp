@@ -262,7 +262,7 @@ void initDb()
 	//keys = { "perAmount", "calories","fat","cholesterol","sodium","carbohydrate","protein" };
 	double tab1[7] = { 100,41,0.2,0,0.070,10,0.9 }; //Carot
 	double tab2[7] = { 100,77,0.1,0,0.006,17,2 }; //Potato
-	double tab3[7] = { 100,52,0.2,0,001,14,0.3 }; //Apple
+	double tab3[7] = { 100,52,0.2,0,0.001,14,0.3 }; //Apple
 	double tab4[7] = { 100,360,1,0,0.002,76,10.3 }; //Wheat
 	double tab5[7] = { 100,57,0.1,0,0.001,15,0.4 }; //Pear
 	double tab6[7] = { 100,60,0.1,0,0.004,15,14 }; //Quince
@@ -315,14 +315,15 @@ void initDb()
 	Aliment testAliment12 = Aliment(testIngredient10, 400); //Buckwheat
 
 
-	StockedAliment testStockedAliment1 = StockedAliment(testIngredient1, 1000, "2021-21-01", 185); //Carot
-	StockedAliment testStockedAliment2 = StockedAliment(testIngredient2, 1500, "2021-22-01", 365); //Potato
-	StockedAliment testStockedAliment3 = StockedAliment(testIngredient3, 2000, "2021-23-01", 30); //Apple
-	StockedAliment testStockedAliment4 = StockedAliment(testIngredient4, 2500, "2021-24-01", 2000); //Wheat
+	StockedAliment testStockedAliment1 = StockedAliment(testIngredient1, 1000, "2021/04/13", 185); //Carot
+	StockedAliment testStockedAliment2 = StockedAliment(testIngredient2, 1500, "2021/05/14", 365); //Potato
+	StockedAliment testStockedAliment3 = StockedAliment(testIngredient3, 2000, "2021/06/15", 30); //Apple
+	StockedAliment testStockedAliment4 = StockedAliment(testIngredient4, 2500, "2021/07/16", 2000); //Wheat
 
 
 	std::forward_list<StockedAliment* > stockedAlimentList;
 	stockedAlimentList.assign({ &testStockedAliment1,&testStockedAliment2,&testStockedAliment3,&testStockedAliment4 });
+
 
 
 	Pantry testpantry1 = Pantry(stockedAlimentList);

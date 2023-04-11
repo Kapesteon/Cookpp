@@ -1,17 +1,29 @@
 #pragma once
 #include "StockedAliment.h"
 #include <forward_list>
+#include <list>
+#include <vector>
+#define MAX_STOCKEDALIMENTS 25
 class Pantry
 {
 	private:
-		std::forward_list<StockedAliment*> stock;
+		//std::forward_list<StockedAliment*> stock;
+		std::array<StockedAliment, MAX_STOCKEDALIMENTS> stock;
+
+		static std::forward_list<StockedAliment*> convertStockToForwardList(std::array<StockedAliment, MAX_STOCKEDALIMENTS> stock);
+		static std::array<StockedAliment, MAX_STOCKEDALIMENTS> convertForwardListToStock(std::forward_list<StockedAliment*>);
+
 
 	public:
 		Pantry();
 		Pantry(std::forward_list<StockedAliment *> stockedAliments);
+		Pantry(std::array<StockedAliment, MAX_STOCKEDALIMENTS> stockedAliments);
 		~Pantry();
 
+
+
 		std::forward_list<StockedAliment *> getStock(void) const;
+		std::list<StockedAliment*> getStockAsList(void);
 		void setStock(std::forward_list<StockedAliment *> newStock) ;
 
 		void addToStock(StockedAliment * stockedAliment);

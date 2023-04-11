@@ -20,5 +20,10 @@ Row:Col
 
 ingredient	0x00000099db11e020	void *
 
-
-Bonjour j'ai été 
+  0 1 2 3 4 5 6
+0 X X I S A
+1 T T I S A
+2 N N I S A
+3 N N I S A
+4  
+5

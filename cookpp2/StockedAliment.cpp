@@ -1,6 +1,7 @@
 #include "StockedAliment.h"
 
-const std::string StockedAliment::format = "%Y-%m-%d"; 
+const std::string StockedAliment::format = "%Y/%m/%d";
+
 //https://en.cppreference.com/w/cpp/io/manip/get_time
 //https://cplusplus.com/reference/ctime/strftime/
 
@@ -83,8 +84,9 @@ const std::string StockedAliment::getObtainedDate() const
 
 void StockedAliment::setObtainedDate(time_t obtainedDate)
 {
-	this->calculateSpoilDate();
 	this->obtainedDate = obtainedDate;
+	this->calculateSpoilDate();
+
 }
 
 
@@ -92,7 +94,7 @@ void StockedAliment::setObtainedDate(time_t obtainedDate)
 
 const int StockedAliment::getSpoilRateInDays() const
 {
-	return (this->spoilRate * 86400);
+	return (this->spoilRate / 86400);
 }
 
 void StockedAliment::setSpoilRateInDays(int spoilRate)
@@ -122,13 +124,24 @@ void StockedAliment::calculateSpoilDate(void)
 
 
 //https://stackoverflow.com/questions/321793/date-time-conversion-string-representation-to-time-t
-time_t StockedAliment::strTotime_t(std::string strDate) const
+//https://codereview.stackexchange.com/questions/277459/convert-string-to-date-c
+time_t StockedAliment::strTotime_t(std::string strDate) 
 {
+
 	bool is_dst = false;
-	std::tm t = { 0 };
+	std::tm t = {0};
 	t.tm_isdst = is_dst ? 1 : 0;
-	std::istringstream ss(strDate);
-	ss >> std::get_time(&t, this->format.c_str());
+
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv1;
+	std::wstring format = conv1.from_bytes(this->format);
+
+	std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv2;
+	std::wstring str = conv2.from_bytes(strDate);
+
+	//a = std::wstring(&strDate);
+	std::wistringstream ss(str);
+	//ss.imbue(std::locale("de_DE.utf-8"));
+	ss >> std::get_time(&t, format.c_str());
 	return mktime(&t);
 
 }
@@ -161,6 +174,18 @@ StockedAliment StockedAliment::operator<(const StockedAliment& s) const
 
 
 
+
+bool operator==(const StockedAliment& l, const StockedAliment& r)
+{
+
+	if (l.getMass() == r.getMass() && l.getObtainedDate() == r.getObtainedDate()) {
+		return true;
+	}
+	else {
+		return false;
+	}
+
+}
 
 std::istream& operator>>(std::istream& is, StockedAliment& in)
 {

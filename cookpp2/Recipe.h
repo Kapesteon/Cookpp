@@ -16,7 +16,7 @@ class Recipe
 {
 	private:
 		std::string name;
-		std::string notes;
+		char notes[256];
 		std::array <Aliment, MAX_ALIMENTS> aliments;
 		std::array<char[256], MAX_STEPS> steps;
 

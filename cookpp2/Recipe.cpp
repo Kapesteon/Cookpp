@@ -4,7 +4,7 @@
 Recipe::Recipe()
 {
 	this->name = "N/A";
-	this->notes = "";
+	this->notes[0] = '\0';
 	this->nutriScore = -1;
 	this->infoNutri = InfoNutri();
 	this->aliments = std::array <Aliment, MAX_ALIMENTS>();
@@ -15,7 +15,8 @@ Recipe::Recipe(std::string name, std::array <Aliment, MAX_ALIMENTS> aliments, st
 {
 	this->name = name;
 	this->aliments = aliments;
-	this->notes = notes;
+	strcpy(this->notes, (notes.c_str()));
+	//this->notes = notes;
 
 	int i = 0;
 	for (auto itr = steps.begin(); itr != steps.end(); itr++) {
@@ -31,7 +32,8 @@ Recipe::Recipe(std::string name, std::array <Aliment, MAX_ALIMENTS> aliments, st
 Recipe::Recipe(const Recipe& c)
 {
 	this->name = c.name;
-	this->notes = c.notes;
+	strcpy(this->notes, (c.notes));
+	//this->notes = c.notes;
 	this->aliments = c.aliments;
 
 	int i = 0;
@@ -175,12 +177,14 @@ void Recipe::addStep(std::string step)
 
 std::string Recipe::getNotes() const
 {
-	return this->notes;
+
+	return std::string(this->notes);
 }
 
 void Recipe::setNotes(std::string notes)
 {
-	this->notes = notes;
+	strcpy(this->notes, (notes.c_str()));
+	//this->notes = notes;
 }
 
 float Recipe::getNutriScore() const

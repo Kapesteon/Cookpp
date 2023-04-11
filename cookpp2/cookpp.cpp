@@ -30,10 +30,18 @@ cookpp::cookpp(QWidget *parent)
 
     displayMainMenu();
 
-    setMinimumSize(650, 480);
-    setMaximumSize(651, 481);
-    resize(650, 480);
+    setMinimumSize(1280, 600);
+    setMaximumSize(1280, 600);
+    resize(1280, 600);
+    QPalette pal = QPalette();
 
+    // set black background
+    // Qt::black / "#000000" / "black"
+    pal.setColor(QPalette::Window, Qt::white);
+
+    this->setAutoFillBackground(true);
+    this->setPalette(pal);
+    //this->setStyleSheet("background-color:white;");
 }
 
 cookpp::~cookpp()
@@ -155,6 +163,57 @@ void cookpp::getPageRecipe(int page, std::list<Recipe*>* listRecipe, std::vector
 
 }
 
+void cookpp::getPagePantry(int page, std::list<StockedAliment*>* listStockedAliment, std::vector< QToolButton*>* pantryButton)
+{
+    std::string n = "";
+    std::unique_ptr<std::vector<StockedAliment*>> bufferStockedAliment= std::make_unique<std::vector<StockedAliment*>>();
+    auto itr = listStockedAliment->begin();
+
+
+
+    //Set the iterator to the right emplacement
+    for (int i = 0; i < NUMBER_OBJET_PER_PAGE * page; i++) {
+        itr++;
+        if (itr == listStockedAliment->end()) {
+            break;
+        }
+    }
+
+    //Build all buttons containing the right name
+    for (int i = 0; i < NUMBER_OBJET_PER_PAGE; ++i) {
+        try {
+            if (itr == listStockedAliment->end()) {
+                pantryButton->push_back(new QToolButton());
+                pantryButton->back()->setText(tr(""));
+                pantryButton->back()->setFixedSize(0, 0);
+                StockedAliment* a = new StockedAliment();
+                bufferStockedAliment->push_back(a);
+            }
+            else {
+                std::string n = (*itr)->getName();
+                pantryButton->push_back(new QToolButton());
+                pantryButton->back()->setText(tr(n.c_str()));
+                pantryButton->back()->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+                connect(pantryButton->back(), SIGNAL(clicked()), this, SLOT(showStockedAlimentDetailclicked()));
+                bufferStockedAliment->push_back(*itr);
+                itr++;
+            }
+
+
+        }
+        catch (std::exception) {
+            return;
+        }
+    }
+
+    this->activeStockedAlimentBuffer = std::move(bufferStockedAliment);
+    //delete listIngredient; //Causes crash
+    return;
+
+
+}
+
+
 
 void cookpp::displayAllIngredients()
 {
@@ -169,7 +228,15 @@ void cookpp::displayAllIngredients()
     int maxPage = 1;
     try {
         listIngredient = this->facade->getAllIngredient();
-        int maxPage = floor(listIngredient.size() / NUMBER_OBJET_PER_PAGE);
+      
+        if (listIngredient.size() <= NUMBER_OBJET_PER_PAGE ) {
+            maxPage = 0;
+        }
+        else {
+            int maxPage = floor(listIngredient.size() / NUMBER_OBJET_PER_PAGE);
+        }
+
+
     }
     catch (std::exception) {
         Ingredient* t = new Ingredient();
@@ -245,7 +312,13 @@ void cookpp::displayAllRecipes()
     int maxPage = 1;
     try {
         listRecipe = this->facade->getAllRecipe();
-        int maxPage = floor(listRecipe.size() / NUMBER_OBJET_PER_PAGE);
+
+        if (listRecipe.size() <= NUMBER_OBJET_PER_PAGE) {
+            maxPage = 0;
+        }
+        else {
+            int maxPage = floor(listRecipe.size() / NUMBER_OBJET_PER_PAGE);
+        }
     }
     catch (std::exception) {
         Recipe* t = new Recipe();
@@ -308,7 +381,92 @@ void cookpp::displayAllRecipes()
 
 }
 
+void cookpp::displayPantry()
+{
+    //Delete old layout to drwn the new https://forum.qt.io/topic/14898/howto-change-layout-of-a-widget/10
+    deleteCurrentView();
 
+
+    QGridLayout* mainLayout = new QGridLayout;
+
+
+
+    Pantry* pantry = new Pantry();
+    std::list<StockedAliment*> listStockedAliment;
+    
+    int maxPage = 1;
+    try {
+        this->facade->getPantry(pantry);
+        listStockedAliment = pantry->getStockAsList();
+
+
+        if (listStockedAliment.size() <= NUMBER_OBJET_PER_PAGE) {
+            maxPage = 0;
+        }
+        else {
+            int maxPage = floor(listStockedAliment.size() / NUMBER_OBJET_PER_PAGE);
+        }
+    }
+    catch (std::exception) {
+        StockedAliment* t = new StockedAliment();
+        listStockedAliment.push_back(t);
+    }
+
+    
+    std::vector<QToolButton*> pantryButton;
+ 
+
+    if (this->currentPage < 0) {
+        this->currentPage = maxPage;
+    }
+    if (this->currentPage > maxPage) {
+        this->currentPage = 0;
+    }
+
+
+    getPagePantry(this->currentPage, &listStockedAliment, &pantryButton);
+
+
+
+    for (int i = 0; i < NUMBER_OBJET_PER_PAGE; ++i) {
+        int row = i / 3;
+        int column = ((i) % 3) + 1;
+        mainLayout->addWidget(pantryButton.at(i), row, column);
+    }
+
+    /*---Add Left and Right Buttons---*/
+    QToolButton* previousPageButton = new QToolButton();
+    QToolButton* nextPageButton = new QToolButton();
+    previousPageButton->setText(tr("<"));
+    nextPageButton->setText(tr(">"));
+    previousPageButton->setFixedSize(BTN_FIXED_HEIGHT, BTN_FIXED_HEIGHT);
+    nextPageButton->setFixedSize(BTN_FIXED_HEIGHT, BTN_FIXED_HEIGHT);
+    connect(previousPageButton, SIGNAL(clicked()), this, SLOT(pantryPreviousclicked()));
+    connect(nextPageButton, SIGNAL(clicked()), this, SLOT(pantryNextclicked()));
+    mainLayout->addWidget(previousPageButton, 1, 0);
+    mainLayout->addWidget(nextPageButton, 1, 4);
+
+
+    /*---Add Bottom Page text---*/
+    QLineEdit* displayPage = new QLineEdit();
+    displayPage->setReadOnly(true);
+    displayPage->setAlignment(Qt::AlignCenter);
+    QFont font = displayPage->font();
+    //font.setPointSize(font.pointSize() + 7);
+    displayPage->setFont(font);
+    std::string pageStr = std::to_string(this->currentPage);
+    pageStr.append(" / ");
+    pageStr.append(std::to_string(maxPage));
+    displayPage->setText(QString::fromStdString(pageStr));
+    displayPage->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+    displayPage->setFrame(false);
+    mainLayout->addWidget(displayPage, 3, 2);
+    mainLayout->addWidget(this->detailBox, 0, 6, 4, 2);
+    setLayout(mainLayout);
+
+    setWindowTitle(tr("Cook++ - Pantry"));
+    
+}
 
 QGroupBox* cookpp::createDebugOutput() {
 
@@ -528,6 +686,9 @@ void cookpp::createActions()
 
     mnViewRecipesAct->setStatusTip(tr("View all known recipes"));
     connect(mnViewRecipesAct, &QAction::triggered, this, &cookpp::mnViewRecipes);
+
+    mnViewPantryAct->setStatusTip(tr("View Stocked Aliments in Pantry "));
+    connect(mnViewPantryAct, &QAction::triggered, this, &cookpp::mnViewPantry);
 }
 
 void cookpp::createMenus()
@@ -606,6 +767,11 @@ void cookpp::mnViewRecipes() {
     displayAllRecipes();
 }
 
+void cookpp::mnViewPantry() {
+    displayPantry();
+}
+
+
 void cookpp::showIngredientDetailclicked()
 {
     QObject* buttonSender = QObject::sender();
@@ -673,7 +839,7 @@ void cookpp::showIngredientDetailclicked()
 
         QTableWidgetItem* itemValue = new QTableWidgetItem();
         QString* qstr = new QString();
-        qstr->append(QString::number(t.at(0)));
+        qstr->append(QString::number(t.at(0) , 'G', 5));
         qstr->append(" g");
         itemValue->setText(*qstr);
         infoNutri->setItem(0, 1, itemValue);
@@ -689,13 +855,19 @@ void cookpp::showIngredientDetailclicked()
 
             QTableWidgetItem* itemValue = new QTableWidgetItem();
             QString* qstr = new QString();
-
-            qstr->append(QString::number(*it));
-            if (keysName.at(i) == "calories") {
-                qstr->append(" kcal");
+            
+            if (keysName.at(i) == "sodium") {
+                qstr->append(QString::number((*it)*1000, 'G', 8));
+                qstr->append(" mg");
             }
             else {
-                qstr->append(" g");
+                qstr->append(QString::number((*it) , 'G', 5));
+                if (keysName.at(i) == "calories") {
+                    qstr->append(" kcal");
+                }
+                else {
+                    qstr->append(" g");
+                }
             }
             itemValue->setText(*qstr);
             infoNutri->setItem(i, 1, itemValue);
@@ -732,7 +904,7 @@ void cookpp::showRecipeDetailclicked()
 
         QLineEdit* name = new QLineEdit("Name");
         QLineEdit* nutriScore = new QLineEdit("NutriScore");
-        QLineEdit* notes = new QLineEdit("Notes");
+        QTextEdit* notes = new QTextEdit("Notes");
         QTableWidget* aliments = new QTableWidget();
         QTableWidget* steps = new QTableWidget();
         QTableWidget* infoNutri = new QTableWidget();
@@ -748,21 +920,22 @@ void cookpp::showRecipeDetailclicked()
         }
 
         name->setText(qs);
-        name->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+        name->setFixedSize(200, BTN_FIXED_HEIGHT);
         name->setFrame(false);
         name->setReadOnly(true);
-        name->setAlignment(Qt::AlignLeft);
+        name->setAlignment(Qt::AlignCenter);
 
 
 
         *qstr = QString::fromStdString("");
         qstr->append("Score : ");
-        nutriScore->setText(QString::number(recipeToShow->getNutriScore()));
-        qstr->append(" /100");
-        nutriScore->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+        qstr->append(QString::number(recipeToShow->getNutriScore(), 'G', 3));
+        qstr->append("/100");
+        nutriScore->setText(*qstr);
+        nutriScore->setFixedSize(200, BTN_FIXED_HEIGHT);
         nutriScore->setFrame(false);
         nutriScore->setReadOnly(true);
-        nutriScore->setAlignment(Qt::AlignRight);
+        nutriScore->setAlignment(Qt::AlignCenter);
 
 
 
@@ -798,6 +971,7 @@ void cookpp::showRecipeDetailclicked()
 
         steps->setColumnCount(1);
         steps->setRowCount(s.size());
+        steps->setColumnWidth(0, 300);
         steps->verticalHeader()->setVisible(false);
         steps->horizontalHeader()->setVisible(false);
 
@@ -806,6 +980,7 @@ void cookpp::showRecipeDetailclicked()
         for (it0; it0 != s.end(); it0++) {
             QTableWidgetItem* step = new QTableWidgetItem();
             step->setText(QString::fromStdString(*it0));
+            step->setToolTip(QString::fromStdString(*it0));
             steps->setItem(i, 0, step);
             i++;
         }
@@ -816,10 +991,12 @@ void cookpp::showRecipeDetailclicked()
         *qstr = QString::fromStdString("");
         qstr->append(QString::fromStdString(recipeToShow->getNotes()));
         notes->setText(*qstr);
-        notes->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
-        notes->setFrame(false);
+        //notes->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+        //notes->setFrame(false);
         notes->setReadOnly(true);
         notes->setAlignment(Qt::AlignCenter);
+        //notes->setFixedWidth(180);
+        //notes->setFixedHeight(180);
 
         /*----Info Nutri table----*/
         auto t = recipeToShow->getInfoNutri().getNutriValues();
@@ -835,7 +1012,7 @@ void cookpp::showRecipeDetailclicked()
 
         QTableWidgetItem* itemValue = new QTableWidgetItem();
         *qstr = QString::fromStdString("");
-        qstr->append(QString::number(t.at(0)));
+        qstr->append(QString::number(t.at(0) , 'G', 5));
         qstr->append(" g");
         itemValue->setText(*qstr);
         infoNutri->setItem(0, 1, itemValue);
@@ -850,8 +1027,21 @@ void cookpp::showRecipeDetailclicked()
 
             QTableWidgetItem* itemValue = new QTableWidgetItem();
             *qstr = QString::fromStdString("");
-            qstr->append(QString::number(*it));
-            qstr->append(" mg");
+
+
+            if (keysName.at(i) == "sodium") {
+                qstr->append(QString::number((*it)*1000, 'G', 8));
+                qstr->append(" mg");
+            }
+            else {
+                qstr->append(QString::number((*it), 'G', 5));
+                if (keysName.at(i) == "calories") {
+                    qstr->append(" kcal");
+                }
+                else {
+                    qstr->append(" g");
+                }
+            }
             itemValue->setText(*qstr);
             infoNutri->setItem(i, 1, itemValue);
             i++;
@@ -861,12 +1051,106 @@ void cookpp::showRecipeDetailclicked()
 
         QLayout* oldLayout = this->detailBox->layout();
         deleteSpecificLayout(oldLayout);
+        grid->addWidget(name, 0,0,1,2);
+        grid->addWidget(nutriScore, 1, 0, 1, 2);
+        grid->addWidget(notes, 2, 0, 2, 2);
+        grid->addWidget(aliments, 0, 2, 4, 1);
+        grid->addWidget(steps, 0,3, 4, 1);
+        grid->addWidget(infoNutri, 0, 4, 4, 1);
+        /*        
         grid->addWidget(name, 0,0,1,1);
         grid->addWidget(nutriScore, 0, 0, 1, 1);
-        grid->addWidget(aliments, 1, 0, 2, 1);
-        grid->addWidget(steps, 1, 1, 2, 1);
+        grid->addWidget(aliments, 1, 1, 2, 1);
+        grid->addWidget(steps, 1, 0, 2, 1);
         grid->addWidget(notes, 3, 0, 1, 2);
-        grid->addWidget(infoNutri, 3, 1, 2, 1);
+        grid->addWidget(infoNutri, 3, 2, 3, 1);
+        */
+        //grid->setContentsMargins(-1, -1, -1, -1);
+        //grid->setSpacing(1);
+        this->detailBox->setLayout(grid);
+    }
+    catch (std::exception) {
+        OutputDebugStringA("Error with button sender");
+    }
+}
+
+void cookpp::showStockedAlimentDetailclicked()
+{
+    QObject* buttonSender = QObject::sender();
+    try {
+        QString qs = qobject_cast<QToolButton*>(buttonSender)->text();
+        std::string ss = qs.toStdString();
+
+
+        QGridLayout* grid = new QGridLayout;
+
+        StockedAliment* stockedAlimentToShow = new StockedAliment();
+
+
+        QLineEdit* name = new QLineEdit("Name");
+        QLineEdit* obtainedDate = new QLineEdit("ObtainedDate");
+        QLineEdit* spoilRate = new QLineEdit("SpoilRate");
+        QLineEdit* spoilDate = new QLineEdit("spoilDate");
+        QString* qstr = new QString();
+
+        int i = 0;
+        auto itr = this->activeStockedAlimentBuffer->begin();
+
+        for (itr; itr != this->activeStockedAlimentBuffer->end(); itr++) {
+            if ((*itr)->getName() == ss) {
+                stockedAlimentToShow = (*itr);
+                break;
+            }
+        }
+
+        name->setText(qs);
+        name->setFixedSize(200, BTN_FIXED_HEIGHT);
+        name->setFrame(false);
+        name->setReadOnly(true);
+        name->setAlignment(Qt::AlignCenter);
+
+
+
+        *qstr = QString::fromStdString("");
+        qstr->append("Obtained date : ");
+        qstr->append(QString::fromStdString(stockedAlimentToShow->getObtainedDate()));
+        obtainedDate->setText(*qstr);
+        obtainedDate->setFixedSize(200, BTN_FIXED_HEIGHT);
+        obtainedDate->setFrame(false);
+        obtainedDate->setReadOnly(true);
+        obtainedDate->setAlignment(Qt::AlignCenter);
+
+        *qstr = QString::fromStdString("");
+        qstr->append("Spoils in ");
+        qstr->append(QString::number(stockedAlimentToShow->getSpoilRateInDays()));
+        qstr->append(" days");
+        spoilRate->setText(*qstr);
+        spoilRate->setFixedSize(200, BTN_FIXED_HEIGHT);
+        spoilRate->setFrame(false);
+        spoilRate->setReadOnly(true);
+        spoilRate->setAlignment(Qt::AlignCenter);
+
+
+        *qstr = QString::fromStdString("");
+        qstr->append("Spoil date : ");
+        qstr->append(QString::fromStdString(stockedAlimentToShow->getSpoilDate()));
+        spoilDate->setText(*qstr);
+        spoilDate->setFixedSize(200, BTN_FIXED_HEIGHT);
+        spoilDate->setFrame(false);
+        spoilDate->setReadOnly(true);
+        spoilDate->setAlignment(Qt::AlignCenter);
+
+
+
+
+
+        QLayout* oldLayout = this->detailBox->layout();
+        deleteSpecificLayout(oldLayout);
+        grid->addWidget(name, 0, 0, 1, 1);
+        grid->addWidget(obtainedDate, 1, 0, 1, 1);
+        grid->addWidget(spoilRate, 0, 1, 1, 1);
+        grid->addWidget(spoilDate, 1, 1, 1, 1);
+        ;
         this->detailBox->setLayout(grid);
     }
     catch (std::exception) {
