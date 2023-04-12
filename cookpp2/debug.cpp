@@ -223,9 +223,6 @@ void debug()
 
 
 
-	std::cout << testInfoNutri1;
-	std::cout << testIngredient1;
-
 
 	//FacadeUserDB facade;
 
@@ -327,6 +324,7 @@ void initDb()
 
 
 	Pantry testpantry1 = Pantry(stockedAlimentList);
+	testpantry1.removeFromStock(&testStockedAliment1);
 
 	std::string testSteps1[] = 
 	{ "1 - Dice carots and potatoes",
@@ -440,8 +438,7 @@ void debugA(IngredientDBManager* DBIngredient, Ingredient* testIngredient0)
 
 	file.close();
 	
-	std::cout << *testInfoNutri0;
-
+	
 
 
 	//facade.saveIngredient(&testIngredient1, 0);

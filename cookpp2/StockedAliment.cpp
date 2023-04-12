@@ -173,7 +173,21 @@ StockedAliment StockedAliment::operator<(const StockedAliment& s) const
 
 
 
+bool StockedAliment::operator==(const StockedAliment& r)
+{
+	{
 
+		if (this->getMass() == r.getMass() && this->getObtainedDate() == r.getObtainedDate()) {
+			return true;
+		}
+		else {
+			return false;
+		}
+
+}
+
+
+}
 
 bool operator==(const StockedAliment& l, const StockedAliment& r)
 {

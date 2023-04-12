@@ -43,6 +43,7 @@ public:
 
 	StockedAliment operator< (const StockedAliment& s) const;
 	friend bool operator==(const StockedAliment& l, const StockedAliment& r);
+	bool operator==(const StockedAliment& r);
 
 
 	friend std::istream& operator >>(std::istream& is, StockedAliment& in);

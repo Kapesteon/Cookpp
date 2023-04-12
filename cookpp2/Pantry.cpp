@@ -1,18 +1,20 @@
 #include "Pantry.h"
 #define DELIMITER_KEY_VALUE_RECIPE '@' //For serialization //MUST BE ONE CHAR
 
-std::forward_list<StockedAliment*> Pantry::convertStockToForwardList(std::array<StockedAliment, MAX_STOCKEDALIMENTS> stock)
+std::forward_list<StockedAliment*> Pantry::convertStockToForwardList(std::array<StockedAliment, MAX_STOCKEDALIMENTS> * stock)
 {
 
 
 	std::forward_list<StockedAliment*> returnList = std::forward_list<StockedAliment*>();
 	int i = 0;
-	for (auto itr = stock.begin(); itr != stock.end() && i < MAX_STOCKEDALIMENTS; itr++) {
+	for (auto itr = stock->begin(); itr != stock->end() && i < MAX_STOCKEDALIMENTS; itr++) {
 		if (!(*itr == StockedAliment())) {
 			returnList.push_front(&*itr);
 			i++;
 		}
-		break;
+		else {
+			break;
+		}
 	}
 	return returnList;
 
@@ -56,9 +58,9 @@ Pantry::~Pantry()
 	OutputDebugStringA("Pantry Destroyed \n");
 }
 
-std::forward_list<StockedAliment *> Pantry::getStock(void) const
+std::forward_list<StockedAliment *> Pantry::getStock(void)
 {
-	return this->convertStockToForwardList(this->stock);
+	return this->convertStockToForwardList(&this->stock);
 
 }
 
@@ -111,15 +113,28 @@ void Pantry::addToStock(StockedAliment * stockedAliment)
 void Pantry::removeFromStock(StockedAliment* stockedAliment)
 {
 
-	auto list = this->convertStockToForwardList(this->stock);
-	list.remove(stockedAliment);
+	auto list = this->convertStockToForwardList(&this->stock);
+	//list.remove(*stockedAliment);
+	
+	auto before = list.before_begin();
+	for (auto it = list.begin(); it != list.end(); ) {
+		if (**it == *stockedAliment) {
+			it = list.erase_after(before);
+
+		}
+		else
+		{
+			before = it;
+			++it;
+		}
+	}
 	this->stock = this->convertForwardListToStock(list);
 }
 
 std::forward_list<StockedAliment*> Pantry::popStockedAlimentByName(std::string name)
 {
 	std::forward_list<StockedAliment*> returnList;
-	std::forward_list<StockedAliment*> list = this->convertStockToForwardList(this->stock);
+	std::forward_list<StockedAliment*> list = this->convertStockToForwardList(&this->stock);
 
 	std::forward_list<StockedAliment*>::iterator itr = list.begin();
 
@@ -147,7 +162,7 @@ std::forward_list<StockedAliment*> Pantry::popStockedAlimentByName(std::string n
 std::forward_list<StockedAliment*> Pantry::popStockedAlimentByType(std::string type)
 {
 	std::forward_list<StockedAliment*> returnList;
-	std::forward_list<StockedAliment*> list = this->convertStockToForwardList(this->stock);
+	std::forward_list<StockedAliment*> list = this->convertStockToForwardList(&this->stock);
 
 	std::forward_list<StockedAliment*>::iterator itr = list.begin();
 
@@ -177,7 +192,7 @@ std::forward_list<StockedAliment*> Pantry::popStockedAlimentMostDated(int nbr)
 	auto todelete = this->stock.max_size();
 	nbr = min(nbr, this->stock.max_size());
 	std::forward_list<StockedAliment*> returnList;
-	std::forward_list<StockedAliment*> list = this->convertStockToForwardList(this->stock);
+	std::forward_list<StockedAliment*> list = this->convertStockToForwardList(&this->stock);
 
 	list.sort();
 
@@ -232,14 +247,16 @@ std::istream& operator>>(std::istream& is, Pantry& in)
 
 }
 
+
+/*
 std::ostream& operator<<(std::ostream& os, const Pantry& in)
 {
 
 
 	try {
-		auto itr = in.getStock().begin();
+		auto itr = in.getStock()->begin();
 		StockedAliment buffer;
-		while (itr != in.getStock().end()) {
+		while (itr != in.getStock()end()) {
 			os << *itr;
 			os << std::endl;
 		}
@@ -256,4 +273,4 @@ std::ostream& operator<<(std::ostream& os, const Pantry& in)
 	return os;
 
 
-}
+}*/

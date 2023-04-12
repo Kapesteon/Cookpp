@@ -10,8 +10,8 @@ class Pantry
 		//std::forward_list<StockedAliment*> stock;
 		std::array<StockedAliment, MAX_STOCKEDALIMENTS> stock;
 
-		static std::forward_list<StockedAliment*> convertStockToForwardList(std::array<StockedAliment, MAX_STOCKEDALIMENTS> stock);
-		static std::array<StockedAliment, MAX_STOCKEDALIMENTS> convertForwardListToStock(std::forward_list<StockedAliment*>);
+		static std::forward_list<StockedAliment*> convertStockToForwardList(std::array<StockedAliment, MAX_STOCKEDALIMENTS>* stock);
+		static std::array<StockedAliment, MAX_STOCKEDALIMENTS> convertForwardListToStock(std::forward_list<StockedAliment*> flist);
 
 
 	public:
@@ -22,7 +22,7 @@ class Pantry
 
 
 
-		std::forward_list<StockedAliment *> getStock(void) const;
+		std::forward_list<StockedAliment *> getStock(void);
 		std::list<StockedAliment*> getStockAsList(void);
 		void setStock(std::forward_list<StockedAliment *> newStock) ;
 
@@ -34,6 +34,6 @@ class Pantry
 		std::forward_list<StockedAliment*> popStockedAlimentMostDated(int nbr);
 
 		friend std::istream& operator>>(std::istream& is, Pantry& in);
-		friend std::ostream& operator<<(std::ostream& os, const Pantry& in);
+		//friend std::ostream& operator<<(std::ostream& os, const Pantry& in);
 };
 
