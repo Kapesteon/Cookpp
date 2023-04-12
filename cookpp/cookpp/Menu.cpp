@@ -1,4 +1,5 @@
 #include "Menu.h"
+#include "RecipeDBManager.h"
 
 Menu::Menu() {
 	this->startDate = NULL;

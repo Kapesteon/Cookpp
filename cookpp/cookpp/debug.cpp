@@ -44,11 +44,42 @@ void debug()
 
 void debug()
 {
+	initDb();
 
+	/*/Menu menu;
+	std::time_t currentTime = std::time(nullptr);
+	menu.setStartDate(currentTime);
+	std::cout << menu.getStartDate();
+
+	FacadeUserDB facade;
+
+	p = facade.getPantry();
+
+	std::list<Recipe*> maListe = facade.getAllRecipe();
+	auto it = maListe.begin();
+	std::cout << "L'élément 3 de la liste est : " << (*it)->getName() << std::endl;*/
+
+
+	/*RecipeDBManager DBRecipe("stockDB/recipe.cdb");
+	std::list<Recipe*> r;
+	r = DBRecipe.getAllRecipe();
+
+	for (auto it = r.begin(); it != r.end(); ++it) {
+		std::cout << it->getName() << std::endl;
+	}
+
+	auto it = r.begin();
+	std::advance(it, 2);
+
+	std::cout << "L'élément 3 de la liste est : " << it->getName() << std::endl;*/
+
+	//Recipe rr = *it;
+	
+	std::cout << "hujki";
 	//std::ostringstream;
 	//OutputDebugStringA("test \n ");
 	//InfoNutri* testInfoNutri2 = new InfoNutri();
-	double tab[7] = { 52.1,98.5,100,258,48,987,10 };
+	/*double tab[7] = {52.1,98.5,100,258,48,987,10};
 	double tab2[7] = { 1,2,3,4,5,6,7};
 	double tab3[7] = { 100,1200,65,0.3,2.4,300,20 };
 
@@ -60,11 +91,6 @@ void debug()
 
 	auto e = testInfoNutri3.getNutriValues();
 	std::cout << "test";
-
-	Menu menu;
-	std::time_t currentTime = std::time(nullptr);
-	menu.setStartDate(currentTime);
-	std::cout << menu.getStartDate();
 
 	std::cout << "test fini";
 
@@ -131,6 +157,7 @@ void debug()
 	auto w = testRecipe2.getAliments();
 	testNManager->estimateNutriValue(w);
 	
+
 	menu.addRecipe(testRecipe2);
 	menu.addRecipe(testRecipe3);
 	menu.removeRecipe(testRecipe3);
@@ -144,7 +171,7 @@ void debug()
 	//r.push_back(&testRecipe1);
 	r = DBRecipe.getAllRecipe();
 
-	std::cout << "yoo";
+	std::cout << "yoo";*/
 	/*
 	testAliment4.~Aliment();
 	OutputDebugStringA("\ns\n ");
@@ -269,4 +296,137 @@ void debug()
 	auto a2 = facade.getAllRecipe();
 
 	return;*/
+}
+
+
+void initDb()
+{
+
+	double tab1[7] = { 1,2,3,4,5,6,7 };
+	double tab2[7] = { 11,12,13,14,15,16,17 };
+	double tab3[7] = { 21,22,23,24,25,26,27 };
+	double tab4[7] = { 31,32,33,34,35,36,37 };
+	double tab5[7] = { 1,2,3,4,5,6,7 };
+	double tab6[7] = { 11,12,13,14,15,16,17 };
+	double tab7[7] = { 21,22,23,24,25,26,27 };
+	double tab8[7] = { 31,32,33,34,35,36,37 };
+	double tab9[7] = { 1,2,3,4,5,6,7 };
+	double tab10[7] = { 11,12,13,14,15,16,17 };
+	double tab11[7] = { 21,22,23,24,25,26,27 };
+	double tab12[7] = { 31,32,33,34,35,36,37 };
+
+	InfoNutri testInfoNutri1 = InfoNutri(tab1, 7);
+	InfoNutri testInfoNutri2 = InfoNutri(tab2, 7);
+	InfoNutri testInfoNutri3 = InfoNutri(tab3, 7);
+	InfoNutri testInfoNutri4 = InfoNutri(tab4, 7);
+	InfoNutri testInfoNutri5 = InfoNutri(tab5, 7);
+	InfoNutri testInfoNutri6 = InfoNutri(tab6, 7);
+	InfoNutri testInfoNutri7 = InfoNutri(tab7, 7);
+	InfoNutri testInfoNutri8 = InfoNutri(tab8, 7);
+	InfoNutri testInfoNutri9 = InfoNutri(tab9, 7);
+	InfoNutri testInfoNutri10 = InfoNutri(tab10, 7);
+	InfoNutri testInfoNutri11 = InfoNutri(tab11, 7);
+	InfoNutri testInfoNutri12 = InfoNutri(tab12, 7);
+
+
+	Ingredient testIngredient1 = Ingredient("Carot", "Vegetable", "N/A", &testInfoNutri1);
+	Ingredient testIngredient2 = Ingredient("Potato", "Vegetable", "N/A", &testInfoNutri2);
+	Ingredient testIngredient3 = Ingredient("Apple", "Fruit", "N/A", &testInfoNutri3);
+	Ingredient testIngredient4 = Ingredient("Wheat", "Grain", "N/A", &testInfoNutri4);
+	Ingredient testIngredient5 = Ingredient("Peer", "Fruit", "N/A", &testInfoNutri5);
+	Ingredient testIngredient6 = Ingredient("Quince", "Fruit", "N/A", &testInfoNutri6);
+	Ingredient testIngredient7 = Ingredient("Water", "N/A", "N/A", &testInfoNutri7);
+	Ingredient testIngredient8 = Ingredient("Olive Oil", "Oil", "N/A", &testInfoNutri8);
+	Ingredient testIngredient9 = Ingredient("Butter", "Dairy", "N/A", &testInfoNutri9);
+	Ingredient testIngredient10 = Ingredient("Red Meat", "Protein", "N/A", &testInfoNutri10);
+	Ingredient testIngredient11 = Ingredient("Lentil", "Protein", "N/A", &testInfoNutri11);
+	Ingredient testIngredient12 = Ingredient("Buckwheat", "Grain", "N/A", &testInfoNutri12);
+
+
+	Aliment testAliment1 = Aliment(testIngredient1, 100); //Carot
+	Aliment testAliment2 = Aliment(testIngredient2, 200); //Potato
+	Aliment testAliment3 = Aliment(testIngredient3, 300); //Apple
+	Aliment testAliment4 = Aliment(testIngredient4, 400); //Wheat
+	Aliment testAliment5 = Aliment(testIngredient5, 100); //Peer
+
+
+	StockedAliment testStockedAliment1 = StockedAliment(testIngredient1, 1000, "2021-21-01", 185); //Carot
+	StockedAliment testStockedAliment2 = StockedAliment(testIngredient2, 1500, "2021-22-01", 365); //Potato
+	StockedAliment testStockedAliment3 = StockedAliment(testIngredient3, 2000, "2021-23-01", 30); //Apple
+	StockedAliment testStockedAliment4 = StockedAliment(testIngredient4, 2500, "2021-24-01", 2000); //Wheat
+
+
+	std::forward_list<StockedAliment* > stockedAlimentList;
+	stockedAlimentList.assign({ &testStockedAliment1,&testStockedAliment2,&testStockedAliment3,&testStockedAliment4 });
+
+
+	Pantry testpantry1 = Pantry(stockedAlimentList);
+
+	std::string testSteps1[] = { "1a","2b","3c","4d","5e" };
+	std::vector<std::string> strs(testSteps1, testSteps1 + sizeof(testSteps1) / sizeof(std::string));
+	std::string testSteps2[] = { "I","II","III" };
+	std::vector<std::string> strs2(testSteps2, testSteps2 + sizeof(testSteps2) / sizeof(std::string));
+
+	Recipe testRecipe1 = Recipe();
+	testRecipe1.addAliment(testAliment1);
+	testRecipe1.addAliment(testAliment2);
+	testRecipe1.addAliment(testAliment5);
+	testRecipe1.setName("Recipe 1");
+	testRecipe1.setNotes("Notes of Recipe1");
+	testRecipe1.markAsComplete();
+
+	Recipe testRecipe2 = Recipe();
+	testRecipe2.addAliment(testAliment3);
+	testRecipe2.addAliment(testAliment4);
+	testRecipe2.setName("Recipe 2");
+	testRecipe2.setNotes("Notes of Recipe2");
+	testRecipe2.markAsComplete();
+
+	FacadeUserDB facade;
+
+	facade.savePantry(&testpantry1);
+
+	facade.saveIngredient(&testIngredient1, 0);
+	facade.saveIngredient(&testIngredient2, 1);
+	facade.saveIngredient(&testIngredient3, 2);
+	facade.saveIngredient(&testIngredient4, 3);
+	facade.saveIngredient(&testIngredient5, 4);
+	facade.saveIngredient(&testIngredient6, 5);
+	facade.saveIngredient(&testIngredient7, 6);
+	facade.saveIngredient(&testIngredient8, 7);
+	facade.saveIngredient(&testIngredient9, 8);
+	facade.saveIngredient(&testIngredient10, 9);
+	facade.saveIngredient(&testIngredient11, 10);
+	facade.saveIngredient(&testIngredient12, 11);
+
+	facade.saveRecipe(&testRecipe1, 0);
+	facade.saveRecipe(&testRecipe2, 1);
+
+	Pantry p = facade.getPantry();
+
+	RecipeDBManager DBRecipe("stockDB/recipe.cdb");
+	std::list<Recipe*> r;
+	r = DBRecipe.getAllRecipe();
+
+	Menu menu;
+	std::time_t currentTime = std::time(nullptr);
+	menu.setStartDate(currentTime);
+	std::cout << menu.getStartDate();
+
+	MenuGenerator menuGenerator;
+
+	Menu newMenu = menuGenerator.generateMenu(2, 3, p, facade);
+
+	FacadeUserDB newFacade;
+
+	Pantry newPantry = newFacade.getPantry();
+	newPantry.setStock(menuGenerator.getStockedAliment());
+	newFacade.savePantry(&newPantry);
+
+	//FacadeUserDB newFacade;
+	//Pantry newPantry = newFacade.getPantry();
+
+	//std::list<Recipe*> maListe = facade.getAllRecipe();
+	//auto it = maListe.begin();
+	//std::cout << "L'élément 3 de la liste est : " << (*it)->getName() << std::endl;
 }

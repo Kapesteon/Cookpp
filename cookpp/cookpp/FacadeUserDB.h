@@ -2,6 +2,8 @@
 #include "PantryDBManager.h"
 #include "RecipeDBManager.h"
 #include "IngredientDBManager.h"
+#include <cstdio>
+#include <fstream>
 
 class FacadeUserDB
 {
@@ -21,6 +23,9 @@ public:
 
 	Pantry getPantry();
 	bool savePantry(Pantry* pantry);
+	bool removePantry();
+	bool putPantry();
+
 
 	std::list<Recipe*> getAllRecipe();
 	Recipe getRecipe(int pos);

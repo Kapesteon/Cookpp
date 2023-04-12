@@ -72,6 +72,33 @@ bool FacadeUserDB::savePantry(Pantry* pantry)
 	}
 }
 
+bool FacadeUserDB::removePantry()
+{
+	try {
+		const char* DBPantryPathChar = this->DBPantryPath.c_str();
+		remove(DBPantryPathChar);
+		//std::ofstream fichier(DBPantryPathChar);
+		return true;
+	}
+	catch (std::exception) {
+		std::cout << "Failed to remove Pantry";
+		return false;
+	}
+}
+
+bool FacadeUserDB::putPantry()
+{
+	try {
+		const char* DBPantryPathChar = this->DBPantryPath.c_str();
+		std::ofstream fichier(DBPantryPathChar);
+		return true;
+	}
+	catch (std::exception) {
+		std::cout << "Failed to put Pantry";
+		return false;
+	}
+}
+
 /*--------------------RECIPE------------------*/
 std::list<Recipe*> FacadeUserDB::getAllRecipe()
 {
