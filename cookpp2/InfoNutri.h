@@ -27,7 +27,7 @@ public:
 	InfoNutri(const InfoNutri& c);
 	~InfoNutri();
 
-	
+	void setValueByKey(std::string key, double value);
 	const std::array<double, NUMBER_ATRIBUTES> getNutriValues() const;
 
 	static const std::vector<std::string> getNutriKeys();

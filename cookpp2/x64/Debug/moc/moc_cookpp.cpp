@@ -50,13 +50,17 @@ static constexpr auto qt_meta_stringdata_CLASScookppENDCLASS = QtMocHelpers::str
     "mnViewIngredients",
     "mnViewRecipes",
     "mnViewPantry",
+    "mnAddIngredient",
     "showIngredientDetailclicked",
     "showRecipeDetailclicked",
-    "showStockedAlimentDetailclicked"
+    "showStockedAlimentDetailclicked",
+    "editIngredientclicked",
+    "saveIngredientEditclicked",
+    "gotoMainMenuclicked"
 );
 #else  // !QT_MOC_HAS_STRING_DATA
 struct qt_meta_stringdata_CLASScookppENDCLASS_t {
-    uint offsetsAndSizes[26];
+    uint offsetsAndSizes[34];
     char stringdata0[7];
     char stringdata1[30];
     char stringdata2[1];
@@ -67,9 +71,13 @@ struct qt_meta_stringdata_CLASScookppENDCLASS_t {
     char stringdata7[18];
     char stringdata8[14];
     char stringdata9[13];
-    char stringdata10[28];
-    char stringdata11[24];
-    char stringdata12[32];
+    char stringdata10[16];
+    char stringdata11[28];
+    char stringdata12[24];
+    char stringdata13[32];
+    char stringdata14[22];
+    char stringdata15[26];
+    char stringdata16[20];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(sizeof(qt_meta_stringdata_CLASScookppENDCLASS_t::offsetsAndSizes) + ofs), len 
@@ -85,9 +93,13 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASScookppENDCLASS_t qt_meta_string
         QT_MOC_LITERAL(123, 17),  // "mnViewIngredients"
         QT_MOC_LITERAL(141, 13),  // "mnViewRecipes"
         QT_MOC_LITERAL(155, 12),  // "mnViewPantry"
-        QT_MOC_LITERAL(168, 27),  // "showIngredientDetailclicked"
-        QT_MOC_LITERAL(196, 23),  // "showRecipeDetailclicked"
-        QT_MOC_LITERAL(220, 31)   // "showStockedAlimentDetailclicked"
+        QT_MOC_LITERAL(168, 15),  // "mnAddIngredient"
+        QT_MOC_LITERAL(184, 27),  // "showIngredientDetailclicked"
+        QT_MOC_LITERAL(212, 23),  // "showRecipeDetailclicked"
+        QT_MOC_LITERAL(236, 31),  // "showStockedAlimentDetailclicked"
+        QT_MOC_LITERAL(268, 21),  // "editIngredientclicked"
+        QT_MOC_LITERAL(290, 25),  // "saveIngredientEditclicked"
+        QT_MOC_LITERAL(316, 19)   // "gotoMainMenuclicked"
     },
     "cookpp",
     "ingredientListPreviousclicked",
@@ -99,9 +111,13 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASScookppENDCLASS_t qt_meta_string
     "mnViewIngredients",
     "mnViewRecipes",
     "mnViewPantry",
+    "mnAddIngredient",
     "showIngredientDetailclicked",
     "showRecipeDetailclicked",
-    "showStockedAlimentDetailclicked"
+    "showStockedAlimentDetailclicked",
+    "editIngredientclicked",
+    "saveIngredientEditclicked",
+    "gotoMainMenuclicked"
 };
 #undef QT_MOC_LITERAL
 #endif // !QT_MOC_HAS_STRING_DATA
@@ -113,7 +129,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASScookppENDCLASS[] = {
       11,       // revision
        0,       // classname
        0,    0, // classinfo
-      11,   14, // methods
+      15,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -121,19 +137,27 @@ Q_CONSTINIT static const uint qt_meta_data_CLASScookppENDCLASS[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,   80,    2, 0x08,    1 /* Private */,
-       3,    0,   81,    2, 0x08,    2 /* Private */,
-       4,    0,   82,    2, 0x08,    3 /* Private */,
-       5,    0,   83,    2, 0x08,    4 /* Private */,
-       6,    0,   84,    2, 0x08,    5 /* Private */,
-       7,    0,   85,    2, 0x08,    6 /* Private */,
-       8,    0,   86,    2, 0x08,    7 /* Private */,
-       9,    0,   87,    2, 0x08,    8 /* Private */,
-      10,    0,   88,    2, 0x08,    9 /* Private */,
-      11,    0,   89,    2, 0x08,   10 /* Private */,
-      12,    0,   90,    2, 0x08,   11 /* Private */,
+       1,    0,  104,    2, 0x08,    1 /* Private */,
+       3,    0,  105,    2, 0x08,    2 /* Private */,
+       4,    0,  106,    2, 0x08,    3 /* Private */,
+       5,    0,  107,    2, 0x08,    4 /* Private */,
+       6,    0,  108,    2, 0x08,    5 /* Private */,
+       7,    0,  109,    2, 0x08,    6 /* Private */,
+       8,    0,  110,    2, 0x08,    7 /* Private */,
+       9,    0,  111,    2, 0x08,    8 /* Private */,
+      10,    0,  112,    2, 0x08,    9 /* Private */,
+      11,    0,  113,    2, 0x08,   10 /* Private */,
+      12,    0,  114,    2, 0x08,   11 /* Private */,
+      13,    0,  115,    2, 0x08,   12 /* Private */,
+      14,    0,  116,    2, 0x08,   13 /* Private */,
+      15,    0,  117,    2, 0x08,   14 /* Private */,
+      16,    0,  118,    2, 0x08,   15 /* Private */,
 
  // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -174,11 +198,19 @@ Q_CONSTINIT const QMetaObject cookpp::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'mnViewPantry'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'mnAddIngredient'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'showIngredientDetailclicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'showRecipeDetailclicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'showStockedAlimentDetailclicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'editIngredientclicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'saveIngredientEditclicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'gotoMainMenuclicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>
     >,
     nullptr
@@ -198,9 +230,13 @@ void cookpp::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 5: _t->mnViewIngredients(); break;
         case 6: _t->mnViewRecipes(); break;
         case 7: _t->mnViewPantry(); break;
-        case 8: _t->showIngredientDetailclicked(); break;
-        case 9: _t->showRecipeDetailclicked(); break;
-        case 10: _t->showStockedAlimentDetailclicked(); break;
+        case 8: _t->mnAddIngredient(); break;
+        case 9: _t->showIngredientDetailclicked(); break;
+        case 10: _t->showRecipeDetailclicked(); break;
+        case 11: _t->showStockedAlimentDetailclicked(); break;
+        case 12: _t->editIngredientclicked(); break;
+        case 13: _t->saveIngredientEditclicked(); break;
+        case 14: _t->gotoMainMenuclicked(); break;
         default: ;
         }
     }
@@ -226,13 +262,13 @@ int cookpp::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 11)
+        if (_id < 15)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 11;
+        _id -= 15;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 11)
+        if (_id < 15)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 11;
+        _id -= 15;
     }
     return _id;
 }

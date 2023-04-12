@@ -52,9 +52,7 @@ void cookpp::displayMainMenu() {
     deleteCurrentView();
 
     QGridLayout* mainGrid = new QGridLayout;
-    mainGrid->addWidget(createMainMenuBox(), 0, 0, 2, 2);
-    mainGrid->addWidget(createSecondExclusiveGroup(), 0, 2, 2, 2);
-    mainGrid->addWidget(createDebugOutput(), 3, 0 , 1, 4);
+
     setLayout(mainGrid);
  
     setWindowTitle(tr("Cook++ - Main Menu"));
@@ -211,6 +209,219 @@ void cookpp::getPagePantry(int page, std::list<StockedAliment*>* listStockedAlim
     return;
 
 
+}
+
+void cookpp::ingredientEditor()
+{
+    try{
+        deleteCurrentView();
+
+        QFormLayout* mainLayout = new QFormLayout;
+        QVBoxLayout* vbox = new QVBoxLayout;
+        QLineEdit* name = new QLineEdit("Name");
+        QComboBox* type = new QComboBox();
+        QTableWidget* infoNutri = new QTableWidget();
+        QDialogButtonBox* dialogButton = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+        Ingredient* toEdit = this->currentIngredientSelected;
+
+
+        //QDialogButtonBox * okButton = new QDialogButtonBox(QDialogButtonBox::Ok);
+        //QDialogButtonBox* cancelButton = new QDialogButtonBox(QDialogButtonBox::Cancel);
+
+
+
+        QString* qstr = new QString();
+
+        *qstr = QString::fromStdString("");
+        qstr->append(QString::fromStdString(toEdit->getName()));
+        name->setText(*qstr);
+        name->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+        if (toEdit->getName() != "Undefined") {
+            name->setFrame(false);
+            name->setReadOnly(true);
+        }
+        else {
+            name->setFrame(true);
+            name->setReadOnly(false);
+        }
+        name->setAlignment(Qt::AlignCenter);
+
+
+
+        type->addItem(tr("Grain"));
+        type->addItem(tr("Vegetable"));
+        type->addItem(tr("Fruit"));
+        type->addItem(tr("Protein"));
+        type->addItem(tr("Oil"));
+        type->addItem(tr("Other"));
+        type->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+        type->setFrame(true);
+
+
+        auto t = toEdit->getInfoNutri().getNutriValues();
+
+        infoNutri->setColumnCount(2);
+        infoNutri->setRowCount(t.size());
+        infoNutri->verticalHeader()->setVisible(false);
+        infoNutri->horizontalHeader()->setVisible(false);
+        auto keysName = toEdit->getInfoNutri().getNutriKeys();
+
+
+        QTableWidgetItem* itemTitle = new QTableWidgetItem();
+        QTableWidgetItem* itemValue = new QTableWidgetItem();
+        itemTitle->setText("Per Amount (g)");
+
+        *qstr = QString::fromStdString("");
+        qstr->append(QString::number(t.at(0), 'G', 5));
+        itemValue->setText(*qstr);
+
+        itemTitle->setFlags(itemTitle->flags() ^ Qt::NoItemFlags);
+        itemTitle->setFlags(itemTitle->flags() ^ Qt::ItemIsEditable | Qt::ItemIsSelectable);
+        infoNutri->setItem(0, 0, itemTitle);
+        infoNutri->setItem(0, 1, itemValue);
+
+        int i = 1;
+        auto it = t.begin();
+        it++;
+        for (it; it != t.end(); it++) {
+            QTableWidgetItem* itemTitle = new QTableWidgetItem();
+            QTableWidgetItem* itemValue = new QTableWidgetItem();
+
+            *qstr = QString::fromStdString("");
+            *qstr = QString::fromStdString(keysName.at(i));
+
+
+            if (keysName.at(i) == "sodium") {
+                qstr->append(" (mg)");
+                itemTitle->setText(*qstr);
+                *qstr = QString::fromStdString("");
+                qstr->append(QString::number((*it) * 1000, 'G', 8));
+                itemValue->setText(*qstr);
+            }
+            else if (keysName.at(i) == "calories") {
+                qstr->append(" (kcal)");
+                itemTitle->setText(*qstr);
+                *qstr = QString::fromStdString("");
+                qstr->append(QString::number((*it), 'G', 5));
+                itemValue->setText(*qstr);
+            }
+            else{
+                qstr->append(" (g)");
+                itemTitle->setText(*qstr);
+                *qstr = QString::fromStdString("");
+                qstr->append(QString::number((*it), 'G', 5));
+                itemValue->setText(*qstr);
+            }
+            
+            itemValue->setFlags(itemTitle->flags() ^ Qt::NoItemFlags);
+            itemTitle->setFlags(itemTitle->flags() ^ Qt::ItemIsEditable | Qt::ItemIsSelectable);
+
+            infoNutri->setItem(i, 0, itemTitle);
+            infoNutri->setItem(i, 1, itemValue);
+            i++;
+        }
+        infoNutri->setFrameStyle(QFrame::NoFrame);
+
+
+        //connect(dialogButton, SIGNAL(accepted()), &dialog, SLOT(accept()));
+        connect(dialogButton, SIGNAL(accepted()), this, SLOT(saveIngredientEditclicked()));
+        connect(dialogButton, SIGNAL(rejected()), this, SLOT(gotoMainMenuclicked()));
+
+
+        QLayout* oldLayout = this->detailBox->layout();
+        deleteSpecificLayout(oldLayout);
+
+        name->setObjectName("name");
+        type->setObjectName("type");
+        infoNutri->setObjectName("infoNutri");
+        vbox->addWidget(name, Qt::AlignCenter);
+        vbox->addWidget(type, Qt::AlignCenter);
+        vbox->addWidget(infoNutri, Qt::AlignCenter);
+        vbox->addWidget(dialogButton, Qt::AlignCenter);
+        this->detailBox->setLayout(vbox);
+        mainLayout->addWidget(this->detailBox);
+        setLayout(mainLayout);
+        setWindowTitle(tr("Cook++ - Ingredients"));
+
+
+    }
+    catch (std::exception) {
+        OutputDebugStringA("Error with button sender");
+    }
+}
+
+void cookpp::saveIngredientEdit()
+{
+    Ingredient* toSave = this->currentIngredientSelected;
+    InfoNutri* infoNutriToSave = new InfoNutri;
+    std::string ingredientName = "";
+    std::string ingredientType = "";
+
+
+    for (int i = 0; i < this->detailBox->layout()->count(); ++i)
+    {
+        QWidget* widget = this->detailBox->layout()->itemAt(i)->widget();
+        if (widget != NULL)
+        {
+            QString qname = widget->objectName();
+            std::string sname = qname.toStdString();
+            if (sname == "name") {
+                QLineEdit* item = qobject_cast<QLineEdit*>(widget);
+                ingredientName = item->text().toStdString();
+                toSave->setName(ingredientName);
+            }
+            else if (sname == "type") {
+                QComboBox* item = qobject_cast<QComboBox*>(widget);
+                ingredientType = item->currentText().toStdString();
+                toSave->setType(ingredientType);
+            }
+            else if (sname == "infoNutri") {
+                QTableWidget* table = qobject_cast<QTableWidget*>(widget);
+                QTableWidgetItem* itemTitle = new QTableWidgetItem;
+                QTableWidgetItem* itemValue = new QTableWidgetItem;
+                std::vector<std::string> keys = infoNutriToSave->getNutriKeys();
+                for (int row = 0; row < table->rowCount(); ++row) {
+                    std::string key = table->item(row, 0)->text().toStdString();
+                    double value = table->item(row, 1)->text().toDouble();
+                    if (key == "sodium (mg)") {
+                        value = value / 1000;
+                    }
+                    infoNutriToSave->setValueByKey(keys[row], value);
+                }
+                toSave->setInfoNutri(*infoNutriToSave);
+            }
+        }
+        else
+        {
+            // You may want to recurse, or perform different actions on layouts.
+            // See gridLayout->itemAt(i)->layout()
+        }
+
+
+    }
+
+    //
+    auto list = this->facade->getAllIngredient();
+    int writeIndex = list.size();
+    //See where to write the current ingredient
+    int i = 0;
+    for (auto it = list.begin(); it != list.end(); it++) {
+        if((*it)->getName() == toSave->getName()) {
+            break;
+        }
+        i++;
+    }
+    writeIndex = i;
+    this->facade->saveIngredient(toSave, writeIndex);
+    //this->facade->addIngredient(toAdd);
+
+
+    delete infoNutriToSave;
+
+
+    displayAllIngredients();
+
+    return;
 }
 
 
@@ -558,98 +769,13 @@ void cookpp::deleteSpecificLayout(QLayout* item)
     }
 }
 
-
-
-
-QGroupBox* cookpp::createFirstExclusiveGroup()
-{
-    QGroupBox* groupBox = new QGroupBox(tr("Exclusive Radio Buttons"));
-
-    QRadioButton* radio1 = new QRadioButton(tr("&Radio button 1"));
-    QRadioButton* radio2 = new QRadioButton(tr("R&adio button 2"));
-    QRadioButton* radio3 = new QRadioButton(tr("Ra&dio button 3"));
-
-    radio1->setChecked(true);
-    QVBoxLayout* vbox = new QVBoxLayout;
-    vbox->addWidget(radio1);
-    vbox->addWidget(radio2);
-    vbox->addWidget(radio3);
-    vbox->addStretch(1);
-    groupBox->setLayout(vbox);
-    groupBox->close();
-
-    return groupBox;
+void cookpp::setDetailBoxToMainLayout(int row, int col, int rowSpan, int colSpan) {
+    QGridLayout* mainLayout = new QGridLayout;
+    mainLayout->addWidget(this->detailBox, row, col, rowSpan, colSpan);
+    setLayout(mainLayout);
 }
 
-QGroupBox* cookpp::createSecondExclusiveGroup()
-{
-    QGroupBox* groupBox = new QGroupBox(tr("E&xclusive Radio Buttons"));
-    groupBox->setCheckable(true);
-    groupBox->setChecked(false);
-    QRadioButton* radio1 = new QRadioButton(tr("Rad&io button 1"));
-    QRadioButton* radio2 = new QRadioButton(tr("Radi&o button 2"));
-    QRadioButton* radio3 = new QRadioButton(tr("Radio &button 3"));
-    radio1->setChecked(true);
-    QCheckBox* checkBox = new QCheckBox(tr("Ind&ependent checkbox"));
-    checkBox->setChecked(true);
-    QVBoxLayout* vbox = new QVBoxLayout;
-    vbox->addWidget(radio1);
-    vbox->addWidget(radio2);
-    vbox->addWidget(radio3);
-    vbox->addWidget(checkBox);
-    vbox->addStretch(1);
-    groupBox->setLayout(vbox);
 
-    return groupBox;
-}
-
-QGroupBox* cookpp::createNonExclusiveGroup()
-{
-    QGroupBox* groupBox = new QGroupBox(tr("Non-Exclusive Checkboxes"));
-    groupBox->setFlat(true);
-    QCheckBox* checkBox1 = new QCheckBox(tr("&Checkbox 1"));
-    QCheckBox* checkBox2 = new QCheckBox(tr("C&heckbox 2"));
-    checkBox2->setChecked(true);
-    QCheckBox* tristateBox = new QCheckBox(tr("Tri-&state button"));
-    tristateBox->setTristate(true);
-    QVBoxLayout* vbox = new QVBoxLayout;
-    vbox->addWidget(checkBox1);
-    vbox->addWidget(checkBox2);
-    vbox->addWidget(tristateBox);
-    vbox->addStretch(1);
-    groupBox->setLayout(vbox);
-
-    return groupBox;
-}
-
-QGroupBox* cookpp::createPushButtonGroup()
-{
-    QGroupBox* groupBox = new QGroupBox(tr("&Push Buttons"));
-    groupBox->setCheckable(true);
-    groupBox->setChecked(true);
-    QPushButton* pushButton = new QPushButton(tr("&Normal Button"));
-    QPushButton* toggleButton = new QPushButton(tr("&Toggle Button"));
-    toggleButton->setCheckable(true);
-    toggleButton->setChecked(true);
-    QPushButton* flatButton = new QPushButton(tr("&Flat Button"));
-    flatButton->setFlat(true);
-    QPushButton* popupButton = new QPushButton(tr("Pop&up Button"));
-    QMenu* menu = new QMenu(this);
-    menu->addAction(tr("&First Item"));
-    menu->addAction(tr("&Second Item"));
-    menu->addAction(tr("&Third Item"));
-    menu->addAction(tr("F&ourth Item"));
-    popupButton->setMenu(menu);
-    QVBoxLayout* vbox = new QVBoxLayout;
-    vbox->addWidget(pushButton);
-    vbox->addWidget(toggleButton);
-    vbox->addWidget(flatButton);
-    vbox->addWidget(popupButton);
-    vbox->addStretch(1);
-    groupBox->setLayout(vbox);
-
-    return groupBox;
-}
 
 
 
@@ -689,6 +815,9 @@ void cookpp::createActions()
 
     mnViewPantryAct->setStatusTip(tr("View Stocked Aliments in Pantry "));
     connect(mnViewPantryAct, &QAction::triggered, this, &cookpp::mnViewPantry);
+
+    mnAddIngredientAct->setStatusTip(tr("Create a new Ingredient"));
+    connect(mnAddIngredientAct, &QAction::triggered, this, &cookpp::mnAddIngredient);
 }
 
 void cookpp::createMenus()
@@ -754,6 +883,8 @@ void cookpp::recipeListPreviousclicked()
     displayAllRecipes();
 }
 
+
+/*----- MN METHODS --------*/
 void cookpp::mnMainMenu() 
 {
     displayMainMenu();
@@ -770,6 +901,12 @@ void cookpp::mnViewRecipes() {
 void cookpp::mnViewPantry() {
     displayPantry();
 }
+
+void cookpp::mnAddIngredient() {
+    this->currentIngredientSelected = new Ingredient;
+    ingredientEditor();
+}
+
 
 
 void cookpp::showIngredientDetailclicked()
@@ -789,6 +926,7 @@ void cookpp::showIngredientDetailclicked()
         QLineEdit* type = new QLineEdit("Type");
         QLineEdit* season = new QLineEdit("Season");
         QTableWidget* infoNutri = new QTableWidget();
+        QPushButton* editButton = new QPushButton(tr("&Edit"));
 
         auto itr = this->activeIngredientBuffer->begin();
 
@@ -876,17 +1014,28 @@ void cookpp::showIngredientDetailclicked()
         infoNutri->setFrameStyle(QFrame::NoFrame);
 
 
+        editButton->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+        this->currentIngredientSelected = ingrToShow;
+        connect(editButton, SIGNAL(clicked()), this, SLOT(editIngredientclicked()));
+
+
         QLayout* oldLayout = this->detailBox->layout();
         deleteSpecificLayout(oldLayout);
         vbox->addWidget(name, Qt::AlignCenter);
         vbox->addWidget(type, Qt::AlignCenter);
         vbox->addWidget(season, Qt::AlignCenter);
         vbox->addWidget(infoNutri, Qt::AlignCenter);
+        vbox->addWidget(editButton, Qt::AlignCenter);
         this->detailBox->setLayout(vbox);
+
+       
+
     }
     catch(std::exception){
         OutputDebugStringA("Error with button sender");
     }
+
+
 }
 
 void cookpp::showRecipeDetailclicked()
@@ -1156,4 +1305,123 @@ void cookpp::showStockedAlimentDetailclicked()
     catch (std::exception) {
         OutputDebugStringA("Error with button sender");
     }
+}
+
+void cookpp::saveIngredientEditclicked()
+{
+    saveIngredientEdit();
+
+    
+
+}
+
+void cookpp::editIngredientclicked()
+{
+    ingredientEditor();
+}
+
+
+
+void cookpp::gotoMainMenuclicked()
+{
+    displayMainMenu();
+}
+
+
+
+
+
+
+
+
+
+
+QGroupBox* cookpp::createFirstExclusiveGroup()
+{
+    QGroupBox* groupBox = new QGroupBox(tr("Exclusive Radio Buttons"));
+
+    QRadioButton* radio1 = new QRadioButton(tr("&Radio button 1"));
+    QRadioButton* radio2 = new QRadioButton(tr("R&adio button 2"));
+    QRadioButton* radio3 = new QRadioButton(tr("Ra&dio button 3"));
+
+    radio1->setChecked(true);
+    QVBoxLayout* vbox = new QVBoxLayout;
+    vbox->addWidget(radio1);
+    vbox->addWidget(radio2);
+    vbox->addWidget(radio3);
+    vbox->addStretch(1);
+    groupBox->setLayout(vbox);
+    groupBox->close();
+
+    return groupBox;
+}
+
+QGroupBox* cookpp::createSecondExclusiveGroup()
+{
+    QGroupBox* groupBox = new QGroupBox(tr("E&xclusive Radio Buttons"));
+    groupBox->setCheckable(true);
+    groupBox->setChecked(false);
+    QRadioButton* radio1 = new QRadioButton(tr("Rad&io button 1"));
+    QRadioButton* radio2 = new QRadioButton(tr("Radi&o button 2"));
+    QRadioButton* radio3 = new QRadioButton(tr("Radio &button 3"));
+    radio1->setChecked(true);
+    QCheckBox* checkBox = new QCheckBox(tr("Ind&ependent checkbox"));
+    checkBox->setChecked(true);
+    QVBoxLayout* vbox = new QVBoxLayout;
+    vbox->addWidget(radio1);
+    vbox->addWidget(radio2);
+    vbox->addWidget(radio3);
+    vbox->addWidget(checkBox);
+    vbox->addStretch(1);
+    groupBox->setLayout(vbox);
+
+    return groupBox;
+}
+
+QGroupBox* cookpp::createNonExclusiveGroup()
+{
+    QGroupBox* groupBox = new QGroupBox(tr("Non-Exclusive Checkboxes"));
+    groupBox->setFlat(true);
+    QCheckBox* checkBox1 = new QCheckBox(tr("&Checkbox 1"));
+    QCheckBox* checkBox2 = new QCheckBox(tr("C&heckbox 2"));
+    checkBox2->setChecked(true);
+    QCheckBox* tristateBox = new QCheckBox(tr("Tri-&state button"));
+    tristateBox->setTristate(true);
+    QVBoxLayout* vbox = new QVBoxLayout;
+    vbox->addWidget(checkBox1);
+    vbox->addWidget(checkBox2);
+    vbox->addWidget(tristateBox);
+    vbox->addStretch(1);
+    groupBox->setLayout(vbox);
+
+    return groupBox;
+}
+
+QGroupBox* cookpp::createPushButtonGroup()
+{
+    QGroupBox* groupBox = new QGroupBox(tr("&Push Buttons"));
+    groupBox->setCheckable(true);
+    groupBox->setChecked(true);
+    QPushButton* pushButton = new QPushButton(tr("&Normal Button"));
+    QPushButton* toggleButton = new QPushButton(tr("&Toggle Button"));
+    toggleButton->setCheckable(true);
+    toggleButton->setChecked(true);
+    QPushButton* flatButton = new QPushButton(tr("&Flat Button"));
+    flatButton->setFlat(true);
+    QPushButton* popupButton = new QPushButton(tr("Pop&up Button"));
+    QMenu* menu = new QMenu(this);
+    menu->addAction(tr("&First Item"));
+    menu->addAction(tr("&Second Item"));
+    menu->addAction(tr("&Third Item"));
+    menu->addAction(tr("F&ourth Item"));
+    popupButton->setMenu(menu);
+    QVBoxLayout* vbox = new QVBoxLayout;
+    vbox->addWidget(pushButton);
+    vbox->addWidget(toggleButton);
+    vbox->addWidget(flatButton);
+    vbox->addWidget(popupButton);
+    vbox->addStretch(1);
+    groupBox->setLayout(vbox);
+
+    return groupBox;
 }

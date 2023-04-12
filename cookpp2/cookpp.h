@@ -33,15 +33,19 @@ public:
     void getPageRecipe(int page, std::list<Recipe*>* listRecipe, std::vector< QToolButton*>* recipesButton);
     void getPagePantry(int page, std::list<StockedAliment*>* listStockedAliment, std::vector< QToolButton*>* pantryButton);
 
+    void ingredientEditor();
+    void saveIngredientEdit();
 
     void deleteCurrentView();
     void deleteSpecificLayout(QLayout* item);
+    void setDetailBoxToMainLayout(int row, int col, int rowSpan, int colSpan);
 
 private:
     int currentPage = 0;
     std::unique_ptr<std::vector<Ingredient*>> activeIngredientBuffer; //Used to store Ingredients
     std::unique_ptr<std::vector<Recipe*>> activeRecipeBuffer; //Used to store Recipes
     std::unique_ptr<std::vector<StockedAliment*>> activeStockedAlimentBuffer; //Used to store StockedAliment
+    Ingredient* currentIngredientSelected;
     FacadeUserDB* facade;
 
 
@@ -62,7 +66,6 @@ private:
     QGroupBox *createSecondExclusiveGroup();
     QGroupBox *createNonExclusiveGroup();
     QGroupBox *createPushButtonGroup();
-    //Ui::cookppClass ui;
 
     void createActions();
     void createMenus();
@@ -96,12 +99,17 @@ private slots:
     void mnViewIngredients();
     void mnViewRecipes();
     void mnViewPantry();
+    void mnAddIngredient();
     /*------------------------------------*/
 
-    /*------------Menu Slots-----------*/
+    /*------------Button Slots-----------*/
     void showIngredientDetailclicked();
     void showRecipeDetailclicked();
     void showStockedAlimentDetailclicked();
+
+    void editIngredientclicked();
+    void saveIngredientEditclicked();
+    void gotoMainMenuclicked();
     /*------------------------------------*/
 
 };

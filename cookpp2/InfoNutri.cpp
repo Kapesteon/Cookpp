@@ -113,6 +113,20 @@ InfoNutri::~InfoNutri()
 
 
 
+void InfoNutri::setValueByKey(std::string key, double value)
+{
+    std::vector<std::string>::iterator it;
+    it = std::find(keys.begin(),keys.end(), key);
+    if (it != keys.end()) {
+        int i = std::distance(keys.begin(), it);
+        this->nutriValues[i] = value;
+    }
+    else {
+        std::cout << "Element not found in myints\n";
+    }
+
+}
+
 const std::array<double, NUMBER_ATRIBUTES> InfoNutri::getNutriValues() const
 {
     
