@@ -1,6 +1,8 @@
 #pragma once
 #include "GenericDBManager.h"
 #include "Pantry.h"
+#define MAX_STOCKEDALIMENTS 25
+
 class PantryDBManager :
     public GenericDBManager
 {

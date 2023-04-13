@@ -4,6 +4,9 @@
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+#include <chrono>
+#include <codecvt>
+#include <string>
 
 class StockedAliment : public Aliment
 {
@@ -30,15 +33,18 @@ public:
 
 
 	const int getSpoilRateInDays() const;
-	void setSpoilRateInDays(int spoilRate) ;
+	void setSpoilRateInDays(int spoilRate);
 
 	const std::string getSpoilDate() const;
 	void calculateSpoilDate(void);
 
-	time_t strTotime_t(std::string strDate) const;
-	std::string time_tToStr(time_t time) const ;
+	time_t strTotime_t(std::string strDate);
+	std::string time_tToStr(time_t time) const;
 
 	StockedAliment operator< (const StockedAliment& s) const;
+	friend bool operator==(const StockedAliment& l, const StockedAliment& r);
+	bool operator==(const StockedAliment& r);
+
 
 	friend std::istream& operator >>(std::istream& is, StockedAliment& in);
 	friend std::ostream& operator <<(std::ostream& os, const StockedAliment& in);

@@ -6,6 +6,7 @@ Menu::Menu() {
 	this->endDate = NULL;
 	this->numConsumers = 0;
 	this->listRecipe = std::list <Recipe>();
+	this->errorMenu = false;
 }
 
 Menu::Menu(time_t startDate, time_t endDate, int numConsumers) {
@@ -13,6 +14,7 @@ Menu::Menu(time_t startDate, time_t endDate, int numConsumers) {
 	this->endDate = endDate;
 	this->numConsumers = numConsumers;
 	this->listRecipe = std::list <Recipe>();
+	this->errorMenu = false;
 }
 
 
@@ -49,6 +51,15 @@ int Menu::getNumConsumers() {
 void Menu::setNumConsumers(int numConsumers) {
 	this->numConsumers = numConsumers;
 }
+
+bool Menu::getErrorMenu() {
+	return this->errorMenu;
+}
+
+void Menu::setErrorMenu(bool error) {
+	this->errorMenu = error;
+}
+
 
 //std::string* Menu::printMenu() { ; }
 void Menu::printMenu() { ; }

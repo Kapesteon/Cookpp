@@ -4,16 +4,18 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <array>
 #include "Windows.h"
 #include "debugapi.h"
+#define NUMBER_ATRIBUTES 7
 
 class InfoNutri
 {
 private:
 	
 	static std::vector<std::string> keys;
-	std::map<std::string, double> values;
-
+	//std::map<std::string, double> values;
+	std::array<double, NUMBER_ATRIBUTES> nutriValues = std::array<double, NUMBER_ATRIBUTES>();
 
 public:
 
@@ -21,12 +23,14 @@ public:
 	InfoNutri();
 	InfoNutri(std::vector<double>& param);
 	InfoNutri(double* tab, size_t len); // Tab of all parameters
-	InfoNutri(std::map<std::string, double> values);
+	InfoNutri(std::map<std::string, double> values); //Unused
 	InfoNutri(const InfoNutri& c);
 	~InfoNutri();
 
-	void printInfoNutri();
-	const std::map<std::string, double> getNutriValues() const;
+	void setValueByKey(std::string key, double value);
+	const std::array<double, NUMBER_ATRIBUTES> getNutriValues() const;
+
+	static const std::vector<std::string> getNutriKeys();
 
 
 	//Overloading streams

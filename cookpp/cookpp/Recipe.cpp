@@ -1,21 +1,29 @@
 #include "Recipe.h"
 #define DELIMITER_KEY_VALUE_RECIPE '@' //For serialization //MUST BE ONE CHAR
+
 Recipe::Recipe()
 {
-	this->name = "unknown";
-	this->aliments = std::set <Aliment>();
-	this->steps = std::vector<std::string>();
-	this->notes = "";
+	this->name = "N/A";
+	this->notes[0] = '\0';
 	this->nutriScore = -1;
 	this->infoNutri = InfoNutri();
+	this->aliments = std::array <Aliment, MAX_ALIMENTS>();
+	this->steps = std::array <char[256], MAX_STEPS>();
 }
 
-Recipe::Recipe(std::string name,std::set<Aliment> aliments, std::vector<std::string> steps, std::string notes)
+Recipe::Recipe(std::string name, std::array <Aliment, MAX_ALIMENTS> aliments, std::array <char[256], MAX_STEPS> steps, std::string notes)
 {
 	this->name = name;
 	this->aliments = aliments;
-	this->steps = steps;
-	this->notes = notes;
+	strcpy_s(this->notes, (notes.c_str()));
+	//this->notes = notes;
+
+	int i = 0;
+	for (auto itr = steps.begin(); itr != steps.end(); itr++) {
+		strcpy_s(this->steps[i], (*itr));
+		i++;
+	}
+
 	this->nutriScore = -1;
 	this->infoNutri = InfoNutri();
 	this->evaluateNutriInfo();
@@ -24,9 +32,15 @@ Recipe::Recipe(std::string name,std::set<Aliment> aliments, std::vector<std::str
 Recipe::Recipe(const Recipe& c)
 {
 	this->name = c.name;
+	strcpy_s(this->notes, (c.notes));
+	//this->notes = c.notes;
 	this->aliments = c.aliments;
-	this->steps = c.steps;
-	this->notes = c.notes;
+
+	int i = 0;
+	for (auto itr = c.steps.begin(); itr != c.steps.end(); itr++) {
+		strcpy_s(this->steps[i], (*itr));
+		i++;
+	}
 	this->nutriScore = c.nutriScore;
 	this->infoNutri = c.infoNutri;
 }
@@ -48,20 +62,44 @@ std::string Recipe::getName() const
 	return this->name;
 }
 
-std::set<Aliment> Recipe::getAliments() const
+std::vector<Aliment> Recipe::getAliments() const
 {
-	return this->aliments;
+	std::vector<Aliment> r;
+	auto itr = this->aliments.begin();
+	int i = 0;
+	for (itr; itr != this->aliments.end(); itr++) {
+		if (!(*(itr) != 0)) {
+			break;
+		}
+		r.push_back(this->aliments[i]);
+		i++;
+	}
+	return r;
+
+	//return std::vector<Aliment>(this->aliments.begin(), this->aliments.end());
+	//return this->aliments;
 }
 
-void Recipe::setAliments(std::set<Aliment> aliments)
+void Recipe::setAliments(std::vector<Aliment> aliments)
 {
-	this->aliments = aliments;
+
+	std::copy_n(aliments.begin(), MAX_ALIMENTS, this->aliments.begin());
+	//this->aliments = aliments;
 
 }
 
 void Recipe::addAliment(Aliment aliment)
 {
-	this->aliments.insert(aliment);
+	auto itr = this->aliments.begin();
+	int i = 0;
+	for (itr; itr != this->aliments.end(); itr++) {
+		if (!(*(itr) != 0)) {
+			this->aliments[i] = aliment;
+ 			break;
+		}
+		i++;
+	}
+
 
 }
 
@@ -69,7 +107,21 @@ void Recipe::addAliment(Aliment aliment)
 
 void Recipe::removeAliment(Aliment aliment)
 {
-	this->aliments.erase(aliment);
+
+
+	auto itr = this->aliments.begin();
+
+	int i = 0;
+	for (itr; itr != this->aliments.end(); itr++) {
+		
+		if (!(*(itr) == aliment)) {
+			this->aliments[i] = Aliment();
+			break;
+		}
+		i++;
+	}
+
+
 
 }
 
@@ -77,33 +129,62 @@ void Recipe::removeAliment(Aliment aliment)
 
 std::vector<std::string> Recipe::getSteps() const
 {
-	return std::vector<std::string>();
+
+	std::vector<std::string> a;
+	auto itr = this->steps.begin();
+	for (itr; itr < this->steps.end() && (*(itr)[0] != '\0'); itr++) {
+		a.push_back(std::string(*itr));
+	}
+	//return std::vector<std::string>(this->steps.begin(), this->steps.end());
+	//return this->steps;
+	return a;
 }
 
-void Recipe::setSteps(std::vector<std::string> steps)
+void Recipe::setStep(std::string step, int pos)
 {
-	this->steps = steps;
+	strcpy_s(this->steps[pos], step.c_str());
+	//std::copy_n(steps.begin(), steps.size(), this->steps.begin());
+	//this->steps = steps;
+
 }
 
 void Recipe::addStep(std::string step)
 {
-	this->steps.push_back(step);
+	auto itr = this->steps.begin();
+	int i = 0;
+
+	for (itr; itr != this->steps.end(); itr++) {
+		if (!(*(itr)[0] != '\0')) {
+			int j = 0;
+			strcpy_s(this->steps[i], step.c_str());
+			/*
+			for (auto itr2 = step.begin(); itr2 != step.end() && j < 255; itr2++) {
+				this->steps[i][j] = *(itr2);
+				j++;
+			}
+			*/
+
+			break;
+		}
+		i++;
+	}
+
+	//this->steps.push_back(step);
 }
 
-void Recipe::removeLastStep()
-{
-	this->steps.pop_back();
-}
+
 
 
 std::string Recipe::getNotes() const
 {
-	return this->notes;
+
+	return std::string(this->notes);
 }
 
 void Recipe::setNotes(std::string notes)
 {
-	this->notes = notes;
+	strcpy_s(this->notes, (notes.c_str()));
+	//this->notes = notes;
 }
 
 float Recipe::getNutriScore() const
@@ -124,7 +205,7 @@ bool Recipe::getIsDraft() const
 void Recipe::evaluateNutriInfo()
 {
 	NutritionalManager* n = n->getSingleton();
-	this->infoNutri = n->estimateNutriValue(this->aliments);
+	this->infoNutri = n->estimateNutriValue(this->getAliments());
 	this->nutriScore = n->estimateNutriScore(this->infoNutri);
 }
 
@@ -192,7 +273,7 @@ std::ostream& operator<<(std::ostream& os, const Recipe& in)
 		<< std::endl;
 	try {
 		// Serialize Aliments set
-		std::set<Aliment>::iterator itr;
+		std::vector<Aliment>::iterator itr;
 		for (itr = in.getAliments().begin();
 			itr != in.getAliments().end(); itr++)
 		{
@@ -241,7 +322,6 @@ Recipe Recipe::operator<(const Recipe& s) const
 		return *this;
 	}
 }
-
 
 int Recipe::operator==(const Recipe& s) const
 {

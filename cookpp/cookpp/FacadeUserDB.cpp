@@ -15,12 +15,14 @@ FacadeUserDB::FacadeUserDB()
 	this->DBIngredient = new IngredientDBManager(this->DBIngredientPath);
 }
 
-FacadeUserDB::FacadeUserDB(std::string DBPantryPath, std::string DBRecipePath, std::string DBIngregientPath)
+FacadeUserDB::FacadeUserDB(std::string DBPantryPath, std::string DBRecipePath, std::string DBIngredientPath)
 {
 	this->DBPantryPath = DBPantryPath;
 	this->DBPantry = new PantryDBManager(DBPantryPath);
-	this->DBRecipePath = "stockDB/recipe.cdb";
+	this->DBRecipePath = DBRecipePath;
 	this->DBRecipe = new RecipeDBManager(this->DBRecipePath);
+	this->DBIngredientPath = DBIngredientPath;
+	this->DBIngredient = new IngredientDBManager(this->DBIngredientPath);
 }
 
 FacadeUserDB::FacadeUserDB(FacadeUserDB& c)
@@ -29,6 +31,8 @@ FacadeUserDB::FacadeUserDB(FacadeUserDB& c)
 	this->DBPantryPath = c.DBPantryPath;
 	this->DBRecipe = c.DBRecipe;
 	this->DBRecipePath = c.DBRecipePath;
+	this->DBIngredientPath = c.DBIngredientPath;
+	this->DBIngredient = c.DBIngredient;
 
 }
 
@@ -36,6 +40,32 @@ FacadeUserDB::~FacadeUserDB()
 {
 	delete this->DBPantry;
 	delete this->DBRecipe;
+	delete this->DBIngredient;
+}
+
+
+/*
+/!\
+FOR SOME REASON, FSTREAM.READ RETURNS ALREADY ALLOCATED HEAP MEMORY 
+THIS MEANS THAT IF THERE IS 2 PANTRY SHARING AT LEAST ONE ITEM IN std::forward_list<StockedAliment*> stock
+THEN THE PROGRAM WILL CRASH AS THE DESTRUCTOR WILL HAVE ALREADY DEALLOCATED THE FIRST ITEM THUS CRASHING ON THE SECOND TRY
+*/
+bool FacadeUserDB::getPantry(Pantry * pantryTarget)
+{
+	try {
+
+
+		if (this->DBPantry->read(pantryTarget,0)) {
+			return true;
+		}
+		else {
+			return false;
+		}
+	}
+	catch (std::exception) {
+		std::cout << "Failed to get Pantry";
+		return false;
+	}
 }
 
 Pantry FacadeUserDB::getPantry()
@@ -43,7 +73,7 @@ Pantry FacadeUserDB::getPantry()
 	try {
 
 		Pantry pReturn;
-		if (this->DBPantry->read(&pReturn,0)) {
+		if (this->DBPantry->read(&pReturn, 0)) {
 			return pReturn;
 		}
 		else {
@@ -113,21 +143,21 @@ std::list<Recipe*> FacadeUserDB::getAllRecipe()
 	}
 }
 
-Recipe FacadeUserDB::getRecipe(int pos)
+bool FacadeUserDB::getRecipe(Recipe* recipeTarget,int pos)
 {
 	try {
 
-		Recipe p;
-		if (this->DBRecipe->read(&p,pos)) {
-			return p;
+
+		if (this->DBRecipe->read(recipeTarget,pos)) {
+			return true;
 		}
 		else {
-			return Recipe();
+			return false;
 		}
 	}
 	catch (std::exception) {
 		std::cout << "Failed to get Recipe";
-		return Recipe();
+		return false;
 	}
 }
 
@@ -165,13 +195,33 @@ bool FacadeUserDB::addRecipe(Recipe* recipe)
 	}
 }
 
-
+bool FacadeUserDB::resetRecipe()
+{
+	try {
+		const char* DBRecipePathChar = this->DBRecipePath.c_str();
+		remove(DBRecipePathChar);
+		std::ofstream fichier(DBRecipePathChar);
+		return true;
+	}
+	catch (std::exception) {
+		std::cout << "Failed to remove Pantry";
+		return false;
+	}
+}
 
 /*--------------------Ingredient------------------*/
 std::list<Ingredient*> FacadeUserDB::getAllIngredient()
 {
 
-	return this->DBIngredient->getAllIngredient();
+	try {
+
+		return this->DBIngredient->getAllIngredient();
+	}
+	catch (std::exception) {
+		std::cout << "Failed to get all Recipe";
+		return std::list<Ingredient *>();
+	}
+
 }
 
 Ingredient FacadeUserDB::getIngredient(int pos)

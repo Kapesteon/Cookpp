@@ -1,5 +1,6 @@
 #pragma once
 #include "Recipe.h"
+#include <list>
 
 class Menu
 {
@@ -8,6 +9,7 @@ class Menu
 		time_t endDate;
 		int numConsumers;
 		std::list <Recipe > listRecipe;
+		bool errorMenu;
 
 	public:
 		Menu();
@@ -22,6 +24,8 @@ class Menu
 		void setEndDate(time_t endDate);
 		int getNumConsumers();
 		void setNumConsumers(int numConsumers);
+		bool getErrorMenu();
+		void setErrorMenu(bool error);
 
 		//std::string* printMenu();
 		void printMenu();

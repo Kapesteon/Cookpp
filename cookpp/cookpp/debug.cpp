@@ -18,6 +18,7 @@
 #include "RecipeDBManager.h"
 #include "FacadeUserDB.h"
 #include "Menu.h"
+#include "Gardien.h"
 
 #include <string>
 
@@ -333,7 +334,7 @@ void initDb()
 	Ingredient testIngredient2 = Ingredient("Potato", "Vegetable", "N/A", &testInfoNutri2);
 	Ingredient testIngredient3 = Ingredient("Apple", "Fruit", "N/A", &testInfoNutri3);
 	Ingredient testIngredient4 = Ingredient("Wheat", "Grain", "N/A", &testInfoNutri4);
-	Ingredient testIngredient5 = Ingredient("Peer", "Fruit", "N/A", &testInfoNutri5);
+	Ingredient testIngredient5 = Ingredient("Pear", "Fruit", "N/A", &testInfoNutri5);
 	Ingredient testIngredient6 = Ingredient("Quince", "Fruit", "N/A", &testInfoNutri6);
 	Ingredient testIngredient7 = Ingredient("Water", "N/A", "N/A", &testInfoNutri7);
 	Ingredient testIngredient8 = Ingredient("Olive Oil", "Oil", "N/A", &testInfoNutri8);
@@ -347,13 +348,14 @@ void initDb()
 	Aliment testAliment2 = Aliment(testIngredient2, 200); //Potato
 	Aliment testAliment3 = Aliment(testIngredient3, 300); //Apple
 	Aliment testAliment4 = Aliment(testIngredient4, 400); //Wheat
-	Aliment testAliment5 = Aliment(testIngredient5, 100); //Peer
+	Aliment testAliment5 = Aliment(testIngredient5, 100); //Pear
 
 
 	StockedAliment testStockedAliment1 = StockedAliment(testIngredient1, 1000, "2021-21-01", 185); //Carot
 	StockedAliment testStockedAliment2 = StockedAliment(testIngredient2, 1500, "2021-22-01", 365); //Potato
 	StockedAliment testStockedAliment3 = StockedAliment(testIngredient3, 2000, "2021-23-01", 30); //Apple
 	StockedAliment testStockedAliment4 = StockedAliment(testIngredient4, 2500, "2021-24-01", 2000); //Wheat
+	StockedAliment testStockedAliment5 = StockedAliment(testIngredient5, 1400, "2021-24-01", 57); //Pear
 
 
 	std::forward_list<StockedAliment* > stockedAlimentList;
@@ -370,7 +372,7 @@ void initDb()
 	Recipe testRecipe1 = Recipe();
 	testRecipe1.addAliment(testAliment1);
 	testRecipe1.addAliment(testAliment2);
-	testRecipe1.addAliment(testAliment5);
+	//testRecipe1.addAliment(testAliment5);
 	testRecipe1.setName("Recipe 1");
 	testRecipe1.setNotes("Notes of Recipe1");
 	testRecipe1.markAsComplete();
@@ -378,6 +380,7 @@ void initDb()
 	Recipe testRecipe2 = Recipe();
 	testRecipe2.addAliment(testAliment3);
 	testRecipe2.addAliment(testAliment4);
+	//testRecipe2.addAliment(testAliment5);
 	testRecipe2.setName("Recipe 2");
 	testRecipe2.setNotes("Notes of Recipe2");
 	testRecipe2.markAsComplete();
@@ -399,10 +402,10 @@ void initDb()
 	facade.saveIngredient(&testIngredient11, 10);
 	facade.saveIngredient(&testIngredient12, 11);
 
+	facade.resetRecipe();
+
 	facade.saveRecipe(&testRecipe1, 0);
 	facade.saveRecipe(&testRecipe2, 1);
-
-	Pantry p = facade.getPantry();
 
 	RecipeDBManager DBRecipe("stockDB/recipe.cdb");
 	std::list<Recipe*> r;
@@ -413,15 +416,47 @@ void initDb()
 	menu.setStartDate(currentTime);
 	std::cout << menu.getStartDate();
 
+	Pantry pantry;
+	facade.getPantry(&pantry);
+	pantry.setStock(stockedAlimentList);
+	facade.savePantry(&pantry);
+	std::forward_list<StockedAliment*> stockedAliment = pantry.getStock();
+
+	std::list<Recipe*> recipesList;
+	recipesList = facade.getAllRecipe();
+
 	MenuGenerator menuGenerator;
+	menuGenerator.setListRecipe(recipesList);
+	menuGenerator.setStockedAliment(stockedAlimentList);
 
-	Menu newMenu = menuGenerator.generateMenu(2, 3, p, facade);
+	Memento memento = Memento(menuGenerator.getListRecipe(), menuGenerator.getStockedAliment());
+	memento.createMemento();
 
-	FacadeUserDB newFacade;
+	Gardien lloris;
+	lloris.addMemento(memento);
 
-	Pantry newPantry = newFacade.getPantry();
+	Recipe testRecipe7 = Recipe();
+	testRecipe7.addAliment(testAliment5);
+	facade.saveRecipe(&testRecipe7, 2);
+	recipesList = facade.getAllRecipe();
+	menuGenerator.setListRecipe(recipesList);
+
+	Memento mementoTwo = Memento(menuGenerator.getListRecipe(), menuGenerator.getStockedAliment());
+	mementoTwo.createMemento();
+	lloris.addMemento(mementoTwo);
+
+	Memento firstMemento = lloris.getMemento(0);
+
+	mementoTwo.restoreMemento(firstMemento);
+
+	Menu newMenu = menuGenerator.generateMenu(3, 3, &pantry, facade);
+
+	/*FacadeUserDB newFacade;
+
+	Pantry newPantry;
+	newFacade.getPantry(&newPantry);
 	newPantry.setStock(menuGenerator.getStockedAliment());
-	newFacade.savePantry(&newPantry);
+	newFacade.savePantry(&newPantry);*/
 
 	//FacadeUserDB newFacade;
 	//Pantry newPantry = newFacade.getPantry();
@@ -429,4 +464,6 @@ void initDb()
 	//std::list<Recipe*> maListe = facade.getAllRecipe();
 	//auto it = maListe.begin();
 	//std::cout << "L'élément 3 de la liste est : " << (*it)->getName() << std::endl;
+
+	std::cout << "ujiokl";
 }
