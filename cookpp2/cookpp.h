@@ -36,6 +36,9 @@ public:
     void ingredientEditor();
     void saveIngredientEdit();
 
+    void recipeEditor();
+    void saveRecipeEdit();
+
     void deleteCurrentView();
     void deleteSpecificLayout(QLayout* item);
     void setDetailBoxToMainLayout(int row, int col, int rowSpan, int colSpan);
@@ -46,6 +49,9 @@ private:
     std::unique_ptr<std::vector<Recipe*>> activeRecipeBuffer; //Used to store Recipes
     std::unique_ptr<std::vector<StockedAliment*>> activeStockedAlimentBuffer; //Used to store StockedAliment
     Ingredient* currentIngredientSelected;
+    Recipe* currentRecipeSelected;
+
+
     FacadeUserDB* facade;
 
 
@@ -100,6 +106,7 @@ private slots:
     void mnViewRecipes();
     void mnViewPantry();
     void mnAddIngredient();
+    void mnAddRecipe();
     /*------------------------------------*/
 
     /*------------Button Slots-----------*/
@@ -109,6 +116,10 @@ private slots:
 
     void editIngredientclicked();
     void saveIngredientEditclicked();
+
+    void editRecipeclicked();
+    void saveRecipeEditclicked();
+
     void gotoMainMenuclicked();
     /*------------------------------------*/
 

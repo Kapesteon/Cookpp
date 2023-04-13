@@ -167,6 +167,19 @@ std::list<Ingredient*> FacadeUserDB::getAllIngredient()
 
 }
 
+int FacadeUserDB::getIngredientIndex(Ingredient* ingrToSearch)
+{
+	std::list<Ingredient*> allIngr = this->getAllIngredient();
+	int i = 0;
+	for (auto it = allIngr.begin(); it != allIngr.end(); it++) {
+		if ((*it)->getName() == ingrToSearch->getName()) {
+			return i;
+		}
+		i++;
+	}
+	return -1;
+}
+
 Ingredient FacadeUserDB::getIngredient(int pos)
 {
 	try {

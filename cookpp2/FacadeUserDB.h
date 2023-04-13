@@ -28,6 +28,7 @@ public:
 	bool addRecipe(Recipe*);
 
 	std::list<Ingredient*> getAllIngredient();
+	int getIngredientIndex(Ingredient*);
 	Ingredient getIngredient(int pos);
 	bool saveIngredient(Ingredient* ingredient, int pos);
 	bool addIngredient(Ingredient*);
