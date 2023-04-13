@@ -36,8 +36,12 @@ public:
     void ingredientEditor();
     void saveIngredientEdit();
 
+    /* RECIPE */
     void recipeEditor();
     void saveRecipeEdit();
+    void setupRecipeAlimentsTable(QTableWidget* aliments, std::vector<Aliment>* alimList);
+    void setupRecipeStepsTable(QTableWidget* steps,std::vector<std::string> *stepsList);
+    void updateCurrentRecipeSelected();
 
     void deleteCurrentView();
     void deleteSpecificLayout(QLayout* item);
@@ -119,6 +123,10 @@ private slots:
 
     void editRecipeclicked();
     void saveRecipeEditclicked();
+    void addNewAlimentInRecipeclicked();
+    void removeAlimentFromRecipeclicked();
+    void addNewStepInRecipeclicked();
+    void removeStepFromRecipeclicked();
 
     void gotoMainMenuclicked();
     /*------------------------------------*/

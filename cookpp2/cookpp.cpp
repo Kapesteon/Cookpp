@@ -213,6 +213,10 @@ void cookpp::getPagePantry(int page, std::list<StockedAliment*>* listStockedAlim
 
 }
 
+
+
+
+/*---------------INGREDIENTS------------*/
 void cookpp::ingredientEditor()
 {
     try{
@@ -426,8 +430,6 @@ void cookpp::saveIngredientEdit()
     return;
 }
 
-
-
 void cookpp::displayAllIngredients()
 {
     //Delete old layout to drwn the new https://forum.qt.io/topic/14898/howto-change-layout-of-a-widget/10
@@ -607,12 +609,12 @@ void cookpp::recipeEditor()
         deleteCurrentView();
 
         QFormLayout* mainLayout = new QFormLayout;
-        QVBoxLayout* vbox = new QVBoxLayout;
-
+        //QGridLayout* grid = new QGridLayout;
+        QHBoxLayout* hbox = new QHBoxLayout;
         QLineEdit* name = new QLineEdit("Name");
         QTableWidget* aliments = new QTableWidget();
         QTableWidget* steps = new QTableWidget();
-        QLineEdit* notes = new QLineEdit("Notes");
+        QTextEdit* notes = new QTextEdit("Notes");
         QToolButton* markAsCompleteButton = new QToolButton();
         QDialogButtonBox* dialogButton = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
         /*--*/
@@ -620,18 +622,12 @@ void cookpp::recipeEditor()
         Recipe* toEdit = this->currentRecipeSelected;
 
 
-        //QDialogButtonBox * okButton = new QDialogButtonBox(QDialogButtonBox::Ok);
-        //QDialogButtonBox* cancelButton = new QDialogButtonBox(QDialogButtonBox::Cancel);
-
-
-
         QString* qstr = new QString();
-
         *qstr = QString::fromStdString("");
         qstr->append(QString::fromStdString(toEdit->getName()));
         name->setText(*qstr);
         name->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
-        if (toEdit->getName() != "Undefined") {
+        if (toEdit->getName() != "N/A") {
             name->setFrame(false);
             name->setReadOnly(true);
         }
@@ -642,102 +638,21 @@ void cookpp::recipeEditor()
         name->setAlignment(Qt::AlignCenter);
         name->setObjectName("name");
 
+        *qstr = QString::fromStdString("");
+        qstr->append(QString::fromStdString(toEdit->getNotes()));
+        notes->setText(*qstr);
+        notes->setFixedSize(BTN_FIXED_WIDTH*3, BTN_FIXED_HEIGHT*5);
+        notes->setObjectName("notes");
+
         /*--------Aliments table----------*/
         auto alimList = toEdit->getAliments();
-        aliments->setColumnCount(3);
-        aliments->setRowCount(alimList.size() + 1);
-        aliments->verticalHeader()->setVisible(false);
-        aliments->horizontalHeader()->setVisible(false);
+        this->setupRecipeAlimentsTable(aliments, &alimList);
+        aliments->setObjectName("aliments");
 
-
-        /*--Headers of table*/
-        QTableWidgetItem* colTitle = new QTableWidgetItem();
-        QTableWidgetItem* colMass = new QTableWidgetItem();
-        QTableWidgetItem* colBtn = new QTableWidgetItem();
-        colTitle->setText("Aliment");
-        colMass->setText("Mass (g)");
-        colBtn->setText("");
-        colTitle->setFlags(Qt::NoItemFlags);
-        colMass->setFlags( Qt::NoItemFlags);
-        colBtn->setFlags(Qt::NoItemFlags);
-        aliments->setItem(0, 0, colTitle);
-        aliments->setItem(0, 1, colMass);
-        aliments->setItem(0, 2, colBtn);
-        aliments->setColumnWidth(2, 20);
-
-
-
-
-        *qstr = QString::fromStdString("");
-        QWidget* pWidget = new QWidget();
-        QPushButton* btn_edit = new QPushButton();
-        QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
-        auto allExistingAliments = this->facade->getAllIngredient();
-        int i = 1;
-        auto it = alimList.begin();
-        for (it; it != alimList.end(); it++) {
-            QTableWidgetItem* cellName = new QTableWidgetItem();
-            QTableWidgetItem* cellMass = new QTableWidgetItem();
-            QTableWidgetItem* cellButtonRemove = new QTableWidgetItem();
-            QToolButton* buttonRemove = new QToolButton();
-
-            *qstr = QString::fromStdString("");
-            *qstr = QString::fromStdString(it->getName());
-            cellName->setText(*qstr);
-
-
-            *qstr = QString::fromStdString("");
-            qstr->append(QString::number(it->getMass()));
-            cellMass->setText(*qstr);
-       
-
-            *qstr = QString::fromStdString("");
-            *qstr = QString::fromStdString(BTN_REMOVE_ALIMENT_SEPARATOR);
-            *qstr = QString::fromStdString(it->getName());
-            buttonRemove->setObjectName(*qstr);
-            buttonRemove->setText(tr(" - "));
-            buttonRemove->setFixedSize(20, 20);
-            connect(buttonRemove, SIGNAL(clicked()), this, SLOT(removeAlimentFromRecipeclicked()));
-            cellButtonRemove->setFlags(Qt::NoItemFlags);
-
-
-            /*Set Remove button*/
-            pWidget = new QWidget();
-            btn_edit = new QPushButton();
-            pLayout = new QHBoxLayout(pWidget);
-            pLayout->addWidget(buttonRemove);
-            pLayout->setAlignment(Qt::AlignCenter);
-            pLayout->setContentsMargins(0, 0, 0, 0);
-            pWidget->setLayout(pLayout);
-            aliments->setCellWidget(i, 2, pWidget);
-
-            /*Set Dropdown aliment*/
-            alimentDrop = new QComboBox();
-            for (auto it0 = allExistingAliments.begin(); it0 != allExistingAliments.end(); it0++) {
-                *qstr = QString::fromStdString("");
-                *qstr = QString::fromStdString((*it0)->getName());
-                alimentDrop->addItem(*qstr);
-            }
-            Ingredient bufferIngr = static_cast<Ingredient>(*it);
-            int index = this->facade->getIngredientIndex(&bufferIngr);
-            alimentDrop->setCurrentIndex(index);
-            alimentDrop->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
-            alimentDrop->setFrame(true);
-            pWidget = new QWidget();
-            btn_edit = new QPushButton();
-            pLayout = new QHBoxLayout(pWidget);
-            pLayout->addWidget(alimentDrop);
-            pLayout->setAlignment(Qt::AlignCenter);
-            pLayout->setContentsMargins(0, 0, 0, 0);
-            pWidget->setLayout(pLayout);
-            aliments->setCellWidget(i, 0, pWidget);
-
-
-            aliments->setItem(i, 1, cellMass);
-
-            i++;
-        }
-
+        /*---------  Steps Table   --------------*/
+        auto stepsList = toEdit->getSteps();
+        this->setupRecipeStepsTable(steps, &stepsList);
+        steps->setObjectName("steps");
 
 
         //connect(dialogButton, SIGNAL(accepted()), &dialog, SLOT(accept()));
@@ -749,13 +664,27 @@ void cookpp::recipeEditor()
         deleteSpecificLayout(oldLayout);
 
 
-
+        hbox->addWidget(name, Qt::AlignCenter);
+        hbox->addWidget(aliments, Qt::AlignCenter);
+        hbox->addWidget(steps, Qt::AlignCenter);
+        hbox->addWidget(notes, Qt::AlignCenter);
+        hbox->addWidget(dialogButton, Qt::AlignCenter);
+        /*
         vbox->addWidget(name, Qt::AlignCenter);
         vbox->addWidget(aliments, Qt::AlignCenter);
         vbox->addWidget(steps, Qt::AlignCenter);
         vbox->addWidget(notes, Qt::AlignCenter);
         vbox->addWidget(dialogButton, Qt::AlignCenter);
-        this->detailBox->setLayout(vbox);
+        */
+        /*
+        grid->addWidget(name, 0, 0, 1, 2);
+        grid->addWidget(notes, 1, 0, 2, 2);
+        grid->addWidget(aliments, 0, 2, 4, 1);
+        grid->addWidget(steps, 0, 3, 4, 1);
+        grid->addWidget(dialogButton,3,0,1,2);
+        */
+
+        this->detailBox->setLayout(hbox);
         mainLayout->addWidget(this->detailBox);
         setLayout(mainLayout);
         setWindowTitle(tr("Cook++ - Recipe"));
@@ -769,11 +698,221 @@ void cookpp::recipeEditor()
 
 void cookpp::saveRecipeEdit()
 {
-    /*
+    
     Recipe* toSave = this->currentRecipeSelected;
-    InfoNutri* infoNutriToSave = new InfoNutri;
-    std::string ingredientName = "";
-    std::string ingredientType = "";
+    auto list = this->facade->getAllRecipe();
+    int writeIndex = list.size();
+    //See where to write the current ingredient
+    int i = 0;
+    for (auto it = list.begin(); it != list.end(); it++) {
+        if ((*it)->getName() == toSave->getName()) {
+            break;
+        }
+        i++;
+    }
+    writeIndex = i;
+    toSave->markAsComplete();
+    this->facade->saveRecipe(toSave, writeIndex);
+    //this->facade->addIngredient(toAdd);
+
+
+
+    displayAllRecipes();
+}
+
+void cookpp::setupRecipeAlimentsTable(QTableWidget* aliments, std::vector<Aliment> * alimList)
+{
+    aliments->setColumnCount(3);
+    aliments->setRowCount(alimList->size() + 2);
+    aliments->verticalHeader()->setVisible(false);
+    aliments->horizontalHeader()->setVisible(false);
+
+    QComboBox* alimentDrop;
+    QString* qstr = new QString();
+    /*--Headers of table Aliment */
+    QTableWidgetItem* colTitle = new QTableWidgetItem();
+    QTableWidgetItem* colMass = new QTableWidgetItem();
+    QTableWidgetItem* colBtn = new QTableWidgetItem();
+    colTitle->setText("Aliment");
+    colMass->setText("Mass (g)");
+    colBtn->setText("");
+    colTitle->setFlags(Qt::NoItemFlags);
+    colMass->setFlags(Qt::NoItemFlags);
+    colBtn->setFlags(Qt::NoItemFlags);
+    aliments->setItem(0, 0, colTitle);
+    aliments->setItem(0, 1, colMass);
+    aliments->setItem(0, 2, colBtn);
+    aliments->setColumnWidth(2, 20);
+    *qstr = QString::fromStdString("");
+    QWidget* pWidget = new QWidget();
+    QPushButton* btn_edit = new QPushButton();
+    QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
+    auto allExistingAliments = this->facade->getAllIngredient();
+    int i = 1;
+    auto it = alimList->begin();
+    for (it; it != alimList->end(); it++) {
+        QTableWidgetItem* cellName = new QTableWidgetItem();
+        QTableWidgetItem* cellMass = new QTableWidgetItem();
+        QTableWidgetItem* cellButtonRemove = new QTableWidgetItem();
+        QToolButton* buttonRemove = new QToolButton();
+
+        *qstr = QString::fromStdString("");
+        *qstr = QString::fromStdString(it->getName());
+        cellName->setText(*qstr);
+
+        *qstr = QString::fromStdString("");
+        qstr->append(QString::number(it->getMass()));
+        cellMass->setText(*qstr);
+
+
+        /*Set Remove button*/
+        *qstr = QString::fromStdString("");
+        *qstr = QString::fromStdString(BTN_REMOVE_ALIMENT_SEPARATOR);
+        *qstr = QString::fromStdString(it->getName());
+        buttonRemove->setObjectName(*qstr);
+        buttonRemove->setText(tr(" - "));
+        buttonRemove->setFixedSize(20, 20);
+        connect(buttonRemove, SIGNAL(clicked()), this, SLOT(removeAlimentFromRecipeclicked()));
+        cellButtonRemove->setFlags(Qt::NoItemFlags);
+        pWidget = new QWidget();
+        btn_edit = new QPushButton();
+        pLayout = new QHBoxLayout(pWidget);
+        pLayout->addWidget(buttonRemove);
+        pLayout->setAlignment(Qt::AlignCenter);
+        pLayout->setContentsMargins(0, 0, 0, 0);
+        pWidget->setLayout(pLayout);
+        aliments->setCellWidget(i, 2, pWidget);
+
+        /*Set Dropdown aliment*/
+        alimentDrop = new QComboBox();
+        for (auto it0 = allExistingAliments.begin(); it0 != allExistingAliments.end(); it0++) {
+            *qstr = QString::fromStdString("");
+            *qstr = QString::fromStdString((*it0)->getName());
+            alimentDrop->addItem(*qstr);
+        }
+        Ingredient bufferIngr = static_cast<Ingredient>(*it);
+        int index = this->facade->getIngredientIndex(&bufferIngr);
+        alimentDrop->setCurrentIndex(index);
+        alimentDrop->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+        alimentDrop->setFrame(true);
+        pWidget = new QWidget();
+        pLayout = new QHBoxLayout(pWidget);
+        pLayout->addWidget(alimentDrop);
+        pLayout->setAlignment(Qt::AlignCenter);
+        pLayout->setContentsMargins(0, 0, 0, 0);
+        pWidget->setLayout(pLayout);
+        aliments->setCellWidget(i, 0, pWidget);
+        aliments->setItem(i, 1, cellMass);
+
+        i++;
+    }
+
+
+
+    /*-- Button add at the end of Table--*/
+    QTableWidgetItem* cellAddButton = new QTableWidgetItem();
+    pWidget = new QWidget();
+    QPushButton* btnAdd = new QPushButton();
+    pLayout = new QHBoxLayout(pWidget);
+    connect(btnAdd, SIGNAL(clicked()), this, SLOT(addNewAlimentInRecipeclicked()));
+    btnAdd->setText("+");
+    pLayout->addWidget(btnAdd);
+    pLayout->setAlignment(Qt::AlignCenter);
+    pLayout->setContentsMargins(0, 0, 0, 0);
+    pWidget->setLayout(pLayout);
+    aliments->setCellWidget(i, 2, pWidget);
+    aliments->addScrollBarWidget(new QScrollBar(), Qt::AlignLeft);
+}
+
+void cookpp::setupRecipeStepsTable(QTableWidget* steps, std::vector<std::string>* stepsList)
+{
+    {
+
+        steps->setColumnCount(2);
+        steps->setRowCount(stepsList->size() + 2);
+        steps->horizontalHeader()->setVisible(false);
+
+
+        QComboBox* alimentDrop;
+        QString* qstr = new QString();
+        /*--Headers of table Steps */
+        QTableWidgetItem* colString = new QTableWidgetItem();
+        QTableWidgetItem* colBtn = new QTableWidgetItem();
+        colString->setText("Steps");
+        colBtn->setText("");
+        colString->setFlags(Qt::NoItemFlags);
+        colBtn->setFlags(Qt::NoItemFlags);
+        steps->setItem(0, 0, colString);
+        steps->setItem(0, 1, colBtn);
+        steps->setColumnWidth(0, 200);
+        steps->setColumnWidth(1, 20);
+
+        *qstr = QString::fromStdString("");
+        QWidget* pWidget = new QWidget();
+        QPushButton* btn_edit = new QPushButton();
+        QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
+        int i = 1;
+        auto it = stepsList->begin();
+        for (it; it != stepsList->end(); it++) {
+            QTableWidgetItem* cellString = new QTableWidgetItem();
+            QTableWidgetItem* cellButtonRemove = new QTableWidgetItem();
+            QToolButton* buttonRemove = new QToolButton();
+
+            *qstr = QString::fromStdString("");
+            *qstr = QString::fromStdString(*it);
+            cellString->setText(*qstr);
+
+
+            /*Set Remove button*/
+            *qstr = QString::fromStdString("");
+            *qstr = QString::number(i-1);
+            buttonRemove->setObjectName(*qstr);
+            buttonRemove->setText(tr(" - "));
+            buttonRemove->setFixedSize(20, 20);
+            connect(buttonRemove, SIGNAL(clicked()), this, SLOT(removeStepFromRecipeclicked()));
+            cellButtonRemove->setFlags(Qt::NoItemFlags);
+            pWidget = new QWidget();
+            btn_edit = new QPushButton();
+            pLayout = new QHBoxLayout(pWidget);
+            pLayout->addWidget(buttonRemove);
+            pLayout->setAlignment(Qt::AlignCenter);
+            pLayout->setContentsMargins(0, 0, 0, 0);
+            pWidget->setLayout(pLayout);
+            steps->setCellWidget(i, 1, pWidget);
+
+       
+            steps->setItem(i, 0, cellString);
+
+            i++;
+        }
+
+
+
+        /*-- Button add at the end of Table--*/
+        QTableWidgetItem* cellAddButton = new QTableWidgetItem();
+        pWidget = new QWidget();
+        QPushButton* btnAdd = new QPushButton();
+        pLayout = new QHBoxLayout(pWidget);
+        connect(btnAdd, SIGNAL(clicked()), this, SLOT(addNewStepInRecipeclicked()));
+        btnAdd->setText("+");
+        pLayout->addWidget(btnAdd);
+        pLayout->setAlignment(Qt::AlignCenter);
+        pLayout->setContentsMargins(0, 0, 0, 0);
+        pWidget->setLayout(pLayout);
+        steps->setCellWidget(i, 1, pWidget);
+        steps->addScrollBarWidget(new QScrollBar(), Qt::AlignLeft);
+    }
+}
+
+void cookpp::updateCurrentRecipeSelected()
+{
+    Recipe * recipeCopy = this->currentRecipeSelected;
+    std::string recipeName = std::string();
+    std::string recipeNotes = std::string();
+    Ingredient* bufferIngredient;
+    Aliment * bufferAliment;
+    std::vector<Aliment>* alimentsToCopy = new std::vector<Aliment>;
+    std::string* notesToCopy = new std::string;
 
 
     for (int i = 0; i < this->detailBox->layout()->count(); ++i)
@@ -785,63 +924,61 @@ void cookpp::saveRecipeEdit()
             std::string sname = qname.toStdString();
             if (sname == "name") {
                 QLineEdit* item = qobject_cast<QLineEdit*>(widget);
-                ingredientName = item->text().toStdString();
-                toSave->setName(ingredientName);
+                recipeName = item->text().toStdString();
+                recipeCopy->setName(recipeName);
             }
-            else if (sname == "type") {
-                QComboBox* item = qobject_cast<QComboBox*>(widget);
-                ingredientType = item->currentText().toStdString();
-                toSave->setType(ingredientType);
+            else if (sname == "notes") {
+                QTextEdit* item = qobject_cast<QTextEdit*>(widget);
+                recipeNotes = item->toPlainText().toStdString();
+                recipeCopy->setNotes(recipeNotes);
             }
-            else if (sname == "infoNutri") {
+            else if (sname == "aliments") {
                 QTableWidget* table = qobject_cast<QTableWidget*>(widget);
-                QTableWidgetItem* itemTitle = new QTableWidgetItem;
-                QTableWidgetItem* itemValue = new QTableWidgetItem;
-                std::vector<std::string> keys = infoNutriToSave->getNutriKeys();
-                for (int row = 0; row < table->rowCount(); ++row) {
-                    std::string key = table->item(row, 0)->text().toStdString();
-                    double value = table->item(row, 1)->text().toDouble();
-                    if (key == "sodium (mg)") {
-                        value = value / 1000;
-                    }
-                    infoNutriToSave->setValueByKey(keys[row], value);
+                //Row = 1 to account for header      //rowCount()-1 to account for footer "addButton"
+                for (int row = 1; row < table->rowCount()-1; ++row) {
+                    //std::string rowAlimentName = table->item(row, 0)->text().toStdString();
+                    double mass = table->item(row, 1)->text().toDouble();
+
+                    auto w = table->cellWidget(row, 0)->layout()->itemAt(0)->widget();
+                    QComboBox* dropDownCell = qobject_cast<QComboBox*>(w);
+                    std::string rowAlimentName = dropDownCell->currentText().toStdString();
+                    bufferIngredient = new Ingredient;
+                    *bufferIngredient = this->facade->getIngredientByName(rowAlimentName);
+                    bufferAliment = new Aliment(*bufferIngredient,mass);
+
+
+                    alimentsToCopy->push_back(*bufferAliment);
+
                 }
-                toSave->setInfoNutri(*infoNutriToSave);
+                recipeCopy->setAliments(*alimentsToCopy);
+
+
+            }
+            else if (sname == "steps") {
+                QTableWidget* table = qobject_cast<QTableWidget*>(widget);
+                //Row = 1 to account for header      //rowCount()-1 to account for footer "addButton"
+                for (int row = 1; row < table->rowCount()-1; ++row) {
+                    std::string step = table->item(row, 0)->text().toStdString();
+                    recipeCopy->setStep(step, i - 1);
+                }
+
             }
         }
         else
         {
-            // You may want to recurse, or perform different actions on layouts.
-            // See gridLayout->itemAt(i)->layout()
+
         }
+
 
 
     }
 
-    //
-    auto list = this->facade->getAllIngredient();
-    int writeIndex = list.size();
-    //See where to write the current ingredient
-    int i = 0;
-    for (auto it = list.begin(); it != list.end(); it++) {
-        if ((*it)->getName() == toSave->getName()) {
-            break;
-        }
-        i++;
-    }
-    writeIndex = i;
-    this->facade->saveIngredient(toSave, writeIndex);
-    //this->facade->addIngredient(toAdd);
-
-
-    delete infoNutriToSave;
-
-
-    displayAllIngredients();
+    this->currentRecipeSelected = recipeCopy;
 
     return;
-    */
 }
+
+
 
 
 
@@ -1384,7 +1521,6 @@ void cookpp::showRecipeDetailclicked()
         steps->setColumnCount(1);
         steps->setRowCount(s.size());
         steps->setColumnWidth(0, 300);
-        steps->verticalHeader()->setVisible(false);
         steps->horizontalHeader()->setVisible(false);
 
         i = 0;
@@ -1584,6 +1720,57 @@ void cookpp::saveIngredientEditclicked()
 
 }
 
+void cookpp::addNewAlimentInRecipeclicked()
+{
+    updateCurrentRecipeSelected();
+    this->currentRecipeSelected->addAliment(Aliment("Carot"));
+    recipeEditor();
+}
+
+void cookpp::removeAlimentFromRecipeclicked() {
+    QObject* buttonSender = QObject::sender();
+    try {
+        QString qs = qobject_cast<QToolButton*>(buttonSender)->objectName();
+        std::string s = qs.toStdString();
+
+        std::string delimiter = BTN_REMOVE_ALIMENT_SEPARATOR;
+        //std::string key = s.substr(0, s.find(delimiter));
+        std::string alimentName = s.substr(s.find(delimiter) + 1, s.size());
+        this->currentRecipeSelected->removeAliment(alimentName);
+        recipeEditor();
+
+
+    }
+    catch (std::exception) {
+        OutputDebugStringA("Error with button sender");
+    }
+}
+
+void cookpp::addNewStepInRecipeclicked() {
+
+    updateCurrentRecipeSelected();
+    this->currentRecipeSelected->addStep("New Step");
+    recipeEditor();
+}
+
+void cookpp::removeStepFromRecipeclicked() {
+    QObject* buttonSender = QObject::sender();
+    try {
+        QString qs = qobject_cast<QToolButton*>(buttonSender)->objectName();
+        int pos = qs.toInt();
+        this->currentRecipeSelected->removeStep(pos);
+        updateCurrentRecipeSelected();
+        recipeEditor();
+
+
+    }
+    catch (std::exception) {
+        OutputDebugStringA("Error with button sender");
+    }
+}
+
+
+
 void cookpp::editIngredientclicked()
 {
     ingredientEditor();
@@ -1591,6 +1778,7 @@ void cookpp::editIngredientclicked()
 
 void cookpp::saveRecipeEditclicked()
 {
+    updateCurrentRecipeSelected();
     saveRecipeEdit();
 }
 
@@ -1598,7 +1786,6 @@ void cookpp::editRecipeclicked()
 {
     recipeEditor();
 }
-
 
 void cookpp::gotoMainMenuclicked()
 {

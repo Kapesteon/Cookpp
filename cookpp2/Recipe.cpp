@@ -83,8 +83,22 @@ std::vector<Aliment> Recipe::getAliments() const
 void Recipe::setAliments(std::vector<Aliment> aliments)
 {
 
-	std::copy_n(aliments.begin(), MAX_ALIMENTS, this->aliments.begin());
-	//this->aliments = aliments;
+	int i = 0;
+	for (auto it = aliments.begin(); it != aliments.end() && i < MAX_ALIMENTS; it++) {
+		this->aliments[i] = *it;
+		i++;
+	}
+	for (i; i < MAX_ALIMENTS; i++) {
+		this->aliments[i] = Aliment();
+	}
+	/*
+	if (aliments.size() < MAX_ALIMENTS) {
+		std::copy(aliments.begin(), aliments.end() + aliments.size()-1, this->aliments.begin());
+	}
+	else {
+		std::copy(aliments.begin(), aliments.begin() + MAX_ALIMENTS, this->aliments.begin());
+	}
+	*/
 
 }
 
@@ -126,6 +140,49 @@ void Recipe::removeAliment(Aliment aliment)
 }
 
 
+
+void Recipe::removeAliment(std::string name)
+{
+	auto itr = this->aliments.begin();
+
+	int i = 0;
+	for (itr; itr != this->aliments.end(); itr++) {
+		if (((itr)->getName() == name)) {
+			this->aliments[i] = Aliment();
+			break;
+		}
+		i++;
+	}
+	auto before = this->aliments.begin() + i;
+	itr++;
+	for (i; i<this->aliments.size()-1; i++) {
+		try{
+			this->aliments[i] = this->aliments[i + 1];
+		}
+		catch (std::exception) {
+			this->aliments[i] = Aliment();
+			return;
+		}
+	}
+	return;
+}
+
+void Recipe::removeStep(int pos) {
+	std::string a = "";
+	strcpy((this->steps[pos]), a.c_str());
+	int i = pos;
+	for (i; i < this->aliments.size() - 1; i++) {
+		try {
+			strcpy((this->steps[i]), (this->steps[i+1]));
+		}
+		catch (std::exception) {
+			strcpy((this->steps[i]), a.c_str());
+			return;
+		}
+	}
+	strcpy((this->steps[MAX_STEPS-1]), a.c_str());
+	return;
+}
 
 std::vector<std::string> Recipe::getSteps() const
 {

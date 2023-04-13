@@ -327,17 +327,17 @@ void initDb()
 	testpantry1.removeFromStock(&testStockedAliment1);
 
 	std::string testSteps1[] = 
-	{ "1 - Dice carots and potatoes",
-		"2 - Boil them for ~20 minutes",
-		"3 - After 20min, add the lentils and the meat to the soup",
-		"4 - Let it cook for another 20min",
-		"5 - Serve"
+	{ "Dice carots and potatoes",
+		"Boil them for ~20 minutes",
+		"After 20min, add the lentils and the meat to the soup",
+		"Let it cook for another 20min",
+		"Serve"
 	};
 	std::vector<std::string> strs(testSteps1, testSteps1 + sizeof(testSteps1) / sizeof(std::string));
 	std::string testSteps2[] = 
-	{ "1 - Lorem ipsum dolor sit amet",
-	  "2 - consectetur adipiscing elit ",
-	  "3 - sed do eiusmod tempor incididunt"
+	{ "Lorem ipsum dolor sit amet",
+	  "consectetur adipiscing elit ",
+	  "sed do eiusmod tempor incididunt"
 	};
 	std::vector<std::string> strs2(testSteps2, testSteps2 + sizeof(testSteps2) / sizeof(std::string));
 

@@ -7,6 +7,13 @@ Aliment::Aliment()
 	this->mass = 0;
 }
 
+Aliment::Aliment(std::string name)
+	: Ingredient()
+{
+	this->setName(name);
+	this->mass = 1;
+}
+
 Aliment::Aliment(std::string name, std::string type, std::string season, InfoNutri* infoNutri, double mass)
 	: Ingredient(name, type, season, infoNutri) 
 {

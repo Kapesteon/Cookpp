@@ -8,6 +8,7 @@ class Aliment : public Ingredient
 
 	public:
 		Aliment();
+		Aliment(std::string name);
 		Aliment(std::string name, std::string type, std::string season, InfoNutri* infoNutri, double mass);
 		Aliment(const Ingredient& ingr, double mass);
 		Aliment(const Aliment & c);

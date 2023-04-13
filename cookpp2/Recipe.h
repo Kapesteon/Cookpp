@@ -3,6 +3,7 @@
 #include "InfoNutri.h"
 #include "NutritionalManager.h"
 
+
 #include <set>
 #include <vector>
 #include <array>
@@ -44,12 +45,12 @@ class Recipe
 		void addAliment(Aliment aliment);
 		//void addAliment(std::string name);
 		void removeAliment(Aliment aliment);
-		//void removeAliment(std::string name);
+		void removeAliment(std::string name);
 
 		std::vector< std::string > getSteps() const;
 		void setStep(std::string step, int pos);
 		void addStep(std::string step);
-
+		void removeStep(int pos);
 
 		std::string getNotes() const;
 		void setNotes(std::string notes);

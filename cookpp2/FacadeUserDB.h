@@ -29,6 +29,7 @@ public:
 
 	std::list<Ingredient*> getAllIngredient();
 	int getIngredientIndex(Ingredient*);
+	Ingredient getIngredientByName(std::string name);
 	Ingredient getIngredient(int pos);
 	bool saveIngredient(Ingredient* ingredient, int pos);
 	bool addIngredient(Ingredient*);

@@ -44,6 +44,8 @@ FacadeUserDB::~FacadeUserDB()
 }
 
 
+
+
 /*
 /!\
 FOR SOME REASON, FSTREAM.READ RETURNS ALREADY ALLOCATED HEAP MEMORY 
@@ -116,6 +118,8 @@ bool FacadeUserDB::getRecipe(Recipe* recipeTarget,int pos)
 	}
 }
 
+
+
 bool FacadeUserDB::saveRecipe(Recipe* recipe, int pos)
 {
 	try {
@@ -178,6 +182,18 @@ int FacadeUserDB::getIngredientIndex(Ingredient* ingrToSearch)
 		i++;
 	}
 	return -1;
+}
+
+
+Ingredient FacadeUserDB::getIngredientByName(std::string name)
+{
+	auto listIngredient = this->getAllIngredient();
+	for (auto it = listIngredient.begin(); it != listIngredient.end(); it++) {
+		if ((*it)->getName() == name) {
+			return **it;
+		}
+	}
+	return Ingredient();
 }
 
 Ingredient FacadeUserDB::getIngredient(int pos)
