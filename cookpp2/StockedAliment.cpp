@@ -60,17 +60,15 @@ StockedAliment::StockedAliment(const Aliment& aliment, std::string obtainedDate,
 
 
 
-
+/*
 StockedAliment::StockedAliment(const StockedAliment& c)
+	: Aliment(c)
 {
 	this->obtainedDate = obtainedDate;
 	this->spoilRate = spoilRate;
 	this->calculateSpoilDate();
 }
-StockedAliment::~StockedAliment()
-{
-	OutputDebugStringA("StockedAliment Destroyed \n");
-}
+*/
 
 
 

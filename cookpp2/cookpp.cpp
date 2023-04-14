@@ -26,6 +26,7 @@ cookpp::cookpp(QWidget *parent)
     QVBoxLayout* mainLayout = new QVBoxLayout(this); // Main layout of widget
     this->facade = new FacadeUserDB();
     this->detailBox = new QGroupBox(tr("Details"));
+    this->currentPantrySelected = new Pantry;
 
     createActions();
     createMenus();
@@ -959,7 +960,7 @@ void cookpp::updateCurrentRecipeSelected()
                 //Row = 1 to account for header      //rowCount()-1 to account for footer "addButton"
                 for (int row = 1; row < table->rowCount()-1; ++row) {
                     std::string step = table->item(row, 0)->text().toStdString();
-                    recipeCopy->setStep(step, i - 1);
+                    recipeCopy->setStep(step, row - 1);
                 }
 
             }
@@ -1070,49 +1071,277 @@ void cookpp::displayPantry()
     
 }
 
-QGroupBox* cookpp::createDebugOutput() {
+void cookpp::pantryEditor() {
+    try {
+        deleteCurrentView();
 
-    QGroupBox* groupBox = new QGroupBox(tr("Output"));
-    QVBoxLayout* vbox = new QVBoxLayout;
+        QFormLayout* mainLayout = new QFormLayout;
+        QHBoxLayout* hbox = new QHBoxLayout;
+        QTableWidget* stockedAliments = new QTableWidget();
+        QDialogButtonBox* dialogButton = new QDialogButtonBox(QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+        /*--*/
+        QComboBox* alimentDrop = new QComboBox();
+        Pantry* toEdit = this->currentPantrySelected;
 
-    QTextEdit* display = new QTextEdit("Messages :");
-    display->setReadOnly(true);
-    display->setAlignment(Qt::AlignLeft);
+        /*--------Aliments table----------*/
+        auto alimList = toEdit->getStockAsList();
+        this->setupPantryAlimentTable(stockedAliments, &alimList);
+        stockedAliments->setObjectName("stockedAliments");
 
-    QFont font = display->font();
-    //font.setPointSize(font.pointSize() + 8);
-    display->setFont(font);
 
-    vbox->addWidget(display);
-    groupBox->setLayout(vbox);
+        //connect(dialogButton, SIGNAL(accepted()), &dialog, SLOT(accept()));
+        connect(dialogButton, SIGNAL(accepted()), this, SLOT(savePantryEditclicked())); //TO IMPLETMENT
+        connect(dialogButton, SIGNAL(rejected()), this, SLOT(gotoMainMenuclicked()));
 
-    return groupBox;
+
+        QLayout* oldLayout = this->detailBox->layout();
+        deleteSpecificLayout(oldLayout);
+
+        hbox->addWidget(stockedAliments, Qt::AlignCenter);
+        hbox->addWidget(dialogButton, Qt::AlignCenter);
+
+        this->detailBox->setLayout(hbox);
+        mainLayout->addWidget(this->detailBox);
+        setLayout(mainLayout);
+        setWindowTitle(tr("Cook++ - Pantry"));
+
+
+    }
+    catch (std::exception) {
+        OutputDebugStringA("Error with button sender");
+    }
 }
 
+void cookpp::setupPantryAlimentTable(QTableWidget* stockedAliments, std::list<StockedAliment*>* alimList)
+{
+    stockedAliments->setColumnCount(5);
+    stockedAliments->setRowCount(alimList->size() + 2);
+    stockedAliments->verticalHeader()->setVisible(false);
+    stockedAliments->horizontalHeader()->setVisible(false);
 
-QGroupBox* cookpp::createMainMenuBox() {
+    QComboBox* alimentDrop;
+    QString* qstr = new QString();
+    /*--Headers of table Aliment */
+    QTableWidgetItem* colTitle = new QTableWidgetItem();
+    QTableWidgetItem* colMass = new QTableWidgetItem();
+    QTableWidgetItem* colObtainedDate = new QTableWidgetItem();
+    QTableWidgetItem* colSpoilRate = new QTableWidgetItem();
+    QTableWidgetItem* colBtn = new QTableWidgetItem();
+    colTitle->setText("Aliment");
+    colTitle->setToolTip("Aliment");
+    colMass->setText("Mass (g)");
+    colMass->setToolTip("Mass (g)");
+    colObtainedDate->setText("Date Obtained");
+    colObtainedDate->setToolTip("Date Obtained");
+    colSpoilRate->setText("Days before Spoilage");
+    colSpoilRate->setToolTip("Days before Spoilage");
+    colBtn->setText("");
+    colTitle->setFlags(Qt::NoItemFlags);
+    colMass->setFlags(Qt::NoItemFlags);
+    colObtainedDate->setFlags(Qt::NoItemFlags);
+    colSpoilRate->setFlags(Qt::NoItemFlags);
+    colBtn->setFlags(Qt::NoItemFlags);
+    stockedAliments->setItem(0, 0, colTitle);
+    stockedAliments->setItem(0, 1, colMass);
+    stockedAliments->setItem(0, 2, colObtainedDate);
+    stockedAliments->setItem(0, 3, colSpoilRate);
+    stockedAliments->setItem(0, 4, colBtn);
+    stockedAliments->setColumnWidth(4, 20);
+    *qstr = QString::fromStdString("");
+    QWidget* pWidget = new QWidget();
+    QPushButton* btn_edit = new QPushButton();
+    QHBoxLayout* pLayout = new QHBoxLayout(pWidget);
+    auto allExistingAliments = this->facade->getAllIngredient();
+    int i = 1;
+    auto it = alimList->begin();
+    for (it; it != alimList->end(); it++) {
+        QTableWidgetItem* cellName = new QTableWidgetItem();
+        QTableWidgetItem* cellMass = new QTableWidgetItem();
+        QTableWidgetItem* cellObtainedDate = new QTableWidgetItem();
+        QTableWidgetItem* cellSpoilRate = new QTableWidgetItem();
+        QTableWidgetItem* cellButtonRemove = new QTableWidgetItem();
+        QToolButton* buttonRemove = new QToolButton();
 
-    QGroupBox* groupBox = new QGroupBox(tr("Output"));
-    QVBoxLayout* vbox = new QVBoxLayout;
-    
-    QToolButton* showIngredientButton = new QToolButton();
-    showIngredientButton->setText(tr("Show all ingredients"));
+        /* Name cell*/
+        *qstr = QString::fromStdString("");
+        *qstr = QString::fromStdString((*it)->getName());
+        cellName->setText(*qstr);
 
-    QToolButton* showPantryButton = new QToolButton();
-    showPantryButton->setText(tr("Show current pantry"));
+        /* Mass cell*/
+        *qstr = QString::fromStdString("");
+        qstr->append(QString::number((*it)->getMass()));
+        cellMass->setText(*qstr);
 
-    QToolButton* showRecipeButton = new QToolButton();
-    showRecipeButton->setText(tr("Show all recipes"));
+        /* Obtained Date cell*/
+        *qstr = QString::fromStdString("");
+        qstr->append(QString::fromStdString((*it)->getObtainedDate()));
+        cellObtainedDate->setText(*qstr);
 
-    vbox->addWidget(showIngredientButton);
-    vbox->addWidget(showPantryButton);
-    vbox->addWidget(showRecipeButton);
-    groupBox->setLayout(vbox);
+        /* Spoil Rate cell*/
+        *qstr = QString::fromStdString("");
+        qstr->append(QString::number((*it)->getSpoilRateInDays()));
+        cellSpoilRate->setText(*qstr);
 
 
-    return groupBox;
+        /*Set Remove button*/
+        *qstr = QString::fromStdString("");
+        *qstr = QString::number(i-1); //-1 to account for header row
+        buttonRemove->setObjectName(*qstr);
+        buttonRemove->setText(tr(" - "));
+        buttonRemove->setFixedSize(20, 20);
+        connect(buttonRemove, SIGNAL(clicked()), this, SLOT(removeStockedAlimentFromPantryclicked()));
+        cellButtonRemove->setFlags(Qt::NoItemFlags);
+        pWidget = new QWidget();
+        btn_edit = new QPushButton();
+        pLayout = new QHBoxLayout(pWidget);
+        pLayout->addWidget(buttonRemove);
+        pLayout->setAlignment(Qt::AlignCenter);
+        pLayout->setContentsMargins(0, 0, 0, 0);
+        pWidget->setLayout(pLayout);
+
+
+
+        stockedAliments->setItem(i, 0, cellName);
+        stockedAliments->setItem(i, 1, cellMass);
+        stockedAliments->setItem(i, 2, cellObtainedDate);
+        stockedAliments->setItem(i, 3, cellSpoilRate);
+        stockedAliments->setCellWidget(i, 4, pWidget);
+        i++;
+    }
+
+
+    /*Set Dropdown aliment*/
+    alimentDrop = new QComboBox();
+    for (auto it0 = allExistingAliments.begin(); it0 != allExistingAliments.end(); it0++) {
+        *qstr = QString::fromStdString("");
+        *qstr = QString::fromStdString((*it0)->getName());
+        alimentDrop->addItem(*qstr);
+    }
+    alimentDrop->setCurrentIndex(0);
+    alimentDrop->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+    alimentDrop->setFrame(true);
+    pWidget = new QWidget();
+    pLayout = new QHBoxLayout(pWidget);
+    pLayout->addWidget(alimentDrop);
+    pLayout->setAlignment(Qt::AlignCenter);
+    pLayout->setContentsMargins(0, 0, 0, 0);
+    pWidget->setLayout(pLayout);
+    stockedAliments->setCellWidget(stockedAliments->rowCount()-1, 0, pWidget);
+
+    /* Mass cell*/
+    QTableWidgetItem* cellMass = new QTableWidgetItem();
+    *qstr = QString::fromStdString("");
+    qstr->append(QString::number(0));
+    cellMass->setText(*qstr);
+    stockedAliments->setItem(stockedAliments->rowCount() - 1, 1, cellMass);
+
+    /* Obtained Date cell*/
+    QTableWidgetItem* cellObtainedDate = new QTableWidgetItem();
+    *qstr = QString::fromStdString("");
+    qstr->append(QString::fromStdString("2022/12/31"));
+    cellObtainedDate->setText(*qstr);
+    stockedAliments->setItem(stockedAliments->rowCount() - 1, 2, cellObtainedDate);
+
+    /* Spoil Rate cell*/
+    QTableWidgetItem* cellSpoilRate = new QTableWidgetItem();
+    *qstr = QString::fromStdString("");
+    qstr->append(QString::number(0));
+    cellSpoilRate->setText(*qstr);
+    stockedAliments->setItem(stockedAliments->rowCount() - 1, 3, cellSpoilRate);
+
+    /*-- Button add at the end of Table--*/
+    QTableWidgetItem* cellAddButton = new QTableWidgetItem();
+    pWidget = new QWidget();
+    QPushButton* btnAdd = new QPushButton();
+    pLayout = new QHBoxLayout(pWidget);
+    connect(btnAdd, SIGNAL(clicked()), this, SLOT(addNewStockedAlimentInPantryclicked()));
+    btnAdd->setText("+");
+    pLayout->addWidget(btnAdd);
+    pLayout->setAlignment(Qt::AlignCenter);
+    pLayout->setContentsMargins(0, 0, 0, 0);
+    pWidget->setLayout(pLayout);
+    stockedAliments->setCellWidget(stockedAliments->rowCount() - 1, 4, pWidget);
+
+    stockedAliments->addScrollBarWidget(new QScrollBar(), Qt::AlignLeft);
 }
 
+void cookpp::updateCurrentPantrySelected(bool isLastRowAdded) {
+    Pantry* pantryCopy = this->currentPantrySelected;
+    std::string stockedAlimentName = std::string();
+    std::string stockedAlimentObtainedDate = std::string();
+    int stockedAlimentSpoilRateInt = int();
+    Ingredient* bufferIngredient;
+    StockedAliment* bufferStockedAliment;
+    std::vector<StockedAliment> alimentsToCopy =  std::vector<StockedAliment>();
+
+
+    for (int i = 0; i < this->detailBox->layout()->count(); ++i)
+    {
+        QWidget* widget = this->detailBox->layout()->itemAt(i)->widget();
+        if (widget != NULL)
+        {
+            QString qname = widget->objectName();
+            std::string sname = qname.toStdString();
+            if (sname == "stockedAliments") {
+                QTableWidget* table = qobject_cast<QTableWidget*>(widget);
+                //Row = 1 to account for header      //rowCount()-1 to account for footer "addButton"
+                for (int row = 1; row < table->rowCount() - 1; ++row) {
+                    std::string name            = table->item(row, 0)->text().toStdString();
+                    double mass                 = table->item(row, 1)->text().toDouble();
+                    std::string obtainedDate    = table->item(row, 2)->text().toStdString();
+                    int spoilRateDays           = table->item(row, 3)->text().toInt();
+
+                    bufferIngredient = new Ingredient;
+                    bufferStockedAliment = new StockedAliment;
+                    *bufferIngredient = this->facade->getIngredientByName(name);
+                    *bufferStockedAliment = StockedAliment(*bufferIngredient, mass, obtainedDate, spoilRateDays);
+
+
+
+                    alimentsToCopy.push_back(*bufferStockedAliment);
+
+                }
+                if (isLastRowAdded) {
+                    int lastRow = table->rowCount() - 1;
+                    auto w = table->cellWidget(lastRow, 0)->layout()->itemAt(0)->widget();
+                    QComboBox* dropDownCell = qobject_cast<QComboBox*>(w);
+                    std::string name = dropDownCell->currentText().toStdString();
+                    double mass = table->item(lastRow, 1)->text().toDouble();
+                    std::string obtainedDate = table->item(lastRow, 2)->text().toStdString();
+                    int spoilRateDays = table->item(lastRow, 3)->text().toInt();
+
+                    bufferIngredient = new Ingredient;
+                    *bufferIngredient = this->facade->getIngredientByName(name);
+                    bufferStockedAliment = new StockedAliment(*bufferIngredient, mass, obtainedDate, spoilRateDays);
+                    alimentsToCopy.push_back(*bufferStockedAliment);
+
+                    
+                }
+
+                pantryCopy->setStock(alimentsToCopy);
+
+            }
+
+        }
+
+
+    }
+
+    this->currentPantrySelected = pantryCopy;
+
+    return;
+}
+
+void cookpp::savePantryEdit() {
+    Pantry* toSave = this->currentPantrySelected;
+
+    this->facade->savePantry(toSave);
+
+
+    displayPantry();
+}
+
+/*-------------UTILITY--------------*/
 void cookpp::deleteCurrentView()
 {
     QLayoutItem* item;
@@ -1181,11 +1410,8 @@ void cookpp::createActions()
     mnExitAct = new QAction(tr("&Exit"), this);
 
     mnAddRecipeAct = new QAction(tr("&Add New Recipe"), this);
-    mnEditRecipeAct = new QAction(tr("&Edit Recipe"), this);
     mnAddIngredientAct = new QAction(tr("&Add New Ingredient"), this);
-    mnEditIngredientAct = new QAction(tr("&Edit Ingredient"), this);
-    mnAddToPantryAct = new QAction(tr("&Add To Pantry"), this);
-    mnRemoveFromPantryAct = new QAction(tr("&Remove From Pantry"), this);
+    mnEditPantryAct = new QAction(tr("&Edit Pantry"), this);
 
     mnViewIngredientsAct = new QAction(tr("&View Ingredients"), this);
     mnViewRecipesAct = new QAction(tr("&View Recipes"), this);
@@ -1212,6 +1438,11 @@ void cookpp::createActions()
 
     mnAddRecipeAct->setStatusTip(tr("Create a new Recipe"));
     connect(mnAddRecipeAct, &QAction::triggered, this, &cookpp::mnAddRecipe);
+
+    mnEditPantryAct->setStatusTip(tr("Edit Pantry"));
+    connect(mnEditPantryAct, &QAction::triggered, this, &cookpp::mnEditPantry);
+
+
 }
 
 void cookpp::createMenus()
@@ -1227,18 +1458,17 @@ void cookpp::createMenus()
 
     QMenu* editMenu = menuBar->addMenu(tr("&Edit"));
     editMenu->addAction(mnAddRecipeAct);
-    editMenu->addAction(mnEditRecipeAct);
     editMenu->addSeparator();
     editMenu->addAction(mnAddIngredientAct);
-    editMenu->addAction(mnEditIngredientAct);
     editMenu->addSeparator();
-    editMenu->addAction(mnAddToPantryAct);
-    editMenu->addAction(mnRemoveFromPantryAct);
+    editMenu->addAction(mnEditPantryAct);
     editMenu->addSeparator();
 
     QMenu* viewMenu = menuBar->addMenu(tr("&View"));
     viewMenu->addAction(mnViewIngredientsAct);
+    editMenu->addSeparator();
     viewMenu->addAction(mnViewRecipesAct);
+    editMenu->addSeparator();
     viewMenu->addAction(mnViewPantryAct);
 
     QMenu* helpMenu = menuBar->addMenu(tr("&Help"));
@@ -1277,6 +1507,18 @@ void cookpp::recipeListPreviousclicked()
     displayAllRecipes();
 }
 
+void cookpp::pantryPreviousclicked()
+{
+    this->currentPage--;
+    displayPantry();
+}
+
+void cookpp::pantryNextclicked()
+{
+    this->currentPage++;
+    displayPantry();
+}
+
 
 /*----- MN METHODS --------*/
 void cookpp::mnMainMenu() 
@@ -1308,6 +1550,22 @@ void cookpp::mnAddRecipe()
     recipeEditor();
 }
 
+void cookpp::mnEditPantry() {
+    Pantry* a = new Pantry;
+    this->facade->getPantry(a);
+    this->facade->getPantry(this->currentPantrySelected);
+    pantryEditor();
+}
+
+
+
+/*----- CLICKED SLOT -----*/
+void cookpp::gotoMainMenuclicked()
+{
+    displayMainMenu();
+}
+
+//Ingredient
 void cookpp::showIngredientDetailclicked()
 {
     QObject* buttonSender = QObject::sender();
@@ -1437,6 +1695,19 @@ void cookpp::showIngredientDetailclicked()
 
 }
 
+void cookpp::saveIngredientEditclicked()
+{
+    saveIngredientEdit();
+}
+
+void cookpp::editIngredientclicked()
+{
+    ingredientEditor();
+}
+
+
+
+//Recipe
 void cookpp::showRecipeDetailclicked()
 {
     QObject* buttonSender = QObject::sender();
@@ -1626,6 +1897,73 @@ void cookpp::showRecipeDetailclicked()
     }
 }
 
+void cookpp::addNewAlimentInRecipeclicked()
+{
+    updateCurrentRecipeSelected();
+    this->currentRecipeSelected->addAliment(Aliment("Carot"));
+    recipeEditor();
+}
+
+void cookpp::removeAlimentFromRecipeclicked() {
+    QObject* buttonSender = QObject::sender();
+    try {
+        QString qs = qobject_cast<QToolButton*>(buttonSender)->objectName();
+        std::string s = qs.toStdString();
+
+        std::string delimiter = BTN_REMOVE_ALIMENT_SEPARATOR;
+        //std::string key = s.substr(0, s.find(delimiter));
+        std::string alimentName = s.substr(s.find(delimiter) + 1, s.size());
+        this->currentRecipeSelected->removeAliment(alimentName);
+        recipeEditor();
+
+
+    }
+    catch (std::exception) {
+        OutputDebugStringA("Error with button sender");
+    }
+}
+
+void cookpp::addNewStepInRecipeclicked() {
+
+    updateCurrentRecipeSelected();
+    this->currentRecipeSelected->addStep("New Step");
+    recipeEditor();
+}
+
+void cookpp::removeStepFromRecipeclicked() {
+    QObject* buttonSender = QObject::sender();
+    try {
+        QString qs = qobject_cast<QToolButton*>(buttonSender)->objectName();
+        int pos = qs.toInt();
+        updateCurrentRecipeSelected();
+        this->currentRecipeSelected->removeStep(pos);
+        recipeEditor();
+
+
+    }
+    catch (std::exception) {
+        OutputDebugStringA("Error with button sender");
+    }
+}
+
+void cookpp::saveRecipeEditclicked()
+{
+    updateCurrentRecipeSelected();
+    saveRecipeEdit();
+}
+
+void cookpp::editRecipeclicked()
+{
+    recipeEditor();
+}
+
+
+
+
+
+
+
+//Pantry
 void cookpp::showStockedAlimentDetailclicked()
 {
     QObject* buttonSender = QObject::sender();
@@ -1710,57 +2048,14 @@ void cookpp::showStockedAlimentDetailclicked()
     }
 }
 
-
-
-void cookpp::saveIngredientEditclicked()
-{
-    saveIngredientEdit();
-
-    
-
-}
-
-void cookpp::addNewAlimentInRecipeclicked()
-{
-    updateCurrentRecipeSelected();
-    this->currentRecipeSelected->addAliment(Aliment("Carot"));
-    recipeEditor();
-}
-
-void cookpp::removeAlimentFromRecipeclicked() {
-    QObject* buttonSender = QObject::sender();
-    try {
-        QString qs = qobject_cast<QToolButton*>(buttonSender)->objectName();
-        std::string s = qs.toStdString();
-
-        std::string delimiter = BTN_REMOVE_ALIMENT_SEPARATOR;
-        //std::string key = s.substr(0, s.find(delimiter));
-        std::string alimentName = s.substr(s.find(delimiter) + 1, s.size());
-        this->currentRecipeSelected->removeAliment(alimentName);
-        recipeEditor();
-
-
-    }
-    catch (std::exception) {
-        OutputDebugStringA("Error with button sender");
-    }
-}
-
-void cookpp::addNewStepInRecipeclicked() {
-
-    updateCurrentRecipeSelected();
-    this->currentRecipeSelected->addStep("New Step");
-    recipeEditor();
-}
-
-void cookpp::removeStepFromRecipeclicked() {
+void cookpp::removeStockedAlimentFromPantryclicked() {
     QObject* buttonSender = QObject::sender();
     try {
         QString qs = qobject_cast<QToolButton*>(buttonSender)->objectName();
         int pos = qs.toInt();
-        this->currentRecipeSelected->removeStep(pos);
-        updateCurrentRecipeSelected();
-        recipeEditor();
+        updateCurrentPantrySelected(false);
+        this->currentPantrySelected->removeFromStock(pos);
+        pantryEditor();
 
 
     }
@@ -1769,124 +2064,13 @@ void cookpp::removeStepFromRecipeclicked() {
     }
 }
 
-
-
-void cookpp::editIngredientclicked()
-{
-    ingredientEditor();
+void cookpp::addNewStockedAlimentInPantryclicked() {
+    updateCurrentPantrySelected(true);
+    pantryEditor();
 }
 
-void cookpp::saveRecipeEditclicked()
-{
-    updateCurrentRecipeSelected();
-    saveRecipeEdit();
+void cookpp::savePantryEditclicked() {
+    updateCurrentPantrySelected(false);
+    savePantryEdit();
 }
 
-void cookpp::editRecipeclicked()
-{
-    recipeEditor();
-}
-
-void cookpp::gotoMainMenuclicked()
-{
-    displayMainMenu();
-}
-
-
-
-
-
-
-
-
-
-
-QGroupBox* cookpp::createFirstExclusiveGroup()
-{
-    QGroupBox* groupBox = new QGroupBox(tr("Exclusive Radio Buttons"));
-
-    QRadioButton* radio1 = new QRadioButton(tr("&Radio button 1"));
-    QRadioButton* radio2 = new QRadioButton(tr("R&adio button 2"));
-    QRadioButton* radio3 = new QRadioButton(tr("Ra&dio button 3"));
-
-    radio1->setChecked(true);
-    QVBoxLayout* vbox = new QVBoxLayout;
-    vbox->addWidget(radio1);
-    vbox->addWidget(radio2);
-    vbox->addWidget(radio3);
-    vbox->addStretch(1);
-    groupBox->setLayout(vbox);
-    groupBox->close();
-
-    return groupBox;
-}
-
-QGroupBox* cookpp::createSecondExclusiveGroup()
-{
-    QGroupBox* groupBox = new QGroupBox(tr("E&xclusive Radio Buttons"));
-    groupBox->setCheckable(true);
-    groupBox->setChecked(false);
-    QRadioButton* radio1 = new QRadioButton(tr("Rad&io button 1"));
-    QRadioButton* radio2 = new QRadioButton(tr("Radi&o button 2"));
-    QRadioButton* radio3 = new QRadioButton(tr("Radio &button 3"));
-    radio1->setChecked(true);
-    QCheckBox* checkBox = new QCheckBox(tr("Ind&ependent checkbox"));
-    checkBox->setChecked(true);
-    QVBoxLayout* vbox = new QVBoxLayout;
-    vbox->addWidget(radio1);
-    vbox->addWidget(radio2);
-    vbox->addWidget(radio3);
-    vbox->addWidget(checkBox);
-    vbox->addStretch(1);
-    groupBox->setLayout(vbox);
-
-    return groupBox;
-}
-
-QGroupBox* cookpp::createNonExclusiveGroup()
-{
-    QGroupBox* groupBox = new QGroupBox(tr("Non-Exclusive Checkboxes"));
-    groupBox->setFlat(true);
-    QCheckBox* checkBox1 = new QCheckBox(tr("&Checkbox 1"));
-    QCheckBox* checkBox2 = new QCheckBox(tr("C&heckbox 2"));
-    checkBox2->setChecked(true);
-    QCheckBox* tristateBox = new QCheckBox(tr("Tri-&state button"));
-    tristateBox->setTristate(true);
-    QVBoxLayout* vbox = new QVBoxLayout;
-    vbox->addWidget(checkBox1);
-    vbox->addWidget(checkBox2);
-    vbox->addWidget(tristateBox);
-    vbox->addStretch(1);
-    groupBox->setLayout(vbox);
-
-    return groupBox;
-}
-
-QGroupBox* cookpp::createPushButtonGroup()
-{
-    QGroupBox* groupBox = new QGroupBox(tr("&Push Buttons"));
-    groupBox->setCheckable(true);
-    groupBox->setChecked(true);
-    QPushButton* pushButton = new QPushButton(tr("&Normal Button"));
-    QPushButton* toggleButton = new QPushButton(tr("&Toggle Button"));
-    toggleButton->setCheckable(true);
-    toggleButton->setChecked(true);
-    QPushButton* flatButton = new QPushButton(tr("&Flat Button"));
-    flatButton->setFlat(true);
-    QPushButton* popupButton = new QPushButton(tr("Pop&up Button"));
-    QMenu* menu = new QMenu(this);
-    menu->addAction(tr("&First Item"));
-    menu->addAction(tr("&Second Item"));
-    menu->addAction(tr("&Third Item"));
-    menu->addAction(tr("F&ourth Item"));
-    popupButton->setMenu(menu);
-    QVBoxLayout* vbox = new QVBoxLayout;
-    vbox->addWidget(pushButton);
-    vbox->addWidget(toggleButton);
-    vbox->addWidget(flatButton);
-    vbox->addWidget(popupButton);
-    vbox->addStretch(1);
-    groupBox->setLayout(vbox);
-
-    return groupBox;
-}

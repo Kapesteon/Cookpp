@@ -24,8 +24,8 @@ public:
 	StockedAliment(const Ingredient& ingredient, double mass, std::string obtainedDate, int spoilRateDays);
 	StockedAliment(const Aliment& aliment, time_t obtainedDate, time_t spoilRate);
 	StockedAliment(const Aliment& aliment, std::string obtainedDate, int spoilRateDays);
-	StockedAliment(const StockedAliment& c);
-	~StockedAliment();
+	StockedAliment(const StockedAliment& c) = default;
+	~StockedAliment()  = default;
 
 	const std::string getObtainedDate() const;
 	void setObtainedDate(time_t obtainedDate);

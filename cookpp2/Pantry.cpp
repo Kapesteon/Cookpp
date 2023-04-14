@@ -98,6 +98,18 @@ void Pantry::setStock(std::forward_list<StockedAliment *> newStock)
 	this->stock = this->convertForwardListToStock(newStock);
 }
 
+void Pantry::setStock(std::vector<StockedAliment> newStock)
+{
+	int i = 0;
+	for (auto it = newStock.begin(); it != newStock.end() && i < MAX_STOCKEDALIMENTS; it++) {
+		this->stock[i] = *it;
+		i++;
+	}
+	for (i; i < MAX_STOCKEDALIMENTS; i++) {
+		this->stock[i] = StockedAliment();
+	}
+}
+
 void Pantry::addToStock(StockedAliment * stockedAliment)
 {
 	int i = 0;
@@ -129,6 +141,26 @@ void Pantry::removeFromStock(StockedAliment* stockedAliment)
 		}
 	}
 	this->stock = this->convertForwardListToStock(list);
+}
+
+void Pantry::removeFromStock(int pos)
+{
+	StockedAliment a = StockedAliment();
+	this->stock[pos] = a;
+	int i = pos;
+	for (i; i < this->stock.size() - 1; i++) {
+		try {
+			this->stock[i] = this->stock[i + 1];
+		}
+		catch (std::exception) {
+			this->stock[i] = a;
+
+			return;
+		}
+	}
+	this->stock[MAX_STOCKEDALIMENTS-1] = a;
+
+	return;
 }
 
 std::forward_list<StockedAliment*> Pantry::popStockedAlimentByName(std::string name)

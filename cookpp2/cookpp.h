@@ -33,8 +33,10 @@ public:
     void getPageRecipe(int page, std::list<Recipe*>* listRecipe, std::vector< QToolButton*>* recipesButton);
     void getPagePantry(int page, std::list<StockedAliment*>* listStockedAliment, std::vector< QToolButton*>* pantryButton);
 
+    /* INGREDIENT */
     void ingredientEditor();
     void saveIngredientEdit();
+
 
     /* RECIPE */
     void recipeEditor();
@@ -47,6 +49,12 @@ public:
     void deleteSpecificLayout(QLayout* item);
     void setDetailBoxToMainLayout(int row, int col, int rowSpan, int colSpan);
 
+    /* PANTRY */
+    void pantryEditor();
+    void savePantryEdit();
+    void setupPantryAlimentTable(QTableWidget* stockedAliments, std::list<StockedAliment*>* alimList);
+    void updateCurrentPantrySelected(bool isLastRowAdded);
+
 private:
     int currentPage = 0;
     std::unique_ptr<std::vector<Ingredient*>> activeIngredientBuffer; //Used to store Ingredients
@@ -54,7 +62,7 @@ private:
     std::unique_ptr<std::vector<StockedAliment*>> activeStockedAlimentBuffer; //Used to store StockedAliment
     Ingredient* currentIngredientSelected;
     Recipe* currentRecipeSelected;
-
+    Pantry* currentPantrySelected;
 
     FacadeUserDB* facade;
 
@@ -84,12 +92,11 @@ private:
     /*------------Menu Actions-----------*/
     QAction* mnMainMenuAct;
     QAction* mnExitAct;
+
     QAction* mnAddRecipeAct;
-    QAction* mnEditRecipeAct;
     QAction* mnAddIngredientAct;
-    QAction* mnEditIngredientAct;
-    QAction* mnAddToPantryAct;
-    QAction* mnRemoveFromPantryAct;
+    QAction* mnEditPantryAct;
+
     QAction* mnViewIngredientsAct;
     QAction* mnViewRecipesAct;
     QAction* mnViewPantryAct;
@@ -103,6 +110,8 @@ private slots:
     void ingredientListNextclicked();
     void recipeListNextclicked();
     void recipeListPreviousclicked();
+    void pantryPreviousclicked();
+    void pantryNextclicked();
 
     /*------------Menu Slots-----------*/
     void mnMainMenu();
@@ -111,6 +120,7 @@ private slots:
     void mnViewPantry();
     void mnAddIngredient();
     void mnAddRecipe();
+    void mnEditPantry();
     /*------------------------------------*/
 
     /*------------Button Slots-----------*/
@@ -127,6 +137,10 @@ private slots:
     void removeAlimentFromRecipeclicked();
     void addNewStepInRecipeclicked();
     void removeStepFromRecipeclicked();
+
+    void removeStockedAlimentFromPantryclicked();
+    void addNewStockedAlimentInPantryclicked();
+    void savePantryEditclicked();
 
     void gotoMainMenuclicked();
     /*------------------------------------*/

@@ -25,9 +25,11 @@ class Pantry
 		std::forward_list<StockedAliment *> getStock(void);
 		std::list<StockedAliment*> getStockAsList(void);
 		void setStock(std::forward_list<StockedAliment *> newStock) ;
+		void setStock(std::vector<StockedAliment> newStock);
 
 		void addToStock(StockedAliment * stockedAliment);
 		void removeFromStock(StockedAliment * stockedAliment);
+		void removeFromStock(int pos);
 
 		std::forward_list<StockedAliment*> popStockedAlimentByName(std::string name);
 		std::forward_list<StockedAliment*> popStockedAlimentByType(std::string type);
