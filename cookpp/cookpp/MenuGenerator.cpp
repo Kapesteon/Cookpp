@@ -192,16 +192,17 @@ bool removeStockedAliment(Recipe recipe, Pantry* pantry, int numConsumers) {
 			return false;
 		}
 	}
+	return true;
 }
 
-void fillTheRecipes(Menu* menu, int numRecipesToAdd, int numConsumers, Pantry* pantry, std::list<Recipe*> recipesList, Gardien gardien, int numMementoToTake) {
+int fillTheRecipes(Menu* menu, int numRecipesToAdd, int numConsumers, Pantry* pantry, std::list<Recipe*> recipesList, Gardien gardien, int numMementoToTake) {
 	std::forward_list<StockedAliment*> stockedAliment = pantry->getStock();
 	
 	Memento mementoToRestore = gardien.getMemento(numMementoToTake);
 	recipesList = mementoToRestore.getListRecipe();
 
 	int numRecipesAdd = 0;
-	while (numRecipesAdd < numRecipesToAdd) {
+	while (numRecipesAdd < numRecipesToAdd && recipesList.size() > 0) {
 		Recipe recipeToTake = getRandomRecipe(recipesList);
 		bool isRecipeGood = checkRecipeIsPossible(recipeToTake, stockedAliment, numConsumers);
 		if (!isRecipeGood) {
@@ -213,11 +214,13 @@ void fillTheRecipes(Menu* menu, int numRecipesToAdd, int numConsumers, Pantry* p
 			numRecipesAdd++;
 		}
 	}
+	return numRecipesAdd;
 }
 
 Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, FacadeUserDB facade) {
 	Menu menu;
 	menu.setNumConsumers(numConsumers);
+	menu.setNbDays(numDay);
 
 	std::forward_list<StockedAliment*> stockedAliment = pantry->getStock();
 	std::list<Recipe*> recipesList;
@@ -235,13 +238,11 @@ Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, F
 		return menu;
 	}
 
-	Recipe rrr = getRandomRecipe(recipesList);
-	int numRecipesOk = 0;
-
 	Gardien gardien;
 	Memento memento = Memento(recipesList, stockedAliment);
 	gardien.addMemento(memento);
 
+	int numRecipesOk = 0;
 	while (recipesList.size() > 0 && numRecipesOk < numDay) {
 		int indexRecipeToTake = getLessPercentageMassRecipe(percentageMassEachRecipe, recipesList);
 		Recipe recipeToTakeValue = getRecipeToTake(recipesList, indexRecipeToTake);
@@ -259,11 +260,21 @@ Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, F
 	}
 
 	int numRecipesToAdd = numDay - numRecipesOk;
-	fillTheRecipes(&menu, numRecipesToAdd, numConsumers, pantry, recipesList, gardien, 0);
+	int recipesAdd = 0;
 
+	if (numRecipesToAdd != 0)
+		int recipesAdd = fillTheRecipes(&menu, numRecipesToAdd, numConsumers, pantry, recipesList, gardien, 0);
 
+	if (recipesAdd != numRecipesToAdd) {
+		std::cerr << "Nombre de repas ajoutés incohérents" << std::endl;
+	}
 
 	std::cout << "L'élément 3 de la liste est : " << std::endl;
 
+	return menu;
+}
+
+Menu MenuGenerator::generateOneTimeMeal(int numConsumers, Pantry* pantry, FacadeUserDB facade) {
+	Menu menu = generateMenu(1, numConsumers, pantry, facade);
 	return menu;
 }

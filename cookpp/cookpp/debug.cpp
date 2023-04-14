@@ -351,10 +351,10 @@ void initDb()
 	Aliment testAliment5 = Aliment(testIngredient5, 100); //Pear
 
 
-	StockedAliment testStockedAliment1 = StockedAliment(testIngredient1, 1000, "2021-21-01", 185); //Carot
+	StockedAliment testStockedAliment1 = StockedAliment(testIngredient1, 300, "2021-21-01", 185); //Carot
 	StockedAliment testStockedAliment2 = StockedAliment(testIngredient2, 1500, "2021-22-01", 365); //Potato
-	StockedAliment testStockedAliment3 = StockedAliment(testIngredient3, 2000, "2021-23-01", 30); //Apple
-	StockedAliment testStockedAliment4 = StockedAliment(testIngredient4, 2500, "2021-24-01", 2000); //Wheat
+	StockedAliment testStockedAliment3 = StockedAliment(testIngredient3, 3000, "2021-23-01", 30); //Apple
+	StockedAliment testStockedAliment4 = StockedAliment(testIngredient4, 3500, "2021-24-01", 2000); //Wheat
 	StockedAliment testStockedAliment5 = StockedAliment(testIngredient5, 1400, "2021-24-01", 57); //Pear
 
 
@@ -364,9 +364,20 @@ void initDb()
 
 	Pantry testpantry1 = Pantry(stockedAlimentList);
 
-	std::string testSteps1[] = { "1a","2b","3c","4d","5e" };
+	std::string testSteps1[] =
+	{ "1 - Dice carots and potatoes",
+		"2 - Boil them for ~20 minutes",
+		"3 - After 20min, add the lentils and the meat to the soup",
+		"4 - Let it cook for another 20min",
+		"5 - Serve"
+	};
 	std::vector<std::string> strs(testSteps1, testSteps1 + sizeof(testSteps1) / sizeof(std::string));
-	std::string testSteps2[] = { "I","II","III" };
+
+	std::string testSteps2[] =
+	{ "1 - Lorem ipsum dolor sit amet",
+	  "2 - consectetur adipiscing elit ",
+	  "3 - sed do eiusmod tempor incididunt"
+	};
 	std::vector<std::string> strs2(testSteps2, testSteps2 + sizeof(testSteps2) / sizeof(std::string));
 
 	Recipe testRecipe1 = Recipe();
@@ -375,6 +386,11 @@ void initDb()
 	//testRecipe1.addAliment(testAliment5);
 	testRecipe1.setName("Recipe 1");
 	testRecipe1.setNotes("Notes of Recipe1");
+	testRecipe1.addStep(testSteps1[0]);
+	testRecipe1.addStep(testSteps1[1]);
+	testRecipe1.addStep(testSteps1[2]);
+	testRecipe1.addStep(testSteps1[3]);
+	testRecipe1.addStep(testSteps1[4]);
 	testRecipe1.markAsComplete();
 
 	Recipe testRecipe2 = Recipe();
@@ -414,6 +430,8 @@ void initDb()
 	Menu menu;
 	std::time_t currentTime = std::time(nullptr);
 	menu.setStartDate(currentTime);
+
+
 	std::cout << menu.getStartDate();
 
 	Pantry pantry;
@@ -429,41 +447,29 @@ void initDb()
 	menuGenerator.setListRecipe(recipesList);
 	menuGenerator.setStockedAliment(stockedAlimentList);
 
-	Memento memento = Memento(menuGenerator.getListRecipe(), menuGenerator.getStockedAliment());
-	memento.createMemento();
+	struct tm date1 = { 0 };
+	date1.tm_year = 2023 - 1900;
+	date1.tm_mon = 3;
+	date1.tm_mday = 10;
+	date1.tm_hour = 12;
+	date1.tm_min = 0;
+	date1.tm_sec = 0;
+	time_t t1 = mktime(&date1);
 
-	Gardien lloris;
-	lloris.addMemento(memento);
+	struct tm date2 = { 0 };
+	date2.tm_year = 2023 - 1900;
+	date2.tm_mon = 3;
+	date2.tm_mday = 20;
+	date2.tm_hour = 12;
+	date2.tm_min = 0;
+	date2.tm_sec = 0;
+	time_t t2 = mktime(&date2);
 
-	Recipe testRecipe7 = Recipe();
-	testRecipe7.addAliment(testAliment5);
-	facade.saveRecipe(&testRecipe7, 2);
-	recipesList = facade.getAllRecipe();
-	menuGenerator.setListRecipe(recipesList);
+	double seconds = difftime(t2, t1);
+	int days = seconds / (24 * 60 * 60);
 
-	Memento mementoTwo = Memento(menuGenerator.getListRecipe(), menuGenerator.getStockedAliment());
-	mementoTwo.createMemento();
-	lloris.addMemento(mementoTwo);
-
-	Memento firstMemento = lloris.getMemento(0);
-
-	mementoTwo.restoreMemento(firstMemento);
-
-	Menu newMenu = menuGenerator.generateMenu(3, 3, &pantry, facade);
-
-	/*FacadeUserDB newFacade;
-
-	Pantry newPantry;
-	newFacade.getPantry(&newPantry);
-	newPantry.setStock(menuGenerator.getStockedAliment());
-	newFacade.savePantry(&newPantry);*/
-
-	//FacadeUserDB newFacade;
-	//Pantry newPantry = newFacade.getPantry();
-
-	//std::list<Recipe*> maListe = facade.getAllRecipe();
-	//auto it = maListe.begin();
-	//std::cout << "L'élément 3 de la liste est : " << (*it)->getName() << std::endl;
-
-	std::cout << "ujiokl";
+	Menu newMenu = menuGenerator.generateMenu(1, 2, &pantry, facade);
+	newMenu.writeMenu();
+	//Menu newMenuBis = menuGenerator.generateOneTimeMeal(2, &pantry, facade);
+	std::cout << "Fin.";
 }

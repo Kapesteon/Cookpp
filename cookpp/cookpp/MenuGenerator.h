@@ -25,6 +25,6 @@ public:
 
 
 	Menu generateMenu(int numDay, int numConsumers, Pantry* pantry, FacadeUserDB facade);
-	Menu rerollMenu(Menu menu, Pantry pantry);
-	Menu generateOneTimeMeal(Pantry pantry);
+	Menu generateOneTimeMeal(int numConsumers, Pantry* pantry, FacadeUserDB facade);
+	void writeMenu(Menu* menu);
 };
