@@ -22,8 +22,7 @@ public:
 	bool getPantry(Pantry* pantryTarget);
 	Pantry getPantry();
 	bool savePantry(Pantry* pantry);
-	bool removePantry();
-	bool putPantry();
+	bool resetPantry();
 
 	std::list<Recipe*> getAllRecipe();
 	bool getRecipe(Recipe* recipeTarget,int pos);
