@@ -97,7 +97,7 @@ bool removeAnAlimentFromStockedAliment(Aliment alimentFromRecipe, Pantry* pantry
 		if (nameStocked == name) {
 			double diffMass = massStocked - mass;
 			if (diffMass == 0) {
-				pantry->removeFromStock(*it);
+				pantry->removeFromStock(*it); //ERREUR POSSIBLEMENT ICI
 			}
 			else {
 				pantry->editFromStock(*it, diffMass);
@@ -197,7 +197,7 @@ bool removeStockedAliment(Recipe recipe, Pantry* pantry, int numConsumers) {
 
 int fillTheRecipes(Menu* menu, int numRecipesToAdd, int numConsumers, Pantry* pantry, std::list<Recipe*> recipesList, Gardien gardien, int numMementoToTake) {
 	std::forward_list<StockedAliment*> stockedAliment = pantry->getStock();
-	
+
 	Memento mementoToRestore = gardien.getMemento(numMementoToTake);
 	recipesList = mementoToRestore.getListRecipe();
 
@@ -220,26 +220,30 @@ int fillTheRecipes(Menu* menu, int numRecipesToAdd, int numConsumers, Pantry* pa
 bool completeShoppingList(Menu* menu, Recipe recipeToAdd, std::forward_list<StockedAliment*>* stockedAliment, int numConsumers) {
 	std::vector<Aliment> alimentForRecipe = recipeToAdd.getAliments();
 	for (Aliment aliment : alimentForRecipe) {
-		int n = 0;
 		double newMass = aliment.getMass() * numConsumers;
 		for (auto it = stockedAliment->begin(); it != stockedAliment->end(); it++) {
 			double massStocked = (*it)->getMass();
-			if (aliment.getName() == (*it)->getName() && aliment.getMass() * numConsumers > massStocked) {
-				newMass = newMass - massStocked;
-				if (newMass >= 0) {
+			if (aliment.getName() == (*it)->getName()) {
+				if (massStocked >= aliment.getMass() * numConsumers) {
+					newMass = massStocked - newMass;
+					(*it)->setMass(newMass);
+				}
+				else {
+					newMass = newMass - massStocked;
 					(*it)->setMass(0);
+					menu->putInShoppingList(aliment, newMass);
 				}
 			}
 		}
-		menu->putInShoppingList(aliment, newMass);
-		
-		}
+	}
 	return true;
 }
 
-int fillWithShoppingList(Menu* menu, int numRecipesToAdd, int numConsumers, std::forward_list<StockedAliment*> stockedAliment, Gardien gardien) {
+int fillWithShoppingList(Menu* menu, int numRecipesToAdd, int numConsumers, Pantry* pantry, Gardien gardien) {
 	Memento mementoToRestore = gardien.getMemento(0);
 	std::list<Recipe*> recipesList = mementoToRestore.getListRecipe();
+
+	std::forward_list<StockedAliment*> stockedAliment = pantry->getStock();
 
 	int numRecipesAdd = 0;
 	while (numRecipesToAdd > numRecipesAdd) {
@@ -309,7 +313,7 @@ Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, F
 		menu.setErrorMenu(true);
 		numRecipesToAdd = numRecipesToAdd - recipesAdd;
 		stockedAliment = pantry->getStock();
-		fillWithShoppingList(&menu, numRecipesToAdd, numConsumers, stockedAliment, gardien);
+		fillWithShoppingList(&menu, numRecipesToAdd, numConsumers, pantry, gardien);
 	}
 
 	std::cout << "L'élément 3 de la liste est : " << std::endl;

@@ -177,7 +177,7 @@ bool StockedAliment::operator==(const StockedAliment& r)
 {
 	{
 
-		if (this->getMass() == r.getMass() && this->getObtainedDate() == r.getObtainedDate()) {
+		if (this->getMass() == r.getMass() && this->getObtainedDate() == r.getObtainedDate() && this->getName() == r.getName()) {
 			return true;
 		}
 		else {
@@ -185,20 +185,17 @@ bool StockedAliment::operator==(const StockedAliment& r)
 		}
 
 	}
-
-
 }
 
 bool operator==(const StockedAliment& l, const StockedAliment& r)
 {
 
-	if (l.getMass() == r.getMass() && l.getObtainedDate() == r.getObtainedDate()) {
+	if (l.getMass() == r.getMass() && l.getObtainedDate() == r.getObtainedDate() && l.getName() == r.getName()) {
 		return true;
 	}
 	else {
 		return false;
 	}
-
 }
 
 std::istream& operator>>(std::istream& is, StockedAliment& in)
