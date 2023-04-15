@@ -1,5 +1,6 @@
 #pragma once
 #include "Recipe.h"
+#include "StockedAliment.h"
 #include <list>
 
 class Menu
@@ -10,6 +11,7 @@ class Menu
 		int numConsumers;
 		int nbDays;
 		std::list <Recipe> listRecipe;
+		std::list<Aliment> _shoppingList;
 		bool errorMenu;
 
 		int getNbOccurOfRecipe(Menu* menu, Recipe recipeToCheck) {
@@ -46,6 +48,10 @@ class Menu
 		int getNbDays();
 		void setNbDays(int nbDays);
 		std::list <Recipe> getListRecipe();
+		std::list<Aliment> getShoppingList();
+		bool checkAlimentInShoppingList(Aliment aliment);
+		void putInShoppingList(Aliment aliment, double newMass);
+		void editMassForElementFromShoppingList(Aliment aliment, double mass);
 		bool getErrorMenu();
 		void setErrorMenu(bool error);
 

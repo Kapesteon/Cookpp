@@ -217,6 +217,41 @@ int fillTheRecipes(Menu* menu, int numRecipesToAdd, int numConsumers, Pantry* pa
 	return numRecipesAdd;
 }
 
+bool completeShoppingList(Menu* menu, Recipe recipeToAdd, std::forward_list<StockedAliment*>* stockedAliment, int numConsumers) {
+	std::vector<Aliment> alimentForRecipe = recipeToAdd.getAliments();
+	for (Aliment aliment : alimentForRecipe) {
+		int n = 0;
+		double newMass = aliment.getMass() * numConsumers;
+		for (auto it = stockedAliment->begin(); it != stockedAliment->end(); it++) {
+			double massStocked = (*it)->getMass();
+			if (aliment.getName() == (*it)->getName() && aliment.getMass() * numConsumers > massStocked) {
+				newMass = newMass - massStocked;
+				if (newMass >= 0) {
+					(*it)->setMass(0);
+				}
+			}
+		}
+		menu->putInShoppingList(aliment, newMass);
+		
+		}
+	return true;
+}
+
+int fillWithShoppingList(Menu* menu, int numRecipesToAdd, int numConsumers, std::forward_list<StockedAliment*> stockedAliment, Gardien gardien) {
+	Memento mementoToRestore = gardien.getMemento(0);
+	std::list<Recipe*> recipesList = mementoToRestore.getListRecipe();
+
+	int numRecipesAdd = 0;
+	while (numRecipesToAdd > numRecipesAdd) {
+		Recipe recipeToAdd = getRandomRecipe(recipesList);
+		completeShoppingList(menu, recipeToAdd, &stockedAliment, numConsumers);
+		menu->addRecipe(recipeToAdd);
+		numRecipesAdd++;
+	}
+
+	return numRecipesAdd;
+}
+
 Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, FacadeUserDB facade) {
 	Menu menu;
 	menu.setNumConsumers(numConsumers);
@@ -225,6 +260,11 @@ Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, F
 	std::forward_list<StockedAliment*> stockedAliment = pantry->getStock();
 	std::list<Recipe*> recipesList;
 	recipesList = facade.getAllRecipe();
+
+	Gardien gardien;
+	Memento firstMemento = Memento(recipesList, stockedAliment);
+	gardien.addMemento(firstMemento);
+
 
 	double totalMassPantry = 0;
 	for (auto it = stockedAliment.begin(); it != stockedAliment.end(); ++it) {
@@ -238,7 +278,6 @@ Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, F
 		return menu;
 	}
 
-	Gardien gardien;
 	Memento memento = Memento(recipesList, stockedAliment);
 	gardien.addMemento(memento);
 
@@ -263,10 +302,14 @@ Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, F
 	int recipesAdd = 0;
 
 	if (numRecipesToAdd != 0)
-		int recipesAdd = fillTheRecipes(&menu, numRecipesToAdd, numConsumers, pantry, recipesList, gardien, 0);
+		recipesAdd = fillTheRecipes(&menu, numRecipesToAdd, numConsumers, pantry, recipesList, gardien, 1);
 
 	if (recipesAdd != numRecipesToAdd) {
 		std::cerr << "Nombre de repas ajoutés incohérents" << std::endl;
+		menu.setErrorMenu(true);
+		numRecipesToAdd = numRecipesToAdd - recipesAdd;
+		stockedAliment = pantry->getStock();
+		fillWithShoppingList(&menu, numRecipesToAdd, numConsumers, stockedAliment, gardien);
 	}
 
 	std::cout << "L'élément 3 de la liste est : " << std::endl;

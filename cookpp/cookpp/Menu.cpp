@@ -67,6 +67,41 @@ std::list <Recipe > Menu::getListRecipe() {
 	return this->listRecipe;
 }
 
+std::list<Aliment> Menu::getShoppingList() {
+	return this->_shoppingList;
+}
+
+bool Menu::checkAlimentInShoppingList(Aliment aliment) {
+	for (auto it = this->_shoppingList.begin(); it != this->_shoppingList.end(); it++) {
+		if (it->getName() == aliment.getName())
+			return true;
+	}
+	return false;
+}
+
+void Menu::putInShoppingList(Aliment aliment, double newMass) {
+	bool alimentInShopingList = false;
+	for (auto it = this->_shoppingList.begin(); it != this->_shoppingList.end(); it++) {
+		if (it->getName() == aliment.getName()) {
+			newMass = it->getMass() + newMass;
+			it->setMass(newMass);
+			alimentInShopingList = true;
+		}
+	}
+	if (alimentInShopingList == false) {
+		Aliment alimentToAdd = Aliment(aliment.getName(), aliment.getType(), aliment.getSeason(), &aliment.getInfoNutri(), newMass);
+		this->_shoppingList.push_back(alimentToAdd);
+	}
+}
+
+void Menu::editMassForElementFromShoppingList(Aliment aliment, double mass) {
+	for (auto it = this->_shoppingList.begin(); it != this->_shoppingList.end(); it++){
+		if (it->getName() == aliment.getName()) {
+			it->setMass(mass);
+		}
+	}
+}
+
 bool Menu::getErrorMenu() {
 	return this->errorMenu;
 }
@@ -101,6 +136,13 @@ void Menu::printMenu() {
 		//int n = 1;
 		for (std::string step : steps) {
 			std::cout << step << std::endl;
+		}
+
+		std::cout << std::endl;
+		std::cout << "Liste de courses :" << std::endl;
+		std::list<Aliment> shoppingList = this->_shoppingList;
+		for (Aliment aliment : shoppingList) {
+			std::cout << " - " << aliment.getName() << " " << aliment.getMass() << "g" << std::endl;
 		}
 
 		std::cout << std::endl;
@@ -144,6 +186,12 @@ void Menu::writeMenu() {
 
 		fichier << std::endl;
 		i++;
+	}
+
+	fichier << "Liste de courses :" << std::endl;
+	std::list<Aliment> shoppingList = this->_shoppingList;
+	for (Aliment aliment : shoppingList) {
+		fichier << " - " << aliment.getName() << " " << aliment.getMass() << "g" << std::endl;
 	}
 
 	fichier.close();
