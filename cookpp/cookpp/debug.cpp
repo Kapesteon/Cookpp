@@ -382,7 +382,7 @@ void initDb()
 	Recipe testRecipe1 = Recipe();
 	testRecipe1.addAliment(testAliment1);
 	testRecipe1.addAliment(testAliment2);
-	//testRecipe1.addAliment(testAliment5);
+	testRecipe1.addAliment(testAliment5);
 	testRecipe1.setName("Recipe 1");
 	testRecipe1.setNotes("Notes of Recipe1");
 	testRecipe1.addStep(testSteps1[0]);
@@ -467,8 +467,11 @@ void initDb()
 	double seconds = difftime(t2, t1);
 	int days = seconds / (24 * 60 * 60);
 
-	Menu newMenu = menuGenerator.generateMenu(10, 2, & pantry, facade);
+	Menu newMenu = menuGenerator.generateMenu(10, 2, & pantry, &facade);
 	newMenu.writeMenu();
+
+	Menu newMenuBis = menuGenerator.generateMenu(4, 2, &pantry, &facade);
+	newMenuBis.writeMenu();
 	//Menu newMenuBis = menuGenerator.generateOneTimeMeal(2, &pantry, facade);
 	std::cout << "Fin.";
 }

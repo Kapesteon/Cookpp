@@ -97,7 +97,7 @@ bool removeAnAlimentFromStockedAliment(Aliment alimentFromRecipe, Pantry* pantry
 		if (nameStocked == name) {
 			double diffMass = massStocked - mass;
 			if (diffMass == 0) {
-				pantry->removeFromStock(*it); //ERREUR POSSIBLEMENT ICI
+				pantry->removeFromStock(*it);
 			}
 			else {
 				pantry->editFromStock(*it, diffMass);
@@ -261,14 +261,14 @@ int fillTheRecipesWithShoppingList(Menu* menu, int numRecipesToAdd, int numConsu
 	return numRecipesAdd;
 }
 
-Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, FacadeUserDB facade) {
+Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, FacadeUserDB* facade) {
 	Menu menu;
 	menu.setNumConsumers(numConsumers);
 	menu.setNbDays(numDay);
 
 	std::forward_list<StockedAliment*> stockedAliment = pantry->getStock();
 	std::list<Recipe*> recipesList;
-	recipesList = facade.getAllRecipe();
+	recipesList = facade->getAllRecipe();
 
 	Gardien gardien;
 	Memento firstMemento = this->createMemento();
@@ -327,7 +327,7 @@ Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, F
 	return menu;
 }
 
-Menu MenuGenerator::generateOneTimeMeal(int numConsumers, Pantry* pantry, FacadeUserDB facade) {
+Menu MenuGenerator::generateOneTimeMeal(int numConsumers, Pantry* pantry, FacadeUserDB* facade) {
 	Menu menu = generateMenu(1, numConsumers, pantry, facade);
 	return menu;
 }
