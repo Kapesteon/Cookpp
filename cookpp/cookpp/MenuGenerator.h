@@ -23,8 +23,10 @@ public:
 	std::forward_list<StockedAliment*> getStockedAliment();
 	void setStockedAliment(std::forward_list<StockedAliment*> stockedAliment);
 
-
 	Menu generateMenu(int numDay, int numConsumers, Pantry* pantry, FacadeUserDB facade);
 	Menu generateOneTimeMeal(int numConsumers, Pantry* pantry, FacadeUserDB facade);
 	void writeMenu(Menu* menu);
+
+	Memento createMemento();
+	void restoreMemento(const Memento& memento);
 };
