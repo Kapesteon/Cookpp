@@ -281,10 +281,6 @@ Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, F
 	std::list<double> percentageMassEachRecipe = getPercentageMassEachRecipe(recipesList, totalMassPantry);
 	
 	bool stillSomeRecipe = removeAllImpossibleRecipes(&recipesList, &percentageMassEachRecipe, stockedAliment, numConsumers);
-	if (stillSomeRecipe == false) {
-		menu.setErrorMenu(true);
-		return menu;
-	}
 
 	Memento memento = this->createMemento();
 	gardien.addMemento(memento);
