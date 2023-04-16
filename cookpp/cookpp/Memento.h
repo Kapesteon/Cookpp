@@ -29,7 +29,4 @@ public:
 	std::forward_list<StockedAliment*> getStockedAliment() const {
 		return stockedAliment_;
 	}
-
-	Memento createMemento();
-	void restoreMemento(const Memento& memento);
 };
