@@ -13,6 +13,7 @@ private:
 	std::forward_list<StockedAliment*> stockedAliment_;
 
 public:
+	Memento() {};
 	Memento(std::list<Recipe*> listRecipe, std::forward_list<StockedAliment*> stockedAliment) {
 		this->listRecipe_ = listRecipe;
 		this->stockedAliment_ = stockedAliment;
