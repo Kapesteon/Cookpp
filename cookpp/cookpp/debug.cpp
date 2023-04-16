@@ -357,7 +357,6 @@ void initDb()
 	StockedAliment testStockedAliment4 = StockedAliment(testIngredient4, 3500, "2021-24-01", 2000); //Wheat
 	StockedAliment testStockedAliment5 = StockedAliment(testIngredient5, 1400, "2021-24-01", 57); //Pear
 
-
 	std::forward_list<StockedAliment* > stockedAlimentList;
 	stockedAlimentList.assign({ &testStockedAliment1,&testStockedAliment2,&testStockedAliment3,&testStockedAliment4 });
 
@@ -396,7 +395,7 @@ void initDb()
 	Recipe testRecipe2 = Recipe();
 	testRecipe2.addAliment(testAliment3);
 	testRecipe2.addAliment(testAliment4);
-	//testRecipe2.addAliment(testAliment5);
+	testRecipe2.addAliment(testAliment5);
 	testRecipe2.setName("Recipe 2");
 	testRecipe2.setNotes("Notes of Recipe2");
 	testRecipe2.markAsComplete();
@@ -468,7 +467,7 @@ void initDb()
 	double seconds = difftime(t2, t1);
 	int days = seconds / (24 * 60 * 60);
 
-	Menu newMenu = menuGenerator.generateMenu(1, 2, &pantry, facade);
+	Menu newMenu = menuGenerator.generateMenu(10, 2, & pantry, facade);
 	newMenu.writeMenu();
 	//Menu newMenuBis = menuGenerator.generateOneTimeMeal(2, &pantry, facade);
 	std::cout << "Fin.";
