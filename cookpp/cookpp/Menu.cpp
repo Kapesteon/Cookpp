@@ -163,29 +163,28 @@ void Menu::writeMenu() {
 	std::list<Recipe> listRecipeWritten;
 
 	for (Recipe recipe : listRecipes) {
-		if (recipeAlreadyWritten(listRecipeWritten, recipe)) {
-			break;
+		if (!recipeAlreadyWritten(listRecipeWritten, recipe)) {
+
+			listRecipeWritten.push_back(recipe);
+			int occur = getNbOccurOfRecipe(this, recipe);
+			fichier << "Recette " << i << " (x" << occur << ")" << std::endl;
+
+			fichier << "Ingrédients :" << std::endl;
+			std::vector<Aliment> aliments = recipe.getAliments();
+			for (Aliment aliment : aliments) {
+				fichier << " - " << aliment.getName() << " " << aliment.getMass() * this->getNumConsumers() << "g" << std::endl;
+			}
+
+			fichier << "Etapes :" << std::endl;
+			std::vector< std::string > steps = recipe.getSteps();
+			//int n = 1;
+			for (std::string step : steps) {
+				fichier << step << std::endl;
+			}
+
+			fichier << std::endl;
+			i++;
 		}
-
-		listRecipeWritten.push_back(recipe);
-		int occur = getNbOccurOfRecipe(this, recipe);
-		fichier << "Recette " << i << " (x" << occur << ")" << std::endl;
-
-		fichier << "Ingrédients :" << std::endl;
-		std::vector<Aliment> aliments = recipe.getAliments();
-		for (Aliment aliment : aliments) {
-			fichier << " - " << aliment.getName() << " " << aliment.getMass() * this->getNumConsumers() << "g" << std::endl;
-		}
-
-		fichier << "Etapes :" << std::endl;
-		std::vector< std::string > steps = recipe.getSteps();
-		//int n = 1;
-		for (std::string step : steps) {
-			fichier << step << std::endl;
-		}
-
-		fichier << std::endl;
-		i++;
 	}
 
 	fichier << "Liste de courses :" << std::endl;

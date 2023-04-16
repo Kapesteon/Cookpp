@@ -26,7 +26,7 @@ class Menu
 
 		bool recipeAlreadyWritten(std::list<Recipe> listRecipeWritten, Recipe recipeToCheck) {
 			for (auto it = listRecipeWritten.begin(); it != listRecipeWritten.end(); it++) {
-				if (*it == recipeToCheck)
+				if (it->getName() == recipeToCheck.getName())
 					return true;
 			}
 			return false;

@@ -195,7 +195,7 @@ bool removeStockedAliment(Recipe recipe, Pantry* pantry, int numConsumers) {
 	return true;
 }
 
-int fillTheRecipes(Menu* menu, int numRecipesToAdd, int numConsumers, Pantry* pantry, std::list<Recipe*> recipesList, Gardien gardien, int numMementoToTake) {
+int fillTheRecipesWithPantry(Menu* menu, int numRecipesToAdd, int numConsumers, Pantry* pantry, std::list<Recipe*> recipesList) {
 	std::forward_list<StockedAliment*> stockedAliment = pantry->getStock();
 
 	//Memento mementoToRestore = gardien.getMemento(numMementoToTake);
@@ -244,8 +244,8 @@ bool completeShoppingList(Menu* menu, Recipe recipeToAdd, std::forward_list<Stoc
 	return true;
 }
 
-int fillWithShoppingList(Menu* menu, int numRecipesToAdd, int numConsumers, Pantry* pantry, Gardien gardien, std::list<Recipe*> recipesList) {
-	Memento mementoToRestore = gardien.getMemento(0);
+int fillTheRecipesWithShoppingList(Menu* menu, int numRecipesToAdd, int numConsumers, Pantry* pantry, std::list<Recipe*> recipesList) {
+	//Memento mementoToRestore = gardien.getMemento(0);
 	//std::list<Recipe*> recipesList = mementoToRestore.getListRecipe();
 
 	std::forward_list<StockedAliment*> stockedAliment = pantry->getStock();
@@ -313,7 +313,7 @@ Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, F
 		Memento mementoToRestore = gardien.getMemento(1);
 		this->restoreMemento(mementoToRestore);
 		recipesList = this->getListRecipe();
-		recipesAdd = fillTheRecipes(&menu, numRecipesToAdd, numConsumers, pantry, recipesList, gardien, 1);
+		recipesAdd = fillTheRecipesWithPantry(&menu, numRecipesToAdd, numConsumers, pantry, recipesList);
 	}
 
 	if (recipesAdd != numRecipesToAdd) {
@@ -323,7 +323,7 @@ Menu MenuGenerator::generateMenu(int numDay, int numConsumers, Pantry* pantry, F
 		Memento mementoToRestore = gardien.getMemento(0);
 		this->restoreMemento(mementoToRestore);
 		recipesList = this->getListRecipe();
-		fillWithShoppingList(&menu, numRecipesToAdd, numConsumers, pantry, gardien, recipesList);
+		fillTheRecipesWithShoppingList(&menu, numRecipesToAdd, numConsumers, pantry, recipesList);
 	}
 
 	std::cout << "L'élément 3 de la liste est : " << std::endl;
