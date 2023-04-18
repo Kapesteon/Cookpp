@@ -49,6 +49,7 @@ static constexpr auto qt_meta_stringdata_CLASScookppENDCLASS = QtMocHelpers::str
     "pantryPreviousclicked",
     "pantryNextclicked",
     "mnMainMenu",
+    "mnGenerateMenu",
     "mnViewIngredients",
     "mnViewRecipes",
     "mnViewPantry",
@@ -66,14 +67,17 @@ static constexpr auto qt_meta_stringdata_CLASScookppENDCLASS = QtMocHelpers::str
     "removeAlimentFromRecipeclicked",
     "addNewStepInRecipeclicked",
     "removeStepFromRecipeclicked",
+    "editPantryclicked",
     "removeStockedAlimentFromPantryclicked",
     "addNewStockedAlimentInPantryclicked",
     "savePantryEditclicked",
+    "gotoGenerateMenuclicked",
+    "generateMenuclicked",
     "gotoMainMenuclicked"
 );
 #else  // !QT_MOC_HAS_STRING_DATA
 struct qt_meta_stringdata_CLASScookppENDCLASS_t {
-    uint offsetsAndSizes[60];
+    uint offsetsAndSizes[68];
     char stringdata0[7];
     char stringdata1[30];
     char stringdata2[1];
@@ -83,27 +87,31 @@ struct qt_meta_stringdata_CLASScookppENDCLASS_t {
     char stringdata6[22];
     char stringdata7[18];
     char stringdata8[11];
-    char stringdata9[18];
-    char stringdata10[14];
-    char stringdata11[13];
-    char stringdata12[16];
-    char stringdata13[12];
-    char stringdata14[13];
-    char stringdata15[28];
-    char stringdata16[24];
-    char stringdata17[32];
-    char stringdata18[22];
-    char stringdata19[26];
-    char stringdata20[18];
-    char stringdata21[22];
-    char stringdata22[29];
-    char stringdata23[31];
-    char stringdata24[26];
-    char stringdata25[28];
-    char stringdata26[38];
-    char stringdata27[36];
-    char stringdata28[22];
-    char stringdata29[20];
+    char stringdata9[15];
+    char stringdata10[18];
+    char stringdata11[14];
+    char stringdata12[13];
+    char stringdata13[16];
+    char stringdata14[12];
+    char stringdata15[13];
+    char stringdata16[28];
+    char stringdata17[24];
+    char stringdata18[32];
+    char stringdata19[22];
+    char stringdata20[26];
+    char stringdata21[18];
+    char stringdata22[22];
+    char stringdata23[29];
+    char stringdata24[31];
+    char stringdata25[26];
+    char stringdata26[28];
+    char stringdata27[18];
+    char stringdata28[38];
+    char stringdata29[36];
+    char stringdata30[22];
+    char stringdata31[24];
+    char stringdata32[20];
+    char stringdata33[20];
 };
 #define QT_MOC_LITERAL(ofs, len) \
     uint(sizeof(qt_meta_stringdata_CLASScookppENDCLASS_t::offsetsAndSizes) + ofs), len 
@@ -118,27 +126,31 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASScookppENDCLASS_t qt_meta_string
         QT_MOC_LITERAL(112, 21),  // "pantryPreviousclicked"
         QT_MOC_LITERAL(134, 17),  // "pantryNextclicked"
         QT_MOC_LITERAL(152, 10),  // "mnMainMenu"
-        QT_MOC_LITERAL(163, 17),  // "mnViewIngredients"
-        QT_MOC_LITERAL(181, 13),  // "mnViewRecipes"
-        QT_MOC_LITERAL(195, 12),  // "mnViewPantry"
-        QT_MOC_LITERAL(208, 15),  // "mnAddIngredient"
-        QT_MOC_LITERAL(224, 11),  // "mnAddRecipe"
-        QT_MOC_LITERAL(236, 12),  // "mnEditPantry"
-        QT_MOC_LITERAL(249, 27),  // "showIngredientDetailclicked"
-        QT_MOC_LITERAL(277, 23),  // "showRecipeDetailclicked"
-        QT_MOC_LITERAL(301, 31),  // "showStockedAlimentDetailclicked"
-        QT_MOC_LITERAL(333, 21),  // "editIngredientclicked"
-        QT_MOC_LITERAL(355, 25),  // "saveIngredientEditclicked"
-        QT_MOC_LITERAL(381, 17),  // "editRecipeclicked"
-        QT_MOC_LITERAL(399, 21),  // "saveRecipeEditclicked"
-        QT_MOC_LITERAL(421, 28),  // "addNewAlimentInRecipeclicked"
-        QT_MOC_LITERAL(450, 30),  // "removeAlimentFromRecipeclicked"
-        QT_MOC_LITERAL(481, 25),  // "addNewStepInRecipeclicked"
-        QT_MOC_LITERAL(507, 27),  // "removeStepFromRecipeclicked"
-        QT_MOC_LITERAL(535, 37),  // "removeStockedAlimentFromPantr..."
-        QT_MOC_LITERAL(573, 35),  // "addNewStockedAlimentInPantryc..."
-        QT_MOC_LITERAL(609, 21),  // "savePantryEditclicked"
-        QT_MOC_LITERAL(631, 19)   // "gotoMainMenuclicked"
+        QT_MOC_LITERAL(163, 14),  // "mnGenerateMenu"
+        QT_MOC_LITERAL(178, 17),  // "mnViewIngredients"
+        QT_MOC_LITERAL(196, 13),  // "mnViewRecipes"
+        QT_MOC_LITERAL(210, 12),  // "mnViewPantry"
+        QT_MOC_LITERAL(223, 15),  // "mnAddIngredient"
+        QT_MOC_LITERAL(239, 11),  // "mnAddRecipe"
+        QT_MOC_LITERAL(251, 12),  // "mnEditPantry"
+        QT_MOC_LITERAL(264, 27),  // "showIngredientDetailclicked"
+        QT_MOC_LITERAL(292, 23),  // "showRecipeDetailclicked"
+        QT_MOC_LITERAL(316, 31),  // "showStockedAlimentDetailclicked"
+        QT_MOC_LITERAL(348, 21),  // "editIngredientclicked"
+        QT_MOC_LITERAL(370, 25),  // "saveIngredientEditclicked"
+        QT_MOC_LITERAL(396, 17),  // "editRecipeclicked"
+        QT_MOC_LITERAL(414, 21),  // "saveRecipeEditclicked"
+        QT_MOC_LITERAL(436, 28),  // "addNewAlimentInRecipeclicked"
+        QT_MOC_LITERAL(465, 30),  // "removeAlimentFromRecipeclicked"
+        QT_MOC_LITERAL(496, 25),  // "addNewStepInRecipeclicked"
+        QT_MOC_LITERAL(522, 27),  // "removeStepFromRecipeclicked"
+        QT_MOC_LITERAL(550, 17),  // "editPantryclicked"
+        QT_MOC_LITERAL(568, 37),  // "removeStockedAlimentFromPantr..."
+        QT_MOC_LITERAL(606, 35),  // "addNewStockedAlimentInPantryc..."
+        QT_MOC_LITERAL(642, 21),  // "savePantryEditclicked"
+        QT_MOC_LITERAL(664, 23),  // "gotoGenerateMenuclicked"
+        QT_MOC_LITERAL(688, 19),  // "generateMenuclicked"
+        QT_MOC_LITERAL(708, 19)   // "gotoMainMenuclicked"
     },
     "cookpp",
     "ingredientListPreviousclicked",
@@ -149,6 +161,7 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASScookppENDCLASS_t qt_meta_string
     "pantryPreviousclicked",
     "pantryNextclicked",
     "mnMainMenu",
+    "mnGenerateMenu",
     "mnViewIngredients",
     "mnViewRecipes",
     "mnViewPantry",
@@ -166,9 +179,12 @@ Q_CONSTINIT static const qt_meta_stringdata_CLASScookppENDCLASS_t qt_meta_string
     "removeAlimentFromRecipeclicked",
     "addNewStepInRecipeclicked",
     "removeStepFromRecipeclicked",
+    "editPantryclicked",
     "removeStockedAlimentFromPantryclicked",
     "addNewStockedAlimentInPantryclicked",
     "savePantryEditclicked",
+    "gotoGenerateMenuclicked",
+    "generateMenuclicked",
     "gotoMainMenuclicked"
 };
 #undef QT_MOC_LITERAL
@@ -181,7 +197,7 @@ Q_CONSTINIT static const uint qt_meta_data_CLASScookppENDCLASS[] = {
       11,       // revision
        0,       // classname
        0,    0, // classinfo
-      28,   14, // methods
+      32,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -189,36 +205,44 @@ Q_CONSTINIT static const uint qt_meta_data_CLASScookppENDCLASS[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags, initial metatype offsets
-       1,    0,  182,    2, 0x08,    1 /* Private */,
-       3,    0,  183,    2, 0x08,    2 /* Private */,
-       4,    0,  184,    2, 0x08,    3 /* Private */,
-       5,    0,  185,    2, 0x08,    4 /* Private */,
-       6,    0,  186,    2, 0x08,    5 /* Private */,
-       7,    0,  187,    2, 0x08,    6 /* Private */,
-       8,    0,  188,    2, 0x08,    7 /* Private */,
-       9,    0,  189,    2, 0x08,    8 /* Private */,
-      10,    0,  190,    2, 0x08,    9 /* Private */,
-      11,    0,  191,    2, 0x08,   10 /* Private */,
-      12,    0,  192,    2, 0x08,   11 /* Private */,
-      13,    0,  193,    2, 0x08,   12 /* Private */,
-      14,    0,  194,    2, 0x08,   13 /* Private */,
-      15,    0,  195,    2, 0x08,   14 /* Private */,
-      16,    0,  196,    2, 0x08,   15 /* Private */,
-      17,    0,  197,    2, 0x08,   16 /* Private */,
-      18,    0,  198,    2, 0x08,   17 /* Private */,
-      19,    0,  199,    2, 0x08,   18 /* Private */,
-      20,    0,  200,    2, 0x08,   19 /* Private */,
-      21,    0,  201,    2, 0x08,   20 /* Private */,
-      22,    0,  202,    2, 0x08,   21 /* Private */,
-      23,    0,  203,    2, 0x08,   22 /* Private */,
-      24,    0,  204,    2, 0x08,   23 /* Private */,
-      25,    0,  205,    2, 0x08,   24 /* Private */,
-      26,    0,  206,    2, 0x08,   25 /* Private */,
-      27,    0,  207,    2, 0x08,   26 /* Private */,
-      28,    0,  208,    2, 0x08,   27 /* Private */,
-      29,    0,  209,    2, 0x08,   28 /* Private */,
+       1,    0,  206,    2, 0x08,    1 /* Private */,
+       3,    0,  207,    2, 0x08,    2 /* Private */,
+       4,    0,  208,    2, 0x08,    3 /* Private */,
+       5,    0,  209,    2, 0x08,    4 /* Private */,
+       6,    0,  210,    2, 0x08,    5 /* Private */,
+       7,    0,  211,    2, 0x08,    6 /* Private */,
+       8,    0,  212,    2, 0x08,    7 /* Private */,
+       9,    0,  213,    2, 0x08,    8 /* Private */,
+      10,    0,  214,    2, 0x08,    9 /* Private */,
+      11,    0,  215,    2, 0x08,   10 /* Private */,
+      12,    0,  216,    2, 0x08,   11 /* Private */,
+      13,    0,  217,    2, 0x08,   12 /* Private */,
+      14,    0,  218,    2, 0x08,   13 /* Private */,
+      15,    0,  219,    2, 0x08,   14 /* Private */,
+      16,    0,  220,    2, 0x08,   15 /* Private */,
+      17,    0,  221,    2, 0x08,   16 /* Private */,
+      18,    0,  222,    2, 0x08,   17 /* Private */,
+      19,    0,  223,    2, 0x08,   18 /* Private */,
+      20,    0,  224,    2, 0x08,   19 /* Private */,
+      21,    0,  225,    2, 0x08,   20 /* Private */,
+      22,    0,  226,    2, 0x08,   21 /* Private */,
+      23,    0,  227,    2, 0x08,   22 /* Private */,
+      24,    0,  228,    2, 0x08,   23 /* Private */,
+      25,    0,  229,    2, 0x08,   24 /* Private */,
+      26,    0,  230,    2, 0x08,   25 /* Private */,
+      27,    0,  231,    2, 0x08,   26 /* Private */,
+      28,    0,  232,    2, 0x08,   27 /* Private */,
+      29,    0,  233,    2, 0x08,   28 /* Private */,
+      30,    0,  234,    2, 0x08,   29 /* Private */,
+      31,    0,  235,    2, 0x08,   30 /* Private */,
+      32,    0,  236,    2, 0x08,   31 /* Private */,
+      33,    0,  237,    2, 0x08,   32 /* Private */,
 
  // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -274,6 +298,8 @@ Q_CONSTINIT const QMetaObject cookpp::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'mnMainMenu'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'mnGenerateMenu'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'mnViewIngredients'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'mnViewRecipes'
@@ -308,11 +334,17 @@ Q_CONSTINIT const QMetaObject cookpp::staticMetaObject = { {
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'removeStepFromRecipeclicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'editPantryclicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'removeStockedAlimentFromPantryclicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'addNewStockedAlimentInPantryclicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'savePantryEditclicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'gotoGenerateMenuclicked'
+        QtPrivate::TypeAndForceComplete<void, std::false_type>,
+        // method 'generateMenuclicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>,
         // method 'gotoMainMenuclicked'
         QtPrivate::TypeAndForceComplete<void, std::false_type>
@@ -333,27 +365,31 @@ void cookpp::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, void
         case 4: _t->pantryPreviousclicked(); break;
         case 5: _t->pantryNextclicked(); break;
         case 6: _t->mnMainMenu(); break;
-        case 7: _t->mnViewIngredients(); break;
-        case 8: _t->mnViewRecipes(); break;
-        case 9: _t->mnViewPantry(); break;
-        case 10: _t->mnAddIngredient(); break;
-        case 11: _t->mnAddRecipe(); break;
-        case 12: _t->mnEditPantry(); break;
-        case 13: _t->showIngredientDetailclicked(); break;
-        case 14: _t->showRecipeDetailclicked(); break;
-        case 15: _t->showStockedAlimentDetailclicked(); break;
-        case 16: _t->editIngredientclicked(); break;
-        case 17: _t->saveIngredientEditclicked(); break;
-        case 18: _t->editRecipeclicked(); break;
-        case 19: _t->saveRecipeEditclicked(); break;
-        case 20: _t->addNewAlimentInRecipeclicked(); break;
-        case 21: _t->removeAlimentFromRecipeclicked(); break;
-        case 22: _t->addNewStepInRecipeclicked(); break;
-        case 23: _t->removeStepFromRecipeclicked(); break;
-        case 24: _t->removeStockedAlimentFromPantryclicked(); break;
-        case 25: _t->addNewStockedAlimentInPantryclicked(); break;
-        case 26: _t->savePantryEditclicked(); break;
-        case 27: _t->gotoMainMenuclicked(); break;
+        case 7: _t->mnGenerateMenu(); break;
+        case 8: _t->mnViewIngredients(); break;
+        case 9: _t->mnViewRecipes(); break;
+        case 10: _t->mnViewPantry(); break;
+        case 11: _t->mnAddIngredient(); break;
+        case 12: _t->mnAddRecipe(); break;
+        case 13: _t->mnEditPantry(); break;
+        case 14: _t->showIngredientDetailclicked(); break;
+        case 15: _t->showRecipeDetailclicked(); break;
+        case 16: _t->showStockedAlimentDetailclicked(); break;
+        case 17: _t->editIngredientclicked(); break;
+        case 18: _t->saveIngredientEditclicked(); break;
+        case 19: _t->editRecipeclicked(); break;
+        case 20: _t->saveRecipeEditclicked(); break;
+        case 21: _t->addNewAlimentInRecipeclicked(); break;
+        case 22: _t->removeAlimentFromRecipeclicked(); break;
+        case 23: _t->addNewStepInRecipeclicked(); break;
+        case 24: _t->removeStepFromRecipeclicked(); break;
+        case 25: _t->editPantryclicked(); break;
+        case 26: _t->removeStockedAlimentFromPantryclicked(); break;
+        case 27: _t->addNewStockedAlimentInPantryclicked(); break;
+        case 28: _t->savePantryEditclicked(); break;
+        case 29: _t->gotoGenerateMenuclicked(); break;
+        case 30: _t->generateMenuclicked(); break;
+        case 31: _t->gotoMainMenuclicked(); break;
         default: ;
         }
     }
@@ -379,13 +415,13 @@ int cookpp::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 28)
+        if (_id < 32)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 28;
+        _id -= 32;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 28)
+        if (_id < 32)
             *reinterpret_cast<QMetaType *>(_a[0]) = QMetaType();
-        _id -= 28;
+        _id -= 32;
     }
     return _id;
 }

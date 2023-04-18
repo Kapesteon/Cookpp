@@ -83,6 +83,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Gardien.cpp" />
+    <ClCompile Include="Memento.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="MenuGenerator.cpp" />
     <ClCompile Include="NutritionalManager.cpp" />
     <ClCompile Include="Pantry.cpp" />
     <ClCompile Include="PantryDBManager.cpp" />
@@ -107,10 +111,14 @@
     <ClInclude Include="debug.h" />
     <ClInclude Include="FacadeUserDB.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Gardien.h" />
     <ClInclude Include="GenericDBManager.h" />
     <ClInclude Include="InfoNutri.h" />
     <ClInclude Include="Ingredient.h" />
     <ClInclude Include="IngredientDBManager.h" />
+    <ClInclude Include="Memento.h" />
+    <ClInclude Include="Menu.h" />
+    <ClInclude Include="MenuGenerator.h" />
     <ClInclude Include="NutritionalManager.h" />
     <ClInclude Include="Pantry.h" />
     <ClInclude Include="PantryDBManager.h" />

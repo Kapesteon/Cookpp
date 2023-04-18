@@ -85,6 +85,21 @@ bool FacadeUserDB::savePantry(Pantry* pantry)
 		return false;
 	}
 }
+bool FacadeUserDB::resetPantry()
+{
+	try {
+		const char* DBPantryPathChar = this->DBPantryPath.c_str();
+		remove(DBPantryPathChar);
+		std::ofstream fichier(DBPantryPathChar);
+		return true;
+	}
+	catch (std::exception) {
+		std::cout << "Failed to reset Pantry";
+		return false;
+	}
+}
+
+
 
 /*--------------------RECIPE------------------*/
 std::list<Recipe*> FacadeUserDB::getAllRecipe()
@@ -154,6 +169,19 @@ bool FacadeUserDB::addRecipe(Recipe* recipe)
 	}
 }
 
+bool FacadeUserDB::resetRecipe()
+{
+	try {
+		const char* DBRecipePathChar = this->DBRecipePath.c_str();
+		remove(DBRecipePathChar);
+		std::ofstream fichier(DBRecipePathChar);
+		return true;
+	}
+	catch (std::exception) {
+		std::cout << "Failed to remove Pantry";
+		return false;
+	}
+}
 
 
 /*--------------------Ingredient------------------*/

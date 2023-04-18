@@ -15,6 +15,7 @@
 #include "PantryDBManager.h"
 #include "RecipeDBManager.h"
 #include "FacadeUserDB.h"
+#include "MenuGenerator.h"
 
 class cookpp : public QWidget
 {
@@ -55,6 +56,11 @@ public:
     void setupPantryAlimentTable(QTableWidget* stockedAliments, std::list<StockedAliment*>* alimList);
     void updateCurrentPantrySelected(bool isLastRowAdded);
 
+
+    /* MENU GEN */
+    void menuGenerator();
+    QGroupBox* createMessageOutput();
+
 private:
     int currentPage = 0;
     std::unique_ptr<std::vector<Ingredient*>> activeIngredientBuffer; //Used to store Ingredients
@@ -64,9 +70,10 @@ private:
     Recipe* currentRecipeSelected;
     Pantry* currentPantrySelected;
 
+
     FacadeUserDB* facade;
 
-
+    QTextEdit* messageOutput;
     QGroupBox* detailBox;
 
     QMenuBar* menuBar;
@@ -92,6 +99,7 @@ private:
     /*------------Menu Actions-----------*/
     QAction* mnMainMenuAct;
     QAction* mnExitAct;
+    QAction* mnGenerateMenuAct;
 
     QAction* mnAddRecipeAct;
     QAction* mnAddIngredientAct;
@@ -115,6 +123,7 @@ private slots:
 
     /*------------Menu Slots-----------*/
     void mnMainMenu();
+    void mnGenerateMenu();
     void mnViewIngredients();
     void mnViewRecipes();
     void mnViewPantry();
@@ -138,11 +147,17 @@ private slots:
     void addNewStepInRecipeclicked();
     void removeStepFromRecipeclicked();
 
+    void editPantryclicked();
     void removeStockedAlimentFromPantryclicked();
     void addNewStockedAlimentInPantryclicked();
     void savePantryEditclicked();
 
+    void gotoGenerateMenuclicked();
+    void generateMenuclicked();
+
     void gotoMainMenuclicked();
     /*------------------------------------*/
+
+
 
 };

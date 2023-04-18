@@ -26,7 +26,9 @@ cookpp::cookpp(QWidget *parent)
     QVBoxLayout* mainLayout = new QVBoxLayout(this); // Main layout of widget
     this->facade = new FacadeUserDB();
     this->detailBox = new QGroupBox(tr("Details"));
+    this->messageOutput = new QTextEdit(tr("Messages :"));
     this->currentPantrySelected = new Pantry;
+
 
     createActions();
     createMenus();
@@ -54,9 +56,37 @@ void cookpp::displayMainMenu() {
 
     deleteCurrentView();
 
-    QGridLayout* mainGrid = new QGridLayout;
+    //QGridLayout* mainGrid = new QGridLayout;
+    //QTabWidget* tabwid = new QTabWidget(this);
+    QVBoxLayout* mainLayout = new QVBoxLayout();
+    //if you want to set margins : 
+    QLabel* title;
+    title = new QLabel(tr("Cook++"));
+    title->setAlignment(Qt::AlignCenter | Qt::AlignTop);
+    title->setStyleSheet("font: 18pt;");
 
-    setLayout(mainGrid);
+    QToolButton* generateMenuButton = new QToolButton();
+    QToolButton* editPantryButton = new QToolButton();
+    generateMenuButton->setText(tr("Generate Menu"));
+    editPantryButton->setText(tr("Edit Pantry"));
+    generateMenuButton->setFixedSize(BTN_FIXED_WIDTH*2, BTN_FIXED_HEIGHT*2);
+    editPantryButton->setFixedSize(BTN_FIXED_WIDTH *2, BTN_FIXED_HEIGHT*2);
+    
+    connect(generateMenuButton, SIGNAL(clicked()), this, SLOT(gotoGenerateMenuclicked()));
+    connect(editPantryButton, SIGNAL(clicked()), this, SLOT(editPantryclicked()));
+
+    mainLayout->setContentsMargins(5, 5, 5, 5);
+    mainLayout->addWidget(title); // center alignment
+    mainLayout->addWidget(generateMenuButton); // center alignment
+    mainLayout->addWidget(editPantryButton); // center alignment
+    mainLayout->setAlignment(generateMenuButton, Qt::AlignHCenter);
+    mainLayout->setAlignment(editPantryButton, Qt::AlignHCenter);
+    /*
+    mainLayout->addWidget(title,0,0); // center alignment
+    mainLayout->addWidget(generateMenuButton,0,1); // center alignment
+    mainLayout->addWidget(editPantryButton,0,2); // center alignment
+    */
+    setLayout(mainLayout);
  
     setWindowTitle(tr("Cook++ - Main Menu"));
 
@@ -449,7 +479,8 @@ void cookpp::displayAllIngredients()
             maxPage = 0;
         }
         else {
-            int maxPage = floor(listIngredient.size() / NUMBER_OBJET_PER_PAGE);
+            double f = (float(listIngredient.size()) / float(NUMBER_OBJET_PER_PAGE));
+            maxPage = floor(f);
         }
 
 
@@ -540,7 +571,8 @@ void cookpp::displayAllRecipes()
             maxPage = 0;
         }
         else {
-            int maxPage = floor(listRecipe.size() / NUMBER_OBJET_PER_PAGE);
+            double f = (float(listRecipe.size()) / float(NUMBER_OBJET_PER_PAGE));
+            maxPage = floor(f);
         }
     }
     catch (std::exception) {
@@ -1341,6 +1373,64 @@ void cookpp::savePantryEdit() {
     displayPantry();
 }
 
+
+/*------------MENU GEN-------------*/
+
+void cookpp::menuGenerator() {
+    deleteCurrentView();
+
+    QLabel* nDaysLabel;
+    QLabel* nCoversLabel;
+
+    QLineEdit* nDaysEdit;
+    QLineEdit* nCoversEdit;
+
+    QDialogButtonBox* buttonBox;
+
+    nDaysLabel = new QLabel(tr("Number of days:"));
+    nDaysLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+
+    nCoversLabel = new QLabel(tr("Servings per day:"));
+    nCoversLabel->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+
+    nDaysEdit = new QLineEdit;
+    nDaysEdit->setObjectName("nDaysEdit");
+    nDaysEdit->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+    nCoversEdit = new QLineEdit;
+    nCoversEdit->setObjectName("nCoversEdit");
+    nCoversEdit->setFixedSize(BTN_FIXED_WIDTH, BTN_FIXED_HEIGHT);
+
+    this->messageOutput = new QTextEdit;
+    this->messageOutput->setObjectName("outputBox");
+    this->messageOutput->setReadOnly(true);
+    this->messageOutput->setAlignment(Qt::AlignLeft);
+
+
+    buttonBox = new QDialogButtonBox(QDialogButtonBox::Ok
+        | QDialogButtonBox::Cancel);
+
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(generateMenuclicked()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(gotoMainMenuclicked()));
+
+    QLayout* oldLayout = this->detailBox->layout();
+    deleteSpecificLayout(oldLayout);
+    QGridLayout* mainLayout = new QGridLayout;
+    mainLayout->addWidget(nDaysLabel, 0, 0);
+    mainLayout->addWidget(nDaysEdit, 0, 1);
+    mainLayout->addWidget(nCoversLabel, 1, 0);
+    mainLayout->addWidget(nCoversEdit, 1, 1);
+    mainLayout->addWidget(messageOutput, 0, 2, 2, 1);
+    mainLayout->addWidget(buttonBox, 3, 0, 1, 3);
+    setLayout(mainLayout);
+
+    setLayout(mainLayout);
+    setWindowTitle(tr("Cook++ - Menu"));
+
+
+}
+
+
+
 /*-------------UTILITY--------------*/
 void cookpp::deleteCurrentView()
 {
@@ -1407,6 +1497,7 @@ void cookpp::createActions()
     /*----------Act Declaration----------*/
     //mnNewAct
     mnMainMenuAct = new QAction(tr("&Main Menu"), this);
+    mnGenerateMenuAct = new QAction(tr("&Generate Menu"), this);
     mnExitAct = new QAction(tr("&Exit"), this);
 
     mnAddRecipeAct = new QAction(tr("&Add New Recipe"), this);
@@ -1423,6 +1514,11 @@ void cookpp::createActions()
     mnMainMenuAct->setShortcuts(QKeySequence::New);
     mnMainMenuAct->setStatusTip(tr("Go to Main Menu"));
     connect(mnMainMenuAct, &QAction::triggered, this, &cookpp::mnMainMenu);
+
+
+    mnGenerateMenuAct->setStatusTip(tr("Generate Menu"));
+    connect(mnGenerateMenuAct, &QAction::triggered, this, &cookpp::mnGenerateMenu);
+
 
     mnViewIngredientsAct->setStatusTip(tr("View all known ingredients"));
     connect(mnViewIngredientsAct, &QAction::triggered, this, &cookpp::mnViewIngredients);
@@ -1453,6 +1549,8 @@ void cookpp::createMenus()
     QMenu * fileMenu = menuBar->addMenu(tr("&File"));
     //fileMenu->addAction(mnNewAct);
     fileMenu->addAction(mnMainMenuAct);
+    fileMenu->addSeparator();
+    fileMenu->addAction(mnGenerateMenuAct);
     fileMenu->addSeparator();
     fileMenu->addAction(mnExitAct);
 
@@ -1524,6 +1622,10 @@ void cookpp::pantryNextclicked()
 void cookpp::mnMainMenu() 
 {
     displayMainMenu();
+}
+
+void cookpp::mnGenerateMenu() {
+    this->menuGenerator();
 }
 
 void cookpp::mnViewIngredients() {
@@ -1964,6 +2066,10 @@ void cookpp::editRecipeclicked()
 
 
 //Pantry
+void cookpp::editPantryclicked() {
+    pantryEditor();
+}
+
 void cookpp::showStockedAlimentDetailclicked()
 {
     QObject* buttonSender = QObject::sender();
@@ -2074,3 +2180,87 @@ void cookpp::savePantryEditclicked() {
     savePantryEdit();
 }
 
+//Menu
+void cookpp::gotoGenerateMenuclicked() {
+    menuGenerator();
+}
+void cookpp::generateMenuclicked() 
+{
+    int days = 0;
+    int covers = 0;
+    QTextEdit* messageOutputBox = new QTextEdit();
+
+    for (int i = 0; i < layout()->count(); ++i)
+    {
+        QWidget* widget = layout()->itemAt(i)->widget();
+        if (widget != NULL)
+        {
+            QString qname = widget->objectName();
+            std::string sname = qname.toStdString();
+            if (sname == "nDaysEdit") {
+                QLineEdit* item = qobject_cast<QLineEdit*>(widget);
+                days = item->text().toInt();
+            }
+            else if (sname == "nCoversEdit") {
+                QLineEdit* item = qobject_cast<QLineEdit*>(widget);
+                covers = item->text().toInt();
+
+            }
+            else if (sname == "outputBox") {
+                //QTextEdit* messageOutputBox = qobject_cast<QTextEdit*>(widget);
+
+            }
+        }
+    }
+    QString* qstr = new QString;
+    *qstr = QString::fromStdString("");
+    if (days == 0) {
+        *qstr = QString::fromStdString("Can't set Days to value 0");
+        this->messageOutput->append(*qstr);
+        *qstr = QString::fromStdString("");
+        this->messageOutput->append(*qstr);
+        return;
+    }
+    if (covers == 0) {
+        *qstr = QString::fromStdString("Can't set Servings to value 0");
+        this->messageOutput->append(*qstr);
+        *qstr = QString::fromStdString("");
+        this->messageOutput->append(*qstr);
+        return;
+    }
+    try {
+        MenuGenerator* mgen = new MenuGenerator();
+        Pantry* pgen = new Pantry();
+        Menu menu;
+        std::time_t currentTime = std::time(nullptr);
+        menu.setStartDate(currentTime);
+        this->facade->getPantry(pgen);
+        std::forward_list<StockedAliment*> stockedAliment = pgen->getStock();
+
+        std::list<Recipe*> recipesList;
+        recipesList = this->facade->getAllRecipe();
+
+        mgen->setListRecipe(recipesList);
+        mgen->setStockedAliment(stockedAliment);
+        menu = mgen->generateMenu(days, covers, pgen, this->facade);
+        menu.writeMenu();
+
+        delete mgen;
+        if (menu.getErrorMenu()) {
+            *qstr = QString::fromStdString("");
+            this->messageOutput->append(*qstr);
+            *qstr = QString::fromStdString("Menu could not generate properly !");
+            this->messageOutput->append(*qstr);
+        }
+        else {
+            *qstr = QString::fromStdString("");
+            this->messageOutput->append(*qstr);
+            *qstr = QString::fromStdString("Menu generated in current directory !");
+            this->messageOutput->append(*qstr);
+        }
+
+    }
+    catch (std::exception) {
+
+    }
+}

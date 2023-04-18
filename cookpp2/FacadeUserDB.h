@@ -21,11 +21,13 @@ public:
 
 	bool getPantry(Pantry* pantryTarget);
 	bool savePantry(Pantry* pantry);
+	bool resetPantry();
 
 	std::list<Recipe*> getAllRecipe();
 	bool getRecipe(Recipe* recipeTarget,int pos);
 	bool saveRecipe(Recipe* recipe,int pos);
 	bool addRecipe(Recipe*);
+	bool resetRecipe();
 
 	std::list<Ingredient*> getAllIngredient();
 	int getIngredientIndex(Ingredient*);

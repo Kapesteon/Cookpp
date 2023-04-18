@@ -1,0 +1,45 @@
+Liste des recettes pour 3 personnes sur 3 jours :
+Recette 1 (x1)
+Ingrédients :
+ - Carot 150g
+ - Potato 150g
+ - Olive Oil 30g
+ - Lentil 450g
+ - Water 600g
+Etapes :
+Dice carots and potatoes
+Boil them for ~20 minutes
+After 20min, add the lentils and the meat to the soup
+Let it cook for another 20min
+Serve
+
+Recette 2 (x1)
+Ingrédients :
+ - Potato 600g
+ - Carot 300g
+ - Onion 600g
+ - Red Meat 375g
+ - Butter 75g
+Etapes :
+Excepteur sint occaecat cupidatat non proident
+sunt in culpa qui officia
+deserunt mollit anim id est laborum.
+
+Recette 3 (x1)
+Ingrédients :
+ - Wheat Flour 600g
+ - Egg 300g
+ - Raspberry 600g
+ - Butter 150g
+Etapes :
+laboris nisi ut aliquip ex ea commodo consequat.
+Duis aute irure dolor in reprehenderit eu fugiat nulla pariatur.
+
+Liste de courses :
+ - Carot 450g
+ - Lentil 450g
+ - Water 600g
+ - Onion 600g
+ - Red Meat 175g
+ - Egg 300g
+ - Raspberry 600g

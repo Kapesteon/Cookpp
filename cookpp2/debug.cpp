@@ -17,7 +17,7 @@
 #include "PantryDBManager.h"
 #include "RecipeDBManager.h"
 #include "FacadeUserDB.h"
-
+#include "MenuGenerator.h"
 
 #include <QtCore/QCoreApplication> 
 #include <qfile> 
@@ -256,11 +256,12 @@ void debug()
 
 void initDb()
 {
+	//https://www.nutritionix.com/food/
 	//keys = { "perAmount", "calories","fat","cholesterol","sodium","carbohydrate","protein" };
 	double tab1[7] = { 100,41,0.2,0,0.070,10,0.9 }; //Carot
 	double tab2[7] = { 100,77,0.1,0,0.006,17,2 }; //Potato
 	double tab3[7] = { 100,52,0.2,0,0.001,14,0.3 }; //Apple
-	double tab4[7] = { 100,360,1,0,0.002,76,10.3 }; //Wheat
+	double tab4[7] = { 100,360,1,0,0.002,76,10.3 }; //Wheat Flour
 	double tab5[7] = { 100,57,0.1,0,0.001,15,0.4 }; //Pear
 	double tab6[7] = { 100,60,0.1,0,0.004,15,14 }; //Quince
 	double tab7[7] = { 100,0,0,0,0.004,0,0 }; //Water
@@ -269,6 +270,16 @@ void initDb()
 	double tab10[7] = { 100,259,17,0.087,0.050,0,26 }; //Red Meat
 	double tab11[7] = { 100,116,0.4,0,0.002,20,9 }; //Lentil
 	double tab12[7] = { 100,92,0.6,0,0.004,20,3.4 }; //Buckwheat
+	double tab13[7] = { 100,52,0.7,0,0.001,12,1.2 }; //Raspberry
+	double tab14[7] = { 100,717,81,0.215,0.643,0,0.9 }; //Butter
+	double tab15[7] = { 100,130,0.3,0,0.001,28,2.7 }; //Rice
+	double tab16[7] = { 100,127,0.5,0,0.001,23,8.7 }; //Red Beans
+	double tab17[7] = { 100,44,0.2,0,0.003,10,1.4 }; //Onion
+	double tab18[7] = { 100,50,2,0.008,0.047,1.8,3.3 }; //Milk
+	double tab19[7] = { 100,144,9.6,0.372,0.142,0.7,12.6 }; //Egg
+	double tab20[7] = { 100,379,6.5,0.0,0.068,68,13 }; //Oat
+	double tab21[7] = { 100,387,0,0.0,0.001,100,0 }; //Sugar
+
 
 	InfoNutri testInfoNutri1 = InfoNutri(tab1, 7);
 	InfoNutri testInfoNutri2 = InfoNutri(tab2, 7);
@@ -282,12 +293,20 @@ void initDb()
 	InfoNutri testInfoNutri10 = InfoNutri(tab10, 7);
 	InfoNutri testInfoNutri11 = InfoNutri(tab11, 7);
 	InfoNutri testInfoNutri12 = InfoNutri(tab12, 7);
-
+	InfoNutri testInfoNutri13 = InfoNutri(tab13, 7);
+	InfoNutri testInfoNutri14 = InfoNutri(tab14, 7);
+	InfoNutri testInfoNutri15 = InfoNutri(tab15, 7);
+	InfoNutri testInfoNutri16 = InfoNutri(tab16, 7);
+	InfoNutri testInfoNutri17 = InfoNutri(tab17, 7);
+	InfoNutri testInfoNutri18 = InfoNutri(tab18, 7);
+	InfoNutri testInfoNutri19 = InfoNutri(tab19, 7);
+	InfoNutri testInfoNutri20 = InfoNutri(tab20, 7);
+	InfoNutri testInfoNutri21 = InfoNutri(tab21, 7);
 
 	Ingredient testIngredient1 = Ingredient("Carot", "Vegetable", "N/A", &testInfoNutri1);
 	Ingredient testIngredient2 = Ingredient("Potato", "Vegetable", "N/A", &testInfoNutri2);
 	Ingredient testIngredient3 = Ingredient("Apple", "Fruit", "N/A", &testInfoNutri3);
-	Ingredient testIngredient4 = Ingredient("Wheat", "Grain", "N/A", &testInfoNutri4);
+	Ingredient testIngredient4 = Ingredient("Wheat Flour", "Grain", "N/A", &testInfoNutri4);
 	Ingredient testIngredient5 = Ingredient("Pear", "Fruit", "N/A", &testInfoNutri5);
 	Ingredient testIngredient6 = Ingredient("Quince", "Fruit", "N/A", &testInfoNutri6);
 	Ingredient testIngredient7 = Ingredient("Water", "N/A", "N/A", &testInfoNutri7);
@@ -296,7 +315,15 @@ void initDb()
 	Ingredient testIngredient10 = Ingredient("Red Meat", "Protein", "N/A", &testInfoNutri10);
 	Ingredient testIngredient11 = Ingredient("Lentil", "Protein", "N/A", &testInfoNutri11);
 	Ingredient testIngredient12 = Ingredient("Buckwheat", "Grain", "N/A", &testInfoNutri12);
-
+	Ingredient testIngredient13 = Ingredient("Raspberry", "Fruit", "N/A", &testInfoNutri13);
+	Ingredient testIngredient14 = Ingredient("Butter", "Other", "N/A", &testInfoNutri14);
+	Ingredient testIngredient15 = Ingredient("Rice", "Grain", "N/A", &testInfoNutri15);
+	Ingredient testIngredient16 = Ingredient("Red Beans", "Vegetable", "N/A", &testInfoNutri16);
+	Ingredient testIngredient17 = Ingredient("Onion", "Vegetable", "N/A", &testInfoNutri17);
+	Ingredient testIngredient18 = Ingredient("Milk", "Other", "N/A", &testInfoNutri18);
+	Ingredient testIngredient19 = Ingredient("Egg", "Protein", "N/A", &testInfoNutri19);
+	Ingredient testIngredient20 = Ingredient("Oat", "Grain", "N/A", &testInfoNutri20);
+	Ingredient testIngredient21 = Ingredient("Sugar", "Other", "N/A", &testInfoNutri21);
 
 	Aliment testAliment1 = Aliment(testIngredient1, 50); //Carot
 	Aliment testAliment2 = Aliment(testIngredient2, 50); //Potato
@@ -311,15 +338,39 @@ void initDb()
 	Aliment testAliment11 = Aliment(testIngredient11, 150); //Lentil
 	Aliment testAliment12 = Aliment(testIngredient10, 400); //Buckwheat
 
+	//Raspberry Cake
+	Aliment testAliment13 = Aliment(testIngredient4, 200); //Flour
+	Aliment testAliment14 = Aliment(testIngredient19, 100); //Egg
+	Aliment testAliment15 = Aliment(testIngredient13, 200); //Raspberry
+	Aliment testAliment16 = Aliment(testIngredient14, 50); //Butter
 
-	StockedAliment testStockedAliment1 = StockedAliment(testIngredient1, 1000, "2021/04/13", 185); //Carot
-	StockedAliment testStockedAliment2 = StockedAliment(testIngredient2, 1500, "2021/05/14", 365); //Potato
-	StockedAliment testStockedAliment3 = StockedAliment(testIngredient3, 2000, "2021/06/15", 30); //Apple
-	StockedAliment testStockedAliment4 = StockedAliment(testIngredient4, 2500, "2021/07/16", 2000); //Wheat
+	//Sheperd's pie
+	Aliment testAliment17 = Aliment(testIngredient2, 200); //Potato
+	Aliment testAliment18 = Aliment(testIngredient1, 100); //Carot
+	Aliment testAliment19 = Aliment(testIngredient17, 200); //Onion
+	Aliment testAliment20 = Aliment(testIngredient10, 125); //Red meat
+	Aliment testAliment21 = Aliment(testIngredient14, 25); //Butter
 
+	//Chili
+	Aliment testAliment22 = Aliment(testIngredient15, 100); //Rice
+	Aliment testAliment23 = Aliment(testIngredient1,  25); //Carot
+	Aliment testAliment24 = Aliment(testIngredient17, 25); //Onion
+	Aliment testAliment25 = Aliment(testIngredient16, 50); //Kidney Beans
+	Aliment testAliment26 = Aliment(testIngredient10, 50); //Red meat
+	Aliment testAliment27 = Aliment(testIngredient8, 25); //Olive Oil
+
+	StockedAliment testStockedAliment1 = StockedAliment(testIngredient1, 1000, "2023/04/13", 185); //Carot
+	StockedAliment testStockedAliment2 = StockedAliment(testIngredient2, 1500, "2023/01/14", 365); //Potato
+	StockedAliment testStockedAliment3 = StockedAliment(testIngredient3, 500, "2023/03/15", 30);   //Apple
+	StockedAliment testStockedAliment4 = StockedAliment(testIngredient4, 2500, "2023/07/16", 2000); //Flour Wheat
+	StockedAliment testStockedAliment5 = StockedAliment(testIngredient10, 200, "2023/07/16", 7); //Red meat
+	StockedAliment testStockedAliment6 = StockedAliment(testIngredient8, 3000, "2023/07/16", 4000); //Olive Oil
+	StockedAliment testStockedAliment7 = StockedAliment(testIngredient14, 3000, "2023/07/16", 4000); //Butter
+	StockedAliment testStockedAliment8 = StockedAliment(testIngredient3, 200, "2023/04/15", 30);   //Apple
 
 	std::forward_list<StockedAliment* > stockedAlimentList;
-	stockedAlimentList.assign({ &testStockedAliment1,&testStockedAliment2,&testStockedAliment3,&testStockedAliment4 });
+	stockedAlimentList.assign({ &testStockedAliment1,&testStockedAliment2,&testStockedAliment3,&testStockedAliment4
+		,& testStockedAliment5 ,& testStockedAliment6 ,& testStockedAliment7 ,& testStockedAliment8});
 
 
 
@@ -340,7 +391,26 @@ void initDb()
 	  "sed do eiusmod tempor incididunt"
 	};
 	std::vector<std::string> strs2(testSteps2, testSteps2 + sizeof(testSteps2) / sizeof(std::string));
+	std::string testSteps3[] =
+	{ "laboris nisi ut aliquip ex ea commodo consequat.",
+	  "Duis aute irure dolor in reprehenderit eu fugiat nulla pariatur."
+	};
+	std::vector<std::string> strs3(testSteps3, testSteps3 + sizeof(testSteps3) / sizeof(std::string));
 
+	std::string testSteps4[] =
+	{ "Excepteur sint occaecat cupidatat non proident",
+	  "sunt in culpa qui officia",
+	  "deserunt mollit anim id est laborum."
+	};
+	std::vector<std::string> strs4(testSteps4, testSteps4 + sizeof(testSteps4) / sizeof(std::string));
+
+	std::string testSteps5[] =
+	{ "Excepteur sint occaecat cupidatat non proident",
+	  "sunt in culpa qui officia",
+	  "deserunt mollit anim id est laborum."
+	};
+	std::vector<std::string> strs5(testSteps5, testSteps5 + sizeof(testSteps5) / sizeof(std::string));
+	    
 	Recipe testRecipe1 = Recipe();
 	testRecipe1.addAliment(testAliment1);
 	testRecipe1.addAliment(testAliment2);
@@ -369,6 +439,45 @@ void initDb()
 	testRecipe2.setNotes("Notes of Recipe2");
 	testRecipe2.markAsComplete();
 
+	Recipe testRecipe3 = Recipe();
+	testRecipe3.addAliment(testAliment13);
+	testRecipe3.addAliment(testAliment14);
+	testRecipe3.addAliment(testAliment15);
+	testRecipe3.addAliment(testAliment16);
+	testRecipe3.setName("Raspberry Cake");
+	testRecipe3.addStep(testSteps3[0]);
+	testRecipe3.addStep(testSteps3[1]);
+	testRecipe3.setNotes("1 egg ~ 40g");
+	testRecipe3.markAsComplete();
+
+	Recipe testRecipe4 = Recipe();
+	testRecipe4.addAliment(testAliment17);
+	testRecipe4.addAliment(testAliment18);
+	testRecipe4.addAliment(testAliment19);
+	testRecipe4.addAliment(testAliment20);
+	testRecipe4.addAliment(testAliment21);
+	testRecipe4.setName("Sheperd's Pie");
+	testRecipe4.addStep(testSteps4[0]);
+	testRecipe4.addStep(testSteps4[1]);
+	testRecipe4.addStep(testSteps4[2]);
+	testRecipe4.setNotes("1 egg ~ 40g");
+	testRecipe4.markAsComplete();
+
+
+	Recipe testRecipe5 = Recipe();
+	testRecipe5.addAliment(testAliment22);
+	testRecipe5.addAliment(testAliment23);
+	testRecipe5.addAliment(testAliment24);
+	testRecipe5.addAliment(testAliment25);
+	testRecipe5.addAliment(testAliment26);
+	testRecipe5.addAliment(testAliment27);
+	testRecipe5.setName("Chili");
+	testRecipe5.addStep(testSteps5[0]);
+	testRecipe5.addStep(testSteps5[1]);
+	testRecipe5.addStep(testSteps5[2]);
+	testRecipe5.setNotes("");
+	testRecipe5.markAsComplete();
+	
 	FacadeUserDB facade;
 	IngredientDBManager DBIngredient("stockDB/ingredient.cdb");
 
@@ -386,9 +495,87 @@ void initDb()
 	facade.saveIngredient(&testIngredient10, 9);
 	facade.saveIngredient(&testIngredient11, 10);
 	facade.saveIngredient(&testIngredient12, 11);
+	facade.saveIngredient(&testIngredient13, 12);
+	facade.saveIngredient(&testIngredient14, 13);
+	facade.saveIngredient(&testIngredient15, 14);
+	facade.saveIngredient(&testIngredient16, 15);
+	facade.saveIngredient(&testIngredient17, 16);
+	facade.saveIngredient(&testIngredient18, 17);
+	facade.saveIngredient(&testIngredient19, 18);
+	facade.saveIngredient(&testIngredient20, 19);
+	facade.saveIngredient(&testIngredient21, 20);
+
 
 	facade.saveRecipe(&testRecipe1, 0);
 	facade.saveRecipe(&testRecipe2, 1);
+	facade.saveRecipe(&testRecipe3, 2);
+	facade.saveRecipe(&testRecipe4, 3);
+	facade.saveRecipe(&testRecipe5, 4);
+
+
+	/*
+	facade.resetRecipe();
+
+	facade.saveRecipe(&testRecipe1, 0);
+	facade.saveRecipe(&testRecipe2, 1);
+
+	RecipeDBManager DBRecipe("stockDB/recipe.cdb");
+	std::list<Recipe*> r;
+	r = DBRecipe.getAllRecipe();
+
+	Menu menu;
+	std::time_t currentTime = std::time(nullptr);
+	menu.setStartDate(currentTime);
+
+
+	std::cout << menu.getStartDate();
+
+	Pantry pantry;
+	facade.getPantry(&pantry);
+	pantry.setStock(stockedAlimentList);
+	facade.savePantry(&pantry);
+	std::forward_list<StockedAliment*> stockedAliment = pantry.getStock();
+
+	std::list<Recipe*> recipesList;
+	recipesList = facade.getAllRecipe();
+
+	MenuGenerator menuGenerator;
+	menuGenerator.setListRecipe(recipesList);
+	menuGenerator.setStockedAliment(stockedAlimentList);
+
+	struct tm date1 = { 0 };
+	date1.tm_year = 2023 - 1900;
+	date1.tm_mon = 3;
+	date1.tm_mday = 10;
+	date1.tm_hour = 12;
+	date1.tm_min = 0;
+	date1.tm_sec = 0;
+	time_t t1 = mktime(&date1);
+
+	struct tm date2 = { 0 };
+	date2.tm_year = 2023 - 1900;
+	date2.tm_mon = 3;
+	date2.tm_mday = 20;
+	date2.tm_hour = 12;
+	date2.tm_min = 0;
+	date2.tm_sec = 0;
+	time_t t2 = mktime(&date2);
+
+	double seconds = difftime(t2, t1);
+	int days = seconds / (24 * 60 * 60);
+
+	Menu newMenu = menuGenerator.generateMenu(1, 2, &pantry, &facade);
+	newMenu.writeMenu();
+
+	Pantry* pantry2 = new Pantry;
+	FacadeUserDB facade2 = FacadeUserDB();
+	facade2.getPantry(pantry2);
+
+	Menu newMenu2 = menuGenerator.generateMenu(1, 2, pantry2, &facade);
+	newMenu2.writeMenu();
+	//Menu newMenuBis = menuGenerator.generateOneTimeMeal(2, &pantry, facade);
+	std::cout << "Fin.";
+	*/
 }
 
 

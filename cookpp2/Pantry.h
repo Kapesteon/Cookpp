@@ -31,6 +31,8 @@ class Pantry
 		void removeFromStock(StockedAliment * stockedAliment);
 		void removeFromStock(int pos);
 
+		void editFromStock(StockedAliment* stockedAliment, double mass);
+
 		std::forward_list<StockedAliment*> popStockedAlimentByName(std::string name);
 		std::forward_list<StockedAliment*> popStockedAlimentByType(std::string type);
 		std::forward_list<StockedAliment*> popStockedAlimentMostDated(int nbr);

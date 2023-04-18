@@ -163,6 +163,20 @@ void Pantry::removeFromStock(int pos)
 	return;
 }
 
+void Pantry::editFromStock(StockedAliment* stockedAliment, double mass)
+{
+	auto list = this->convertStockToForwardList(&this->stock);
+
+	for (auto it = list.begin(); it != list.end(); ++it) {
+		if (**it == *stockedAliment) {
+			(*it)->setMass(mass);
+			break;
+		}
+	}
+	this->stock = this->convertForwardListToStock(list);
+}
+
+
 std::forward_list<StockedAliment*> Pantry::popStockedAlimentByName(std::string name)
 {
 	std::forward_list<StockedAliment*> returnList;
